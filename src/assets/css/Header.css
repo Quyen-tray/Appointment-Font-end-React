@@ -1,0 +1,12 @@
+/* Header.css */
+.navbar {
+    transition: all 0.3s ease;
+}
+.sticky-top {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1030;
+    background-color: white; /* hoặc màu bạn muốn */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
