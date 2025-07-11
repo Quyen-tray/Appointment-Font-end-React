@@ -1,13 +1,15 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../AuthContext';
 
 export default function PatientNavbar() {
-    // const navigate = useNavigate();
-    //
-    // const handleLogout = () => {
-    //     // TODO: gọi logout từ context nếu có
-    //     navigate("/login");
-    // };
+    const navigate = useNavigate();
+    const { logout, user } = useAuth();
+
+    const handleLogout = async () => {
+        await logout();
+        navigate("/login");
+    };
 
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-primary px-3">
@@ -25,6 +27,18 @@ export default function PatientNavbar() {
 
                     <li className="nav-item">
                         <Link className="nav-link" to="/patient/appointments/history">View History Appointment</Link>
+                    </li>
+
+                    <li className="nav-item">
+                        <Link className="nav-link" to="/patient/medicalvisit">Medical Visit</Link>
+                    </li>
+
+                    <li className="nav-item">
+                        <Link className="nav-link" to="/patient/feedback">Feedback</Link> {/* ✅ Thêm dòng này */}
+                    </li>
+
+                    <li className="nav-item">
+                        <Link className="nav-link" to="/patient/feedback/submit">Gửi Feedback</Link>
                     </li>
 
                     <li className="nav-item">

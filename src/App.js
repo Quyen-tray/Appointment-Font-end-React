@@ -20,9 +20,14 @@ import AdminLayout from "./pages/admin/AdminLayout";
 import ReceptionistLayout from "./pages/receptionist/ReceptionistLayout";
 import Unauthorized from "./pages/Unauthorized";
 import PublicLayout from "./pages/PublicLayout";
+import MedicalVisit from "./pages/patient/MedicalVisit";
+import PrivateRoute from "./components/PrivateRoute";
+import PatientFeedback from "./pages/patient/PatientFeedback";
+import SubmitFeedback from "./pages/patient/SubmitFeedback";
 
 
 function App() {
+    localStorage.removeItem("token");
   return (
       <Router>
         <HeaderSub />
@@ -46,19 +51,31 @@ function App() {
             <Route path="/unauthorized" element={<Unauthorized />} />
 
             {/* Patient layout + routes */}
-            <Route path="/patient" element={<PatientLayout />}>
+            <Route path="/patient" element={
+                <PrivateRoute allowedRoles={["ROLE_PATIENT"]}>
+                    <PatientLayout />
+                </PrivateRoute> } >
                 {/*<Route index element={<PatientDashboard />} />*/}
                 {/*<Route path="profile" element={<PatientProfile />} />*/}
+                <Route path="medicalvisit" element={<MedicalVisit />} />
+                <Route path="feedback" element={<PatientFeedback />} />
+                <Route path="feedback/submit" element={<SubmitFeedback />} />
             </Route>
 
             {/* Admin layout + routes */}
-            <Route path="/admin" element={<AdminLayout />}>
+            <Route path="/admin" element={
+                <PrivateRoute allowedRoles={["ROLE_ADMIN"]}>
+                    <AdminLayout />
+                </PrivateRoute>}>
                 {/*<Route index element={<AdminDashboard />} />*/}
                 {/*<Route path="users" element={<UserManagement />} />*/}
             </Route>
 
             {/* Receptionist layout + routes */}
-            <Route path="/receptionist" element={<ReceptionistLayout />}>
+            <Route path="/receptionist" element={
+                <PrivateRoute allowedRoles={["ROLE_RECEPTIONIST"]}>
+                    <ReceptionistLayout />
+                </PrivateRoute>}>
                 {/*<Route index element={<ReceptionistDashboard />} />*/}
                 {/*<Route path="appointments" element={<ManageAppointments />} />*/}
             </Route>
