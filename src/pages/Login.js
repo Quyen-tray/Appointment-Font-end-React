@@ -6,7 +6,7 @@ import { useAuth } from "../AuthContext";
 function Login() {
     const [formData, setFormData] = useState({ username: "", password: "" });
     const [message, setMessage] = useState("");
-    const [loading, setLoading] = useState(false); // ✅ loading spinner
+    const [loading, setLoading] = useState(false); 
     const navigate = useNavigate();
     const { login, user, load } = useAuth();
 

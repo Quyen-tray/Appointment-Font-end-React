@@ -20,7 +20,7 @@ export default function PatientNavbar() {
             <div className="collapse navbar-collapse" id="patientNavbar">
                 <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                     <li className="nav-item">
-                        <Link className="nav-link" to="/patient/appointments/book">Book Appointment</Link>
+                        <Link className="nav-link" to="/booking">Book Appointment</Link>
                     </li>
 
                     <li className="nav-item">
