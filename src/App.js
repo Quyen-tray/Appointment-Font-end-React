@@ -24,10 +24,11 @@ import MedicalVisit from "./pages/patient/MedicalVisit";
 import PrivateRoute from "./components/PrivateRoute";
 import PatientFeedback from "./pages/patient/PatientFeedback";
 import SubmitFeedback from "./pages/patient/SubmitFeedback";
+import Invoice from "./pages/patient/Invoice";
+
 
 
 function App() {
-    localStorage.removeItem("token");
   return (
       <Router>
         <HeaderSub />
@@ -60,6 +61,8 @@ function App() {
                 <Route path="medicalvisit" element={<MedicalVisit />} />
                 <Route path="feedback" element={<PatientFeedback />} />
                 <Route path="feedback/submit" element={<SubmitFeedback />} />
+                <Route path="invoice" element={<Invoice />} />
+
             </Route>
 
             {/* Admin layout + routes */}
