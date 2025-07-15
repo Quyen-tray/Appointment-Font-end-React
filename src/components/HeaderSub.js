@@ -71,7 +71,7 @@ function HeaderSub() {
 
                             {/* ⬇️ Thêm phần này để hiển thị login/register hoặc user info */}
                             <div className="d-flex align-items-center ps-3">
-                                {isLoggedIn ? (
+                                {isLoggedIn && user ? (
                                     <>
                                         <span className="me-3">
                                             <i className="fa fa-user me-1"></i> Hello, {user.username}
