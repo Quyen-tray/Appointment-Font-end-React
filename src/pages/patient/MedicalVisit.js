@@ -1,3 +1,6 @@
+// ✅ Đã nâng cấp kích thước + giao diện thẻ khám bệnh
+// 📁 File: MedicalVisit.js
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../../AuthContext";
@@ -11,37 +14,27 @@ function MedicalVisit() {
     useEffect(() => {
         const fetchVisits = async () => {
             if (!user?.id) {
-                console.log("❌ Không có user hoặc user.id.");
                 setError("Không tìm thấy thông tin người dùng.");
                 setLoading(false);
                 return;
             }
 
             try {
-                // 👣 Bỏ hardcode patientId, lấy lại từ API
                 const patientRes = await axios.get(`http://localhost:8081/api/patient/by-user/${user.id}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
+                    headers: { Authorization: `Bearer ${token}` },
                 });
-                console.log("Patient API response:", patientRes.data);
-                if (!patientRes.data || !patientRes.data.id) {
-                    console.error("❌ Không tìm thấy patient tương ứng userId:", user.id);
+
+                if (!patientRes.data?.id) {
                     setError("Không tìm thấy bệnh nhân tương ứng với tài khoản.");
                     setLoading(false);
                     return;
                 }
 
                 const patientId = patientRes.data.id;
-                console.log("Patient ID:", patientId);
 
-                // 👣 Bước 2: Lấy danh sách visit theo patientId
                 const visitsRes = await axios.get(`http://localhost:8081/api/visits/patient/${patientId}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
+                    headers: { Authorization: `Bearer ${token}` },
                 });
-                console.log("Visits:", visitsRes.data);
 
                 setVisits(visitsRes.data);
                 setError("");
@@ -60,21 +53,25 @@ function MedicalVisit() {
 
     return (
         <div className="container py-5">
-            <h2 className="text-center mb-4">Lịch Sử Khám Bệnh</h2>
+            <h2 className="text-center mb-5 text-primary">
+                <i className="bi bi-stethoscope me-2"></i>Lịch Sử Khám Bệnh
+            </h2>
 
             {loading ? (
                 <div className="text-center">Đang tải dữ liệu...</div>
             ) : visits.length > 0 ? (
-                <div className="row">
+                <div className="row justify-content-center g-4">
                     {visits.map((visit) => (
-                        <div className="col-md-6 mb-4" key={visit.id}>
-                            <div className="card h-100 shadow-sm">
-                                <div className="card-body">
-                                    <h5 className="card-title">Bác sĩ: {visit.doctorName || "Chưa có"}</h5>
-                                    <p><strong>Ngày khám:</strong> {new Date(visit.createdAt).toLocaleDateString()}</p>
-                                    <p><strong>Chẩn đoán:</strong> {visit.diagnosis}</p>
-                                    <p><strong>Ghi chú:</strong> {visit.note}</p>
-                                </div>
+                        <div className="col-lg-6 col-xl-5" key={visit.id}>
+                            <div className="shadow rounded-5 p-4 bg-white">
+                                <h5 className="fw-bold text-primary mb-3">
+                                    👨‍⚕️ Bác sĩ: {visit.doctorName || "Chưa có"}
+                                </h5>
+                                <ul className="list-unstyled fs-5">
+                                    <li>📅 <strong>Ngày khám:</strong> {new Date(visit.createdAt).toLocaleDateString()}</li>
+                                    <li>📝 <strong>Chẩn đoán:</strong> {visit.diagnosis}</li>
+                                    <li>🗒️ <strong>Ghi chú:</strong> {visit.note}</li>
+                                </ul>
                             </div>
                         </div>
                     ))}

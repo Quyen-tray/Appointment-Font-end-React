@@ -42,6 +42,10 @@ export default function PatientNavbar() {
                     </li>
 
                     <li className="nav-item">
+                        <Link className="nav-link" to="/patient/invoice">Invoice</Link> {/* 👈 Thêm dòng này */}
+                    </li>
+
+                    <li className="nav-item">
                         <Link className="nav-link" to="/patient/profile">Profile</Link>
                     </li>
                 </ul>
