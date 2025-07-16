@@ -1,15 +1,6 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../AuthContext';
+import { Link } from 'react-router-dom';
 
 export default function PatientNavbar() {
-    const navigate = useNavigate();
-    const { logout, user } = useAuth();
-
-    const handleLogout = async () => {
-        await logout();
-        navigate("/login");
-    };
 
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-primary px-3">
@@ -22,11 +13,12 @@ export default function PatientNavbar() {
             <div className="collapse navbar-collapse" id="patientNavbar">
                 <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                     <li className="nav-item">
-                        <Link className="nav-link" to="/booking">Book Appointment</Link>
+
+                        <Link className="nav-link" to="/patient/booking">Đặt lịch khám</Link>
                     </li>
 
                     <li className="nav-item">
-                        <Link className="nav-link" to="/patient/appointments/history">View History Appointment</Link>
+                        <Link className="nav-link" to="/patient/appointments/history">Lịch sử lịch hẹn</Link>
                     </li>
 
                     <li className="nav-item">
@@ -34,7 +26,7 @@ export default function PatientNavbar() {
                     </li>
 
                     <li className="nav-item">
-                        <Link className="nav-link" to="/patient/feedback">Feedback</Link> {/* ✅ Thêm dòng này */}
+                        <Link className="nav-link" to="/patient/feedback">Feedback</Link> 
                     </li>
 
                     <li className="nav-item">
@@ -42,11 +34,7 @@ export default function PatientNavbar() {
                     </li>
 
                     <li className="nav-item">
-                        <Link className="nav-link" to="/patient/invoice">Invoice</Link> {/* 👈 Thêm dòng này */}
-                    </li>
-
-                    <li className="nav-item">
-                        <Link className="nav-link" to="/patient/profile">Profile</Link>
+                        <Link className="nav-link" to="/patient/profile">Hồ sơ</Link>
                     </li>
                 </ul>
 

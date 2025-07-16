@@ -6,7 +6,7 @@ export function AuthProvider({ children }) {
     const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
     const [token, setToken] = useState(localStorage.getItem("token"));
     const [user, setUser] = useState(null);
-    const [patientId, setPatientId] = useState(null); // Giữ lại từ main
+    const [patientId, setPatientId] = useState(null); 
     const [load, setLoad] = useState(!!token);
 
     const fetchUser = useCallback(async () => {
@@ -23,21 +23,19 @@ export function AuthProvider({ children }) {
                     const data = await res.json();
                     setUser(data);
                     setIsLoggedIn(true);
-                    setPatientId(data.id); // nếu có `id` từ backend
+
+                    setPatientId(data.id); 
                     console.log(data);
                 } else if (res.status === 401) {
                     localStorage.removeItem("token");
                     setToken(null);
                     setIsLoggedIn(false);
                     setUser(null);
-                    setPatientId(null); // reset luôn nếu có
+                    setPatientId(null); 
                     console.error("Token hết hạn, auto logout");
                 } else {
                     console.error(res);
                 }
-
-                }
-
             } catch (err) {
                 console.error("Lỗi khi lấy user:", err);
             } finally {
