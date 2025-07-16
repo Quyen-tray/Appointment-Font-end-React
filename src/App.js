@@ -23,33 +23,45 @@ import PublicLayout from "./pages/PublicLayout";
 
 
 function App() {
-  return (
-      <Router>
-        <HeaderSub />
-        <Routes>
-            {/* Public routes */}
-            {/* Layout cho public route */}
-            <Route path="/" element={<PublicLayout />}>
-                <Route index element={<Home />} />  {/* tức là / */}
-                <Route path="about" element={<About />} />
-                <Route path="appointment" element={<Appointment />} />
-                <Route path="contact" element={<Contact />} />
-                <Route path="price" element={<Price />} />
-                <Route path="service" element={<Service />} />
-                <Route path="team" element={<Team />} />
-                <Route path="testimonial" element={<Testimonial />} />
-                <Route path="login" element={<Login />} />
-                <Route path="register" element={<Register />} />
-            </Route>
+    return (
+        <Router>
+            <HeaderSub />
+            <Routes>
+                {/* Public routes */}
+                {/* Layout cho public route */}
+                <Route path="/" element={<PublicLayout />}>
+                    <Route index element={<Home />} />  {/* tức là / */}
+                    <Route path="about" element={<About />} />
+                    <Route path="appointment" element={<Appointment />} />
+                    <Route path="contact" element={<Contact />} />
+                    <Route path="price" element={<Price />} />
+                    <Route path="service" element={<Service />} />
+                    <Route path="team" element={<Team />} />
+                    <Route path="testimonial" element={<Testimonial />} />
+                    <Route path="login" element={<Login />} />
+                    <Route path="register" element={<Register />} />
+
+                </Route>
 
             {/* Route riêng cho Unauthorized */}
             <Route path="/unauthorized" element={<Unauthorized />} />
 
-            {/* Patient layout + routes */}
-            <Route path="/patient" element={<PatientLayout />}>
-                {/*<Route index element={<PatientDashboard />} />*/}
-                {/*<Route path="profile" element={<PatientProfile />} />*/}
-            </Route>
+                {/* Patient layout + routes */}
+                <Route path="/patient" element={
+                    <PrivateRoute allowedRoles={["ROLE_PATIENT"]}>
+                        <PatientLayout />
+                    </PrivateRoute>
+                }>
+                    {/*<Route index element={<PatientDashboard />} />*/}
+                    {/*<Route path="profile" element={<PatientProfile />} />*/}
+                    <Route path="booking" element={<BookingForm />} />
+                    <Route path="booking-success" element={<BookingSuccess />} />
+                    <Route path="appointments/history" element={<HistoryAppointment />} />
+                    <Route path="profile" element={<Profile />} />
+                    <Route path="medicalvisit" element={<MedicalVisit />} />
+                    <Route path="feedback" element={<PatientFeedback />} />
+                    <Route path="feedback/submit" element={<SubmitFeedback />} />
+                </Route>
 
             {/* Admin layout + routes */}
             <Route path="/admin" element={<AdminLayout />}>

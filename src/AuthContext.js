@@ -2,39 +2,49 @@ import {createContext, useContext, useState, useEffect, useCallback} from "react
 
 const AuthContext = createContext();
 
-export function AuthProvider ({ children })  {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [token,setToken] = useState(localStorage.getItem('token'));
-    const [user,setUser] = useState(null);
-    const [load,setLoad] = useState(!!token);
+export function AuthProvider({ children }) {
+    const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
+    const [token, setToken] = useState(localStorage.getItem("token"));
+    const [user, setUser] = useState(null);
+    const [patientId, setPatientId] = useState(null); 
+    const [load, setLoad] = useState(!!token);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-        const fetchUser = useCallback(async () => {
-            if (token) {
-                try {
-                    const res = await fetch("http://localhost:8081/api/user/me", {
-                        method: "GET",
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    });
+    const fetchUser = useCallback(async () => {
+        if (token) {
+            try {
+                const res = await fetch("http://localhost:8081/api/user/me", {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
 
-                    if (res.ok) {
-                        const data = await res.json();
-                        setUser(data);
-                        console.log(data);
-                    }else{
-                        console.error(res);
-                    }
-                } catch (err) {
-                    console.error("❌ Lỗi khi lấy user:", err);
-                } finally {
-                    setLoad(false);
+                if (res.ok) {
+                    const data = await res.json();
+                    setUser(data);
+                    setIsLoggedIn(true);
+                    setPatientId(data.id); 
+                    console.log(data);
+                } else if (res.status === 401) {
+                    localStorage.removeItem("token");
+                    setToken(null);
+                    setIsLoggedIn(false);
+                    setUser(null);
+                    setPatientId(null); 
+                    console.error("Token hết hạn, auto logout");
+                } else {
+                    console.error(res);
                 }
-            } else {
+
+            } catch (err) {
+                console.error("Lỗi khi lấy user:", err);
+            } finally {
                 setLoad(false);
             }
-        },[token]);
+        } else {
+            setLoad(false);
+        }
+    },[token]);
 
     useEffect(() => {
         if (token) {

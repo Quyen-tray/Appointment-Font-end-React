@@ -1,14 +1,7 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export default function PatientNavbar() {
-    // const navigate = useNavigate();
-    //
-    // const handleLogout = () => {
-    //     // TODO: gọi logout từ context nếu có
-    //     navigate("/login");
-    // };
-
+    
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-primary px-3">
             <Link className="navbar-brand" to="/patient">Patient Panel</Link>
@@ -20,15 +13,27 @@ export default function PatientNavbar() {
             <div className="collapse navbar-collapse" id="patientNavbar">
                 <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                     <li className="nav-item">
-                        <Link className="nav-link" to="/patient/appointments/book">Book Appointment</Link>
+                        <Link className="nav-link" to="/patient/booking">Đặt lịch khám</Link>
                     </li>
 
                     <li className="nav-item">
-                        <Link className="nav-link" to="/patient/appointments/history">View History Appointment</Link>
+                        <Link className="nav-link" to="/patient/appointments/history">Lịch sử lịch hẹn</Link>
                     </li>
 
                     <li className="nav-item">
-                        <Link className="nav-link" to="/patient/profile">Profile</Link>
+                        <Link className="nav-link" to="/patient/medicalvisit">Medical Visit</Link>
+                    </li>
+
+                    <li className="nav-item">
+                        <Link className="nav-link" to="/patient/feedback">Feedback</Link> 
+                    </li>
+
+                    <li className="nav-item">
+                        <Link className="nav-link" to="/patient/feedback/submit">Gửi Feedback</Link>
+                    </li>
+
+                    <li className="nav-item">
+                        <Link className="nav-link" to="/patient/profile">Hồ sơ</Link>
                     </li>
                 </ul>
 
