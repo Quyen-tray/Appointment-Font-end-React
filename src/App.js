@@ -20,55 +20,56 @@ import AdminLayout from "./pages/admin/AdminLayout";
 import ReceptionistLayout from "./pages/receptionist/ReceptionistLayout";
 import Unauthorized from "./pages/Unauthorized";
 import PublicLayout from "./pages/PublicLayout";
+import AppointmentReceptionist from "./pages/receptionist/AppointmentReceptionist";
 
 
 function App() {
-  return (
-      <Router>
-        <HeaderSub />
-        <Routes>
-            {/* Public routes */}
-            {/* Layout cho public route */}
-            <Route path="/" element={<PublicLayout />}>
-                <Route index element={<Home />} />  {/* tức là / */}
-                <Route path="about" element={<About />} />
-                <Route path="appointment" element={<Appointment />} />
-                <Route path="contact" element={<Contact />} />
-                <Route path="price" element={<Price />} />
-                <Route path="service" element={<Service />} />
-                <Route path="team" element={<Team />} />
-                <Route path="testimonial" element={<Testimonial />} />
-                <Route path="login" element={<Login />} />
-                <Route path="register" element={<Register />} />
-            </Route>
+    return (
+        <Router>
+            <HeaderSub />
+            <Routes>
+                {/* Public routes */}
+                {/* Layout cho public route */}
+                <Route path="/" element={<PublicLayout />}>
+                    <Route index element={<Home />} />  {/* tức là / */}
+                    <Route path="about" element={<About />} />
+                    <Route path="appointment" element={<Appointment />} />
+                    <Route path="contact" element={<Contact />} />
+                    <Route path="price" element={<Price />} />
+                    <Route path="service" element={<Service />} />
+                    <Route path="team" element={<Team />} />
+                    <Route path="testimonial" element={<Testimonial />} />
+                    <Route path="login" element={<Login />} />
+                    <Route path="register" element={<Register />} />
+                </Route>
 
-            {/* Route riêng cho Unauthorized */}
-            <Route path="/unauthorized" element={<Unauthorized />} />
+                {/* Route riêng cho Unauthorized */}
+                <Route path="/unauthorized" element={<Unauthorized />} />
 
-            {/* Patient layout + routes */}
-            <Route path="/patient" element={<PatientLayout />}>
-                {/*<Route index element={<PatientDashboard />} />*/}
-                {/*<Route path="profile" element={<PatientProfile />} />*/}
-            </Route>
+                {/* Patient layout + routes */}
+                <Route path="/patient" element={<PatientLayout />}>
+                    {/*<Route index element={<PatientDashboard />} />*/}
+                    {/*<Route path="profile" element={<PatientProfile />} />*/}
+                </Route>
 
-            {/* Admin layout + routes */}
-            <Route path="/admin" element={<AdminLayout />}>
-                {/*<Route index element={<AdminDashboard />} />*/}
-                {/*<Route path="users" element={<UserManagement />} />*/}
-            </Route>
+                {/* Admin layout + routes */}
+                <Route path="/admin" element={<AdminLayout />}>
+                    {/*<Route index element={<AdminDashboard />} />*/}
+                    {/*<Route path="users" element={<UserManagement />} />*/}
+                </Route>
 
-            {/* Receptionist layout + routes */}
-            <Route path="/receptionist" element={<ReceptionistLayout />}>
-                {/*<Route index element={<ReceptionistDashboard />} />*/}
-                {/*<Route path="appointments" element={<ManageAppointments />} />*/}
-            </Route>
+                {/* Receptionist layout + routes */}
+                <Route path="/receptionist" element={<ReceptionistLayout />}>
+                    {/*<Route index element={<ReceptionistDashboard />} />*/}
+                    <Route path="appointments" element={<AppointmentReceptionist />} />
+                </Route>
 
-            {/* 404 Not Found */}
-            <Route path="*" element={<h1>404 Not Found</h1>} />
-        </Routes>
-        <Footer />
-      </Router>
-  );
+                {/* 404 Not Found */}
+                <Route path="*" element={<h1>404 Not Found</h1>} />
+            </Routes>
+            <Footer />
+        </Router>
+    );
 }
 
 export default App;
