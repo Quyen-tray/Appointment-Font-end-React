@@ -3,10 +3,7 @@ import axios from "axios";
 import "./profile.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { storage } from "../../firebase/firebaseConfig";
 
-import { v4 as uuidv4 } from "uuid";
 const PatientProfile = () => {
     const [profile, setProfile] = useState({
         fullName: "",
@@ -63,26 +60,40 @@ const PatientProfile = () => {
             .finally(() => setLoading(false));
     };
 
-    const handleImageChange = (e) => {
+    const handleImageChange = async (e) => {
         const file = e.target.files[0];
         if (!file) return;
 
-        const uniqueName = `avatar_${uuidv4()}`;
-        const storageRef = ref(storage, `avatars/${uniqueName}`);
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", "avatar_upload"); 
 
-        uploadBytes(storageRef, file)
-            .then((snapshot) => getDownloadURL(snapshot.ref))
-            .then((url) => {
+        try {
+            const response = await fetch("https://api.cloudinary.com/v1_1/dpk1bgfbz/image/upload", {
+                method: "POST",
+                body: formData,
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                console.log("Upload thành công:", data);
                 setProfile((prev) => ({
                     ...prev,
-                    avatar: url,
+                    avatar: data.secure_url,
                 }));
-            })
-            .catch((error) => {
-                console.error("Lỗi upload ảnh:", error);
-                alert("Lỗi khi tải ảnh lên!");
-            });
+            } else {
+                console.error("Upload thất bại:", data);
+                alert("Lỗi khi tải ảnh lên Cloudinary!");
+            }
+        } catch (err) {
+            console.error("Lỗi upload ảnh:", err);
+            alert("Lỗi khi tải ảnh lên Cloudinary!");
+        }
     };
+
+
+
 
     return (
         <div className="profile-container">

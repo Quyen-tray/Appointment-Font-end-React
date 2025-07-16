@@ -65,7 +65,7 @@ export default function BookingForm() {
       parseInt(minute)
     );
 
-    scheduledTime.setHours(scheduledTime.getHours() + 7); 
+    scheduledTime.setHours(scheduledTime.getHours() + 7);
     const isoTime = scheduledTime.toISOString();
 
     const requestData = {
@@ -85,8 +85,7 @@ export default function BookingForm() {
       );
 
       console.log("Kết quả đặt lịch:", res.data);
-     const bookingId = res.data.appointmentId;
-
+      const bookingId = res.data.appointmentId;
       navigate("/booking-success", {
         state: { bookingId }
       });
@@ -111,7 +110,7 @@ export default function BookingForm() {
                 onChange={(e) => {
                   setSelectedDoctorId(e.target.value);
                   const bs = doctorsList.find(x => x.id === parseInt(e.target.value));
-                  if(bs) setSelectedDoctorName(bs.fullName);
+                  if (bs) setSelectedDoctorName(bs.fullName);
                 }}
               >
                 {doctorsList.map((bs) => (
@@ -146,11 +145,10 @@ export default function BookingForm() {
                   <button
                     type="button"
                     key={time}
-                    className={`btn ${
-                      selectedTime === time
+                    className={`btn ${selectedTime === time
                         ? "btn-success"
                         : "btn-outline-secondary"
-                    }`}
+                      }`}
                     onClick={() => setSelectedTime(time)}
                     disabled={!selectedDate}
                   >
@@ -168,11 +166,10 @@ export default function BookingForm() {
                   <button
                     type="button"
                     key={time}
-                    className={`btn ${
-                      selectedTime === time
+                    className={`btn ${selectedTime === time
                         ? "btn-success"
                         : "btn-outline-secondary"
-                    }`}
+                      }`}
                     onClick={() => setSelectedTime(time)}
                     disabled={!selectedDate}
                   >

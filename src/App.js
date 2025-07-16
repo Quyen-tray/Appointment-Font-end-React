@@ -25,7 +25,6 @@ import PrivateRoute from "./components/PrivateRoute";
 import PatientFeedback from "./pages/patient/PatientFeedback";
 import SubmitFeedback from "./pages/patient/SubmitFeedback";
 import Invoice from "./pages/patient/Invoice";
-import Profile from "./pages/patient/Profile";
 
 
 
@@ -59,7 +58,6 @@ function App() {
                 </PrivateRoute> } >
                 {/*<Route index element={<PatientDashboard />} />*/}
                 {/*<Route path="profile" element={<PatientProfile />} />*/}
-                <Route path="/patient/profile" element={<Profile />} />
                 <Route path="medicalvisit" element={<MedicalVisit />} />
                 <Route path="feedback" element={<PatientFeedback />} />
                 <Route path="feedback/submit" element={<SubmitFeedback />} />
