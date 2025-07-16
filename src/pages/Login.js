@@ -6,7 +6,7 @@ import { useAuth } from "../AuthContext";
 function Login() {
     const [formData, setFormData] = useState({ username: "", password: "" });
     const [message, setMessage] = useState("");
-    const [loading, setLoading] = useState(false); // ✅ loading spinner
+    const [loading, setLoading] = useState(false); 
     const navigate = useNavigate();
     const { login, user, load } = useAuth();
 
@@ -34,14 +34,14 @@ function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true); // ✅ Start loading
+        setLoading(true); 
 
         const result = await login(formData.username, formData.password);
 
         if (!result.success) {
             setMessage(result.message);
         }
-        setLoading(false); // ✅ Stop loading
+        setLoading(false); 
     };
 
     return (
@@ -54,7 +54,7 @@ function Login() {
             <div className="card shadow p-4 position-relative" style={{ maxWidth: "400px", width: "100%" }}>
                 <h3 className="text-center mb-4">Login</h3>
 
-                {/* ✅ Spinner overlay */}
+                {/*  Spinner overlay */}
                 {loading && (
                     <div className="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-white bg-opacity-75" style={{ zIndex: 10 }}>
                         <div className="spinner-border text-primary" role="status">
