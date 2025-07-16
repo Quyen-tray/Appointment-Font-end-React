@@ -26,6 +26,10 @@ import MedicalVisit from "./pages/patient/MedicalVisit";
 import PrivateRoute from "./components/PrivateRoute";
 import PatientFeedback from "./pages/patient/PatientFeedback";
 import SubmitFeedback from "./pages/patient/SubmitFeedback";
+import Profile from "./pages/patient/Profile";
+import BookingForm from "./pages/patient/BookingForm";
+import BookingSuccess from "./pages/patient/BookingSuccess";
+import HistoryAppointment from"./pages/patient/HistoryAppointment";
 import Invoice from "./pages/patient/Invoice";
 import UserAccountPage from "./pages/admin/UserAccountPage";
 import UserPatientPage from "./pages/admin/UserPatientPage";
@@ -56,6 +60,22 @@ function App() {
                 {/* Route riêng cho Unauthorized */}
                 <Route path="/unauthorized" element={<Unauthorized />} />
 
+            {/* Patient layout + routes */}
+                <Route path="/patient" element={
+                    <PrivateRoute allowedRoles={["ROLE_PATIENT"]}>
+                        <PatientLayout />
+                    </PrivateRoute>
+                }>
+                    {/*<Route index element={<PatientDashboard />} />*/}
+                    {/*<Route path="profile" element={<PatientProfile />} />*/}
+                    <Route path="booking" element={<BookingForm />} />
+                    <Route path="booking-success" element={<BookingSuccess />} />
+                    <Route path="appointments/history" element={<HistoryAppointment />} />
+                    <Route path="profile" element={<Profile />} />
+                    <Route path="medicalvisit" element={<MedicalVisit />} />
+                    <Route path="feedback" element={<PatientFeedback />} />
+                    <Route path="feedback/submit" element={<SubmitFeedback />} />
+                </Route>
                 {/* Patient layout + routes */}
                 <Route path="/patient" element={
                     <PrivateRoute allowedRoles={["ROLE_PATIENT"]}>
