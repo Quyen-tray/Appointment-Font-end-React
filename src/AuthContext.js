@@ -3,6 +3,7 @@ import { createContext, useContext, useState, useEffect, useCallback } from "rea
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
+    const [isAuthReady, setIsAuthReady] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
     const [token, setToken] = useState(localStorage.getItem("token"));
     const [user, setUser] = useState(null);
@@ -23,6 +24,7 @@ export function AuthProvider({ children }) {
                     const data = await res.json();
                     setUser(data);
                     setIsLoggedIn(true);
+                    setIsAuthReady(true);
                     setPatientId(data.id); // nếu có `id` từ backend
                     console.log(data);
                 } else if (res.status === 401) {
@@ -99,6 +101,7 @@ export function AuthProvider({ children }) {
                 setUser(null);
                 setPatientId(null); 
                 setIsLoggedIn(false);
+                setIsAuthReady(false);
                 return { success: true };
 
             }
@@ -120,7 +123,8 @@ export function AuthProvider({ children }) {
             setToken,
             setUser,
             load,
-            setLoad
+            setLoad,
+            isAuthReady, setIsAuthReady
         }}>
             {children}
         </AuthContext.Provider>
