@@ -1,4 +1,4 @@
-import {createContext, useContext, useState, useEffect, useCallback} from "react";
+import { createContext, useContext, useState, useEffect, useCallback } from "react";
 
 const AuthContext = createContext();
 
@@ -23,6 +23,7 @@ export function AuthProvider({ children }) {
                     const data = await res.json();
                     setUser(data);
                     setIsLoggedIn(true);
+
                     setPatientId(data.id); 
                     console.log(data);
                 } else if (res.status === 401) {
@@ -35,7 +36,6 @@ export function AuthProvider({ children }) {
                 } else {
                     console.error(res);
                 }
-
             } catch (err) {
                 console.error("Lỗi khi lấy user:", err);
             } finally {
@@ -49,11 +49,11 @@ export function AuthProvider({ children }) {
     useEffect(() => {
         if (token) {
             fetchUser();
-        }else{
+            setLoad(true);
+        } else {
             setLoad(false);
         }
     }, [fetchUser, token]);
-
 
     const login = async (username, password) => {
         try {
@@ -82,7 +82,6 @@ export function AuthProvider({ children }) {
         }
     };
 
-
     const logout = async () => {
         try {
             const res = await fetch("http://localhost:8081/api/auth/logout", {
@@ -94,22 +93,34 @@ export function AuthProvider({ children }) {
 
             if (res.status !== 200) {
                 throw new Error("Logout failed on server");
-            }else{
+            } else {
                 localStorage.removeItem("token");
                 setUser(null);
+                setPatientId(null); 
                 setIsLoggedIn(false);
                 return { success: true };
+
             }
 
-
         } catch (error) {
-            console.error("❌ Logout error:", error);
+            console.error("Logout error:", error);
             return { success: false, message: error.message };
         }
-    }
+    };
 
     return (
-        <AuthContext.Provider value={{login,logout,isLoggedIn,token,user,setToken,setUser,load,setLoad}}>
+        <AuthContext.Provider value={{
+            login,
+            logout,
+            isLoggedIn,
+            token,
+            user,
+            patientId, 
+            setToken,
+            setUser,
+            load,
+            setLoad
+        }}>
             {children}
         </AuthContext.Provider>
     );

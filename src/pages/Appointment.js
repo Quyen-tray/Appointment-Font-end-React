@@ -3,10 +3,112 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import axios from "axios";
+import { useEffect } from "react";
+import { setHours, setMinutes } from "date-fns";
 
 function Appointment() {
     const [appointmentDate, setAppointmentDate] = useState(null);
     const [appointmentTime, setAppointmentTime] = useState(null);
+    const [selectedDoctorId, setSelectedDoctorId] = useState("");
+    const [doctorList, setDoctorList] = useState([]);
+    const [patientProfile, setPatientProfile] = useState({
+        fullName: "",
+        email: ""
+    });
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        console.log("appointmentDate", appointmentDate);
+        console.log("appointmentTime", appointmentTime);
+        if (!selectedDoctorId) {
+            alert("Vui lòng chọn bác sĩ!");
+            return;
+        }
+        if (!appointmentDate) {
+            alert("Vui lòng chọn ngày hẹn!");
+            return;
+        }
+        if (!appointmentTime) {
+            alert("Vui lòng chọn giờ hẹn!");
+            return;
+        }
+        try {
+            const scheduledTime = new Date(
+                appointmentDate.getFullYear(),
+                appointmentDate.getMonth(),
+                appointmentDate.getDate(),
+                appointmentTime.getHours(),
+                appointmentTime.getMinutes()
+            );
+            scheduledTime.setHours(scheduledTime.getHours() + 7);
+
+            // rồi gửi ISO
+            const isoTime = scheduledTime.toISOString();
+            const requestData = {
+                doctorId: selectedDoctorId,
+                scheduledTime: isoTime
+            };
+
+            const res = await axios.post("http://localhost:8081/api/patient/appointments", requestData, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`
+                }
+            });
+
+            alert(res.data);
+        } catch (error) {
+            console.error(error);
+            alert(error.response?.data || "Đặt lịch thất bại");
+        }
+
+    }
+
+    useEffect(() => {
+        const fetchDoctors = async () => {
+            try {
+                const res = await axios.get("http://localhost:8081/api/doctor/list-doctor", {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
+                setDoctorList(res.data);
+            } catch (err) {
+                console.error(err);
+            }
+        };
+        fetchDoctors();
+    }, []);
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                const res = await axios.get("http://localhost:8081/api/patient/profile", {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
+                setPatientProfile({
+                    fullName: res.data.fullName,
+                    email: res.data.email
+                });
+            } catch (err) {
+                console.error(err);
+            }
+        };
+        fetchProfile();
+    }, []);
+    const handleTimeChange = (time) => {
+        if (time && appointmentDate) {
+            const newDateTime = new Date(
+                appointmentDate.getFullYear(),
+                appointmentDate.getMonth(),
+                appointmentDate.getDate(),
+                time.getHours(),
+                time.getMinutes()
+            );
+            setAppointmentTime(newDateTime);
+        }
+    };
 
     return (
         <>
@@ -54,35 +156,33 @@ function Appointment() {
                         >
                             <div className="appointment-form h-100 d-flex flex-column justify-content-center text-center p-5">
                                 <h1 className="text-white mb-4">Make Appointment</h1>
-                                <form>
+                                <form onSubmit={handleSubmit}>
                                     <div className="row g-3">
-                                        <div className="col-12 col-sm-6">
+                                        {/* <div className="col-12 col-sm-6">
                                             <select className="form-select bg-light border-0" style={{ height: '55px' }} defaultValue="1">
-                                                <option value="1">Select A Service</option>
+                                                <option value="1">Chọn dịch vụ</option>
                                                 <option value="2">Service 1</option>
                                                 <option value="3">Service 2</option>
                                                 <option value="4">Service 3</option>
                                             </select>
-                                        </div>
+                                        </div> */}
                                         <div className="col-12 col-sm-6">
-                                            <select className="form-select bg-light border-0" style={{ height: '55px' }} defaultValue="1">
-                                                <option value="1">Select Doctor</option>
-                                                <option value="2">Doctor 1</option>
-                                                <option value="3">Doctor 2</option>
-                                                <option value="4">Doctor 3</option>
+                                            <select className="form-select bg-light border-0" value={selectedDoctorId} onChange={(e) => setSelectedDoctorId(e.target.value)} style={{ height: '55px' }}>
+                                                <option value="">Chọn bác sĩ</option>
+                                                {doctorList.map((doc) => (<option key={doc.id} value={doc.id}>{doc.fullName}</option>))}
                                             </select>
                                         </div>
                                         <div className="col-12 col-sm-6">
-                                            <input type="text" className="form-control bg-light border-0" placeholder="Your Name" style={{ height: '55px' }} />
+                                            <input type="text" className="form-control bg-light border-0" placeholder="Họ và tên" value={patientProfile.fullName} readOnly style={{ height: '55px' }} />
                                         </div>
                                         <div className="col-12 col-sm-6">
-                                            <input type="email" className="form-control bg-light border-0" placeholder="Your Email" style={{ height: '55px' }} />
+                                            <input type="email" className="form-control bg-light border-0" placeholder="Email" value={patientProfile.email} readOnly style={{ height: '55px' }} />
                                         </div>
                                         <div className="col-12 col-sm-6">
                                             <DatePicker
                                                 selected={appointmentDate}
                                                 onChange={(date) => setAppointmentDate(date)}
-                                                placeholderText="Appointment Date"
+                                                placeholderText="Chọn ngày"
                                                 className="form-control bg-light border-0"
                                                 dateFormat="dd/MM/yyyy"
                                             />
@@ -90,18 +190,20 @@ function Appointment() {
                                         <div className="col-12 col-sm-6">
                                             <DatePicker
                                                 selected={appointmentTime}
-                                                onChange={(time) => setAppointmentTime(time)}
-                                                placeholderText="Appointment Time"
+                                                onChange={handleTimeChange}
+                                                placeholderText="Chọn giờ"
                                                 className="form-control bg-light border-0"
                                                 showTimeSelect
                                                 showTimeSelectOnly
                                                 timeIntervals={30}
+                                                minTime={setHours(setMinutes(new Date(), 30), 6)}
+                                                maxTime={setHours(setMinutes(new Date(), 0), 18)}
                                                 timeCaption="Time"
                                                 dateFormat="h:mm aa"
                                             />
                                         </div>
                                         <div className="col-12">
-                                            <button className="btn btn-dark w-100 py-3" type="submit">Make Appointment</button>
+                                            <button className="btn btn-dark w-100 py-3" type="submit">Tạo lịch hẹn</button>
                                         </div>
                                     </div>
                                 </form>

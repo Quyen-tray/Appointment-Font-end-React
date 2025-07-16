@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 
 export default function PatientNavbar() {
-    
+
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-primary px-3">
             <Link className="navbar-brand" to="/patient">Patient Panel</Link>
@@ -13,6 +13,7 @@ export default function PatientNavbar() {
             <div className="collapse navbar-collapse" id="patientNavbar">
                 <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                     <li className="nav-item">
+
                         <Link className="nav-link" to="/patient/booking">Đặt lịch khám</Link>
                     </li>
 
