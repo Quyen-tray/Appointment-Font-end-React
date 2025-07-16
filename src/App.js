@@ -25,6 +25,10 @@ import PrivateRoute from "./components/PrivateRoute";
 import PatientFeedback from "./pages/patient/PatientFeedback";
 import SubmitFeedback from "./pages/patient/SubmitFeedback";
 import Invoice from "./pages/patient/Invoice";
+import UserAccountPage from "./pages/admin/UserAccountPage";
+import UserPatientPage from "./pages/admin/UserPatientPage";
+import UserReceptionistPage from "./pages/admin/UserReceptionistPage";
+import UserActivityLogPage from "./pages/admin/UserActivityLogPage";
 
 
 
@@ -70,6 +74,10 @@ function App() {
                 <PrivateRoute allowedRoles={["ROLE_ADMIN"]}>
                     <AdminLayout />
                 </PrivateRoute>}>
+                <Route path="usersAccount" element={<UserAccountPage />} />
+                <Route path="usersPatient" element={<UserPatientPage />} />
+                <Route path="usersReceptionist" element={<UserReceptionistPage />} />
+                <Route path="usersActivityLog" element={<UserActivityLogPage />} />
                 {/*<Route index element={<AdminDashboard />} />*/}
                 {/*<Route path="users" element={<UserManagement />} />*/}
             </Route>
