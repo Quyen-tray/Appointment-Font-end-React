@@ -32,8 +32,6 @@ import UserPatientPage from "./pages/admin/UserPatientPage";
 import UserReceptionistPage from "./pages/admin/UserReceptionistPage";
 import UserActivityLogPage from "./pages/admin/UserActivityLogPage";
 
-import AppointmentReceptionist from "./pages/receptionist/AppointmentReceptionist";
-
 
 function App() {
     return (
@@ -89,8 +87,9 @@ function App() {
                 <Route path="/receptionist" element={
                     <PrivateRoute allowedRoles={["ROLE_RECEPTIONIST"]}>
                         <ReceptionistLayout />
-                        <Route path="appointments" element={<AppointmentReceptionist />} />
+
                     </PrivateRoute>}>
+                    <Route path="appointments" element={<AppointmentReceptionist />} />
                     {/*<Route index element={<ReceptionistDashboard />} />*/}
                     {/*<Route path="appointments" element={<ManageAppointments />} />*/}
                 </Route>
