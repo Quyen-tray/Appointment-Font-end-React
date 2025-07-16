@@ -20,8 +20,10 @@ import AdminLayout from "./pages/admin/AdminLayout";
 import ReceptionistLayout from "./pages/receptionist/ReceptionistLayout";
 import Unauthorized from "./pages/Unauthorized";
 import PublicLayout from "./pages/PublicLayout";
+import RoomList from "./pages/receptionist/RoomList";
+import PatientList from "./pages/receptionist/PatientList";
 
-
+import DoctorDetail from "./pages/DoctorDetail";
 function App() {
   return (
       <Router>
@@ -37,6 +39,7 @@ function App() {
                 <Route path="price" element={<Price />} />
                 <Route path="service" element={<Service />} />
                 <Route path="team" element={<Team />} />
+                <Route path="doctor/:id" element={<DoctorDetail />} />
                 <Route path="testimonial" element={<Testimonial />} />
                 <Route path="login" element={<Login />} />
                 <Route path="register" element={<Register />} />
@@ -59,6 +62,8 @@ function App() {
 
             {/* Receptionist layout + routes */}
             <Route path="/receptionist" element={<ReceptionistLayout />}>
+            <Route path="patients" element={<PatientList />} />
+            <Route path="rooms" element={<RoomList />} />
                 {/*<Route index element={<ReceptionistDashboard />} />*/}
                 {/*<Route path="appointments" element={<ManageAppointments />} />*/}
             </Route>

@@ -3,12 +3,11 @@ import {createContext, useContext, useState, useEffect, useCallback} from "react
 const AuthContext = createContext();
 
 export function AuthProvider ({ children })  {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
     const [token,setToken] = useState(localStorage.getItem('token'));
     const [user,setUser] = useState(null);
     const [load,setLoad] = useState(!!token);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
         const fetchUser = useCallback(async () => {
             if (token) {
                 try {
@@ -22,12 +21,21 @@ export function AuthProvider ({ children })  {
                     if (res.ok) {
                         const data = await res.json();
                         setUser(data);
+                        setIsLoggedIn(true);
                         console.log(data);
-                    }else{
+                    } else if (res.status === 401) {
+                        
+                        localStorage.removeItem("token");
+                        setToken(null);
+                        setIsLoggedIn(false);
+                        setUser(null);
+                        console.error("Token hết hạn, auto logout");
+                    } else {
                         console.error(res);
                     }
+
                 } catch (err) {
-                    console.error("❌ Lỗi khi lấy user:", err);
+                    console.error("Lỗi khi lấy user:", err);
                 } finally {
                     setLoad(false);
                 }
@@ -78,7 +86,7 @@ export function AuthProvider ({ children })  {
             const res = await fetch("http://localhost:8081/api/auth/logout", {
                 method: "POST",
                 headers: {
-                    Authorization: `Bearer ${token}`,
+Authorization: `Bearer ${token}`,
                 },
             });
 
@@ -87,13 +95,15 @@ export function AuthProvider ({ children })  {
             }else{
                 localStorage.removeItem("token");
                 setUser(null);
+                setToken(null);
                 setIsLoggedIn(false);
                 return { success: true };
+
             }
 
 
         } catch (error) {
-            console.error("❌ Logout error:", error);
+            console.error("Logout error:", error);
             return { success: false, message: error.message };
         }
     }
