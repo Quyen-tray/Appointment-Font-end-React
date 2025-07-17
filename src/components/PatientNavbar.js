@@ -34,6 +34,10 @@ export default function PatientNavbar() {
                     </li>
 
                     <li className="nav-item">
+                        <Link className="nav-link" to="/patient/invoice">Xem hóa đơn</Link>
+                    </li>
+
+                    <li className="nav-item">
                         <Link className="nav-link" to="/patient/profile">Hồ sơ</Link>
                     </li>
                 </ul>
