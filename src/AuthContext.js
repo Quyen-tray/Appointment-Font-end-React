@@ -36,6 +36,7 @@ export function AuthProvider({ children }) {
                     console.error("Token hết hạn, auto logout");
                 } else {
                     console.error(res);
+
                 }
 
 
@@ -47,7 +48,7 @@ export function AuthProvider({ children }) {
         } else {
             setLoad(false);
         }
-    },[token]);
+    }, [token]);
 
     useEffect(() => {
         if (token) {
@@ -99,7 +100,8 @@ export function AuthProvider({ children }) {
             } else {
                 localStorage.removeItem("token");
                 setUser(null);
-                setPatientId(null); 
+                setToken(null);
+                setPatientId(null);
                 setIsLoggedIn(false);
                 setIsAuthReady(false);
                 return { success: true };
@@ -119,7 +121,7 @@ export function AuthProvider({ children }) {
             isLoggedIn,
             token,
             user,
-            patientId, 
+            patientId,
             setToken,
             setUser,
             load,
