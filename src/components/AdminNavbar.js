@@ -11,7 +11,7 @@ export default function AdminNavbar() {
 
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-3">
-            <Link className="navbar-brand" to="/admin">Admin Panel</Link>
+            {/*<Link className="navbar-brand" to="/admin">Admin Panel</Link>*/}
 
             <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbar" aria-controls="adminNavbar" aria-expanded="false" aria-label="Toggle navigation">
                 <span className="navbar-toggler-icon"></span>
@@ -21,19 +21,19 @@ export default function AdminNavbar() {
                 <ul className="navbar-nav me-auto mb-2 mb-lg-0">
 
                     <li className="nav-item">
-                        <Link className="nav-link" to="/admin/accounts">Account Management</Link>
+                        <Link className="nav-link" to="/admin/usersAccount">Account Management</Link>
                     </li>
 
                     <li className="nav-item">
-                        <Link className="nav-link" to="/admin/patients">Patient Management</Link>
+                        <Link className="nav-link" to="/admin/usersPatient">Patient Management</Link>
                     </li>
 
                     <li className="nav-item">
-                        <Link className="nav-link" to="/admin/receptions">Reception Management</Link>
+                        <Link className="nav-link" to="/admin/usersReceptionist">Reception Management</Link>
                     </li>
 
                     <li className="nav-item">
-                        <Link className="nav-link" to="/admin/logs">Log Management</Link>
+                        <Link className="nav-link" to="/admin/usersActivityLog">Log Management</Link>
                     </li>
 
                     <li className="nav-item">

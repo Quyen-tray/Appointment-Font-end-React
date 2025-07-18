@@ -1,57 +1,63 @@
-import {createContext, useContext, useState, useEffect, useCallback} from "react";
+import { createContext, useContext, useState, useEffect, useCallback } from "react";
 
 const AuthContext = createContext();
 
-export function AuthProvider ({ children })  {
+export function AuthProvider({ children }) {
+    const [isAuthReady, setIsAuthReady] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
-    const [token,setToken] = useState(localStorage.getItem('token'));
-    const [user,setUser] = useState(null);
-    const [load,setLoad] = useState(!!token);
+    const [token, setToken] = useState(localStorage.getItem("token"));
+    const [user, setUser] = useState(null);
+    const [patientId, setPatientId] = useState(null); // Giữ lại từ main
+    const [load, setLoad] = useState(!!token);
 
-        const fetchUser = useCallback(async () => {
-            if (token) {
-                try {
-                    const res = await fetch("http://localhost:8081/api/user/me", {
-                        method: "GET",
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    });
+    const fetchUser = useCallback(async () => {
+        if (token) {
+            try {
+                const res = await fetch("http://localhost:8081/api/user/me", {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
 
-                    if (res.ok) {
-                        const data = await res.json();
-                        setUser(data);
-                        setIsLoggedIn(true);
-                        console.log(data);
-                    } else if (res.status === 401) {
-                        
-                        localStorage.removeItem("token");
-                        setToken(null);
-                        setIsLoggedIn(false);
-                        setUser(null);
-                        console.error("Token hết hạn, auto logout");
-                    } else {
-                        console.error(res);
-                    }
+                if (res.ok) {
+                    const data = await res.json();
+                    setUser(data);
+                    setIsLoggedIn(true);
+                    setIsAuthReady(true);
+                    setPatientId(data.id); // nếu có `id` từ backend
+                    console.log(data);
+                } else if (res.status === 401) {
+                    localStorage.removeItem("token");
+                    setToken(null);
+                    setIsLoggedIn(false);
+                    setUser(null);
+                    setPatientId(null); // reset luôn nếu có
+                    console.error("Token hết hạn, auto logout");
+                } else {
+                    console.error(res);
 
-                } catch (err) {
-                    console.error("Lỗi khi lấy user:", err);
-                } finally {
-                    setLoad(false);
                 }
-            } else {
+
+
+            } catch (err) {
+                console.error("Lỗi khi lấy user:", err);
+            } finally {
                 setLoad(false);
             }
-        },[token]);
+        } else {
+            setLoad(false);
+        }
+    }, [token]);
 
     useEffect(() => {
         if (token) {
             fetchUser();
-        }else{
+            setLoad(true);
+        } else {
             setLoad(false);
         }
     }, [fetchUser, token]);
-
 
     const login = async (username, password) => {
         try {
@@ -80,36 +86,48 @@ export function AuthProvider ({ children })  {
         }
     };
 
-
     const logout = async () => {
         try {
             const res = await fetch("http://localhost:8081/api/auth/logout", {
                 method: "POST",
                 headers: {
-Authorization: `Bearer ${token}`,
+                    Authorization: `Bearer ${token}`,
                 },
             });
 
             if (res.status !== 200) {
                 throw new Error("Logout failed on server");
-            }else{
+            } else {
                 localStorage.removeItem("token");
                 setUser(null);
                 setToken(null);
+                setPatientId(null);
                 setIsLoggedIn(false);
+                setIsAuthReady(false);
                 return { success: true };
 
             }
-
 
         } catch (error) {
             console.error("Logout error:", error);
             return { success: false, message: error.message };
         }
-    }
+    };
 
     return (
-        <AuthContext.Provider value={{login,logout,isLoggedIn,token,user,setToken,setUser,load,setLoad}}>
+        <AuthContext.Provider value={{
+            login,
+            logout,
+            isLoggedIn,
+            token,
+            user,
+            patientId,
+            setToken,
+            setUser,
+            load,
+            setLoad,
+            isAuthReady, setIsAuthReady
+        }}>
             {children}
         </AuthContext.Provider>
     );

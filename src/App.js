@@ -20,9 +20,21 @@ import AdminLayout from "./pages/admin/AdminLayout";
 import ReceptionistLayout from "./pages/receptionist/ReceptionistLayout";
 import Unauthorized from "./pages/Unauthorized";
 import PublicLayout from "./pages/PublicLayout";
+
+import ReceptionistDashboard from './pages/receptionist/ReceptionistDashboard';
 import RoomList from "./pages/receptionist/RoomList";
 import PatientList from "./pages/receptionist/PatientList";
+import PatientHistory from "./pages/receptionist/PatientHistory";
 
+import MedicalVisit from "./pages/patient/MedicalVisit";
+import PrivateRoute from "./components/PrivateRoute";
+import PatientFeedback from "./pages/patient/PatientFeedback";
+import SubmitFeedback from "./pages/patient/SubmitFeedback";
+import Invoice from "./pages/patient/Invoice";
+import UserAccountPage from "./pages/admin/UserAccountPage";
+import UserPatientPage from "./pages/admin/UserPatientPage";
+import UserReceptionistPage from "./pages/admin/UserReceptionistPage";
+import UserActivityLogPage from "./pages/admin/UserActivityLogPage";
 import DoctorDetail from "./pages/DoctorDetail";
 function App() {
   return (
@@ -49,22 +61,46 @@ function App() {
             <Route path="/unauthorized" element={<Unauthorized />} />
 
             {/* Patient layout + routes */}
-            <Route path="/patient" element={<PatientLayout />}>
+            <Route path="/patient" element={
+                <PrivateRoute allowedRoles={["ROLE_PATIENT"]}>
+                    <PatientLayout />
+                </PrivateRoute> } >
                 {/*<Route index element={<PatientDashboard />} />*/}
                 {/*<Route path="profile" element={<PatientProfile />} />*/}
+                <Route path="medicalvisit" element={<MedicalVisit />} />
+                <Route path="feedback" element={<PatientFeedback />} />
+                <Route path="feedback/submit" element={<SubmitFeedback />} />
+                <Route path="invoice" element={<Invoice />} />
+
             </Route>
 
             {/* Admin layout + routes */}
-            <Route path="/admin" element={<AdminLayout />}>
+            <Route path="/admin" element={
+                <PrivateRoute allowedRoles={["ROLE_ADMIN"]}>
+                    <AdminLayout />
+                </PrivateRoute>}>
+                <Route path="usersAccount" element={<UserAccountPage />} />
+                <Route path="usersPatient" element={<UserPatientPage />} />
+                <Route path="usersReceptionist" element={<UserReceptionistPage />} />
+                <Route path="usersActivityLog" element={<UserActivityLogPage />} />
                 {/*<Route index element={<AdminDashboard />} />*/}
                 {/*<Route path="users" element={<UserManagement />} />*/}
             </Route>
 
             {/* Receptionist layout + routes */}
-            <Route path="/receptionist" element={<ReceptionistLayout />}>
-            <Route path="patients" element={<PatientList />} />
-            <Route path="rooms" element={<RoomList />} />
-                {/*<Route index element={<ReceptionistDashboard />} />*/}
+
+          
+
+            <Route path="/receptionist" element={
+                <PrivateRoute allowedRoles={["ROLE_RECEPTIONIST"]}>
+                    <ReceptionistLayout />
+                </PrivateRoute>}>
+                {/*<Route index element={<ReceptionistDashboard />} />*/} 
+                    <Route index element={<ReceptionistDashboard />} />   
+                    <Route path="patients" element={<PatientList />} />
+                    <Route path="rooms" element={<RoomList />} />
+                    <Route path="/receptionist/patient-history/:id" element={<PatientHistory />} />
+                    
                 {/*<Route path="appointments" element={<ManageAppointments />} />*/}
             </Route>
 
