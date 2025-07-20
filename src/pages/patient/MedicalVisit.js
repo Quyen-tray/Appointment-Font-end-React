@@ -1,6 +1,3 @@
-// ✅ Đã nâng cấp kích thước + giao diện thẻ khám bệnh
-// 📁 File: MedicalVisit.js
-
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../../AuthContext";
@@ -71,7 +68,7 @@ function MedicalVisit() {
                                     <li>📅 <strong>Ngày khám:</strong> {new Date(visit.createdAt).toLocaleDateString()}</li>
                                     <li>📝 <strong>Chẩn đoán:</strong> {visit.diagnosis}</li>
                                     <li>🗒️ <strong>Ghi chú:</strong> {visit.note}</li>
-                                </ul>
+                                    </ul>
                             </div>
                         </div>
                     ))}
