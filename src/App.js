@@ -80,7 +80,7 @@ function App() {
                     <Route path="medicalvisit" element={<MedicalVisit />} />
                     <Route path="feedback" element={<PatientFeedback />} />
                     <Route path="feedback/submit" element={<SubmitFeedback />} />
-                </RoutRoutee>
+                </Route>
 
                 {/* Admin layout + routes */}
                 <Route path="/admin" element={
