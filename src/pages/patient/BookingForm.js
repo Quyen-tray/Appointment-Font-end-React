@@ -86,7 +86,7 @@ export default function BookingForm() {
 
       console.log("Kết quả đặt lịch:", res.data);
       const bookingId = res.data.appointmentId;
-      navigate("/booking-success", {
+      navigate("/patient/booking-success", {
         state: { bookingId }
       });
     } catch (error) {
