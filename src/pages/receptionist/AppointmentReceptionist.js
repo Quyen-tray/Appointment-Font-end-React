@@ -27,25 +27,64 @@ export default function AppointmentReceptionist() {
     const [sortScheduledTime, setSortScheduledTime] = useState();
     const [showApproveModal, setShowApproveModal] = useState(false);
 
+
+    function getNowForInput(offsetMinutes = 2) {
+        const now = new Date(Date.now() + offsetMinutes * 60000);
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const date = String(now.getDate()).padStart(2, '0');
+        const hour = String(now.getHours()).padStart(2, '0');
+        const minute = String(now.getMinutes()).padStart(2, '0');
+        return `${year}-${month}-${date}T${hour}:${minute}`;
+    }
+
+
+
+
     // Lấy danh sách appointment, bệnh nhân, bác sĩ, phòng từ API
     useEffect(() => {
-        fetch("http://localhost:8081/api/appointment")
+        fetch("http://localhost:8081/api/appointment", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+        })
             .then((res) => res.json())
             .then((data) => setAppointments(data))
             .catch(() => setAppointments([]));
-        fetch("http://localhost:8081/api/patient")
+        fetch("http://localhost:8081/api/patient", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+        })
             .then((res) => res.json())
             .then((data) => setPatients(data))
             .catch(() => setPatients([]));
-        fetch("http://localhost:8081/api/doctor/list-doctor")
+        fetch("http://localhost:8081/api/doctor/list-doctor", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+        })
             .then((res) => res.json())
             .then((data) => setDoctors(data))
             .catch(() => setDoctors([]));
-        fetch("http://localhost:8081/api/room")
+        fetch("http://localhost:8081/api/room", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+        })
             .then((res) => res.json())
             .then((data) => setRooms(data))
             .catch(() => setRooms([]));
-        fetch("http://localhost:8081/api/receptionist")
+        fetch("http://localhost:8081/api/receptionist", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+        })
             .then((res) => res.json())
             .then((data) => setReceptionists(data))
             .catch(() => setReceptionists([]));
@@ -94,9 +133,18 @@ export default function AppointmentReceptionist() {
         let scheduledTime = form.scheduledTime || detailForm.scheduledTime;
         if (scheduledTime && scheduledTime.length === 16) scheduledTime += ":00";
         if (scheduledTime) {
-            const date = new Date(scheduledTime);
-            if (!isNaN(date.getTime())) {
-                scheduledTime = date.toISOString(); // chuẩn UTC + 'Z'
+            const selectedDate = new Date(scheduledTime);
+            const now = new Date();
+
+            // Kiểm tra nếu thời gian đã chọn nhỏ hơn hiện tại thì thông báo lỗi
+            if (selectedDate < now) {
+                alert("Không được chọn thời gian trong quá khứ!");
+                return; // hoặc throw lỗi, hoặc return false nếu trong hàm
+            }
+
+            // Nếu hợp lệ, chuyển sang định dạng chuẩn UTC ISO (thêm 'Z')
+            if (!isNaN(selectedDate.getTime())) {
+                scheduledTime = selectedDate.toISOString();
             }
         }
         // luôn gửi UTC
@@ -118,7 +166,12 @@ export default function AppointmentReceptionist() {
         })
             .then(() => {
                 // Reload list
-                return fetch("http://localhost:8081/api/appointment").then((res) => res.json());
+                return fetch("http://localhost:8081/api/appointment", {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    },
+                }).then((res) => res.json());
             })
             .then((data) => setAppointments(data))
             .finally(closeModal);
@@ -132,7 +185,12 @@ export default function AppointmentReceptionist() {
                     Authorization: `Bearer ${token}`,
                 },
             })
-                .then(() => fetch("http://localhost:8081/api/appointment"))
+                .then(() => fetch("http://localhost:8081/api/appointment", {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    },
+                }))
                 .then((res) => res.json())
                 .then((data) => setAppointments(data));
         }
@@ -180,15 +238,8 @@ export default function AppointmentReceptionist() {
         setShowConfirm(true);
     };
     const confirmUpdateDetail = () => {
-        // Chuyển đổi scheduledTime sang ISO-8601 có 'Z'
-        let scheduledTime = detailForm.scheduledTime;
-        if (scheduledTime && !scheduledTime.endsWith('Z')) {
-            if (scheduledTime.length === 16) scheduledTime += ":00";
-            scheduledTime += "Z";
-        }
         const body = {
-            status: detailForm.status,
-            receptionistId: detailForm.approvedBy || null,
+            status: detailForm.status
         };
         fetch(`http://localhost:8081/api/appointment/status/${detailData.id}`, {
             method: "PUT",
@@ -198,7 +249,12 @@ export default function AppointmentReceptionist() {
             },
             body: JSON.stringify(body),
         })
-            .then(() => fetch("http://localhost:8081/api/appointment").then((res) => res.json()))
+            .then(() => fetch("http://localhost:8081/api/appointment", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+            }).then((res) => res.json()))
             .then((data) => setAppointments(data))
             .finally(() => {
                 setShowConfirm(false);
@@ -214,7 +270,12 @@ export default function AppointmentReceptionist() {
         let url = `http://localhost:8081/api/appointment?keyword=${encodeURIComponent(search)}`;
         if (filterStatus) url += `&status=${filterStatus}`;
         if (sortScheduledTime) url += `&isIncreaseScheduleDate=${sortScheduledTime}`;
-        fetch(url)
+        fetch(url, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+        })
             .then((res) => res.json())
             .then((data) => setAppointments(data))
             .catch(() => setAppointments([]));
@@ -378,6 +439,7 @@ export default function AppointmentReceptionist() {
                                             onChange={handleChange}
                                             required
                                             step="60" // chỉ cho chọn đến phút, không chọn giây
+                                            min={getNowForInput()}
                                         />
                                     </div>
 
