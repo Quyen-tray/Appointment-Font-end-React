@@ -80,8 +80,8 @@ function HeaderSub() {
                                     </>
                                 ) : (
                                     <>
-                                        <Link to="/login" className="btn btn-sm btn-light me-2">Login</Link>
-                                        <Link to="/register" className="btn btn-sm btn-outline-light">Register</Link>
+                                        <Link to="/login" className="btn btn-sm btn-light me-2">Đăng Nhập </Link>
+                                        <Link to="/register" className="btn btn-sm btn-outline-light">Đăng Ký</Link>
                                     </>
                                 )}
                             </div>

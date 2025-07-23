@@ -65,7 +65,7 @@ function Login() {
 
                 <form onSubmit={handleSubmit}>
                     <div className="mb-3">
-                        <label className="form-label">Username</label>
+                        <label className="form-label">Tên Tài Khoản</label>
                         <input
                             type="text"
                             name="username"
@@ -77,7 +77,7 @@ function Login() {
                         />
                     </div>
                     <div className="mb-3">
-                        <label className="form-label">Password</label>
+                        <label className="form-label">Mật Khẩu</label>
                         <input
                             type="password"
                             name="password"
@@ -89,12 +89,12 @@ function Login() {
                         />
                     </div>
                     <button type="submit" className="btn btn-primary w-100" disabled={loading}>
-                        {loading ? "Đang đăng nhập..." : "Login"}
+                        {loading ? "Đang đăng nhập..." : "Đăng Nhập"}
                     </button>
                 </form>
 
                 <div className="text-center mt-3">
-                    Don't have an account? <Link to="/register">Register</Link>
+                    Don't have an account? <Link to="/register">Đăng Ký</Link>
                 </div>
 
                 {message && <div className="mt-3 alert alert-info">{message}</div>}

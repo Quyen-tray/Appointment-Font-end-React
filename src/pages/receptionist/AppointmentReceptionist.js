@@ -7,7 +7,7 @@ export default function AppointmentReceptionist() {
     const [rooms, setRooms] = useState([]);
     const [receptionists, setReceptionists] = useState([]);
     const [showModal, setShowModal] = useState(false);
-    const [token,setToken] = useState(localStorage.getItem('token'));
+    const [token, setToken] = useState(localStorage.getItem('token'));
     const [editing, setEditing] = useState(null); // null: add, object: edit
     const [form, setForm] = useState({
         patient: "",
@@ -25,26 +25,66 @@ export default function AppointmentReceptionist() {
     const [search, setSearch] = useState("");
     const [filterStatus, setFilterStatus] = useState("");
     const [sortScheduledTime, setSortScheduledTime] = useState();
+    const [showApproveModal, setShowApproveModal] = useState(false);
+
+
+    function getNowForInput(offsetMinutes = 2) {
+        const now = new Date(Date.now() + offsetMinutes * 60000);
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const date = String(now.getDate()).padStart(2, '0');
+        const hour = String(now.getHours()).padStart(2, '0');
+        const minute = String(now.getMinutes()).padStart(2, '0');
+        return `${year}-${month}-${date}T${hour}:${minute}`;
+    }
+
+
+
 
     // Lấy danh sách appointment, bệnh nhân, bác sĩ, phòng từ API
     useEffect(() => {
-        fetch("http://localhost:8081/api/appointment")
+        fetch("http://localhost:8081/api/appointment", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+        })
             .then((res) => res.json())
             .then((data) => setAppointments(data))
             .catch(() => setAppointments([]));
-        fetch("http://localhost:8081/api/patient")
+        fetch("http://localhost:8081/api/patient", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+        })
             .then((res) => res.json())
             .then((data) => setPatients(data))
             .catch(() => setPatients([]));
-        fetch("http://localhost:8081/api/doctor/list-doctor")
+        fetch("http://localhost:8081/api/doctor/list-doctor", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+        })
             .then((res) => res.json())
             .then((data) => setDoctors(data))
             .catch(() => setDoctors([]));
-        fetch("http://localhost:8081/api/room")
+        fetch("http://localhost:8081/api/room", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+        })
             .then((res) => res.json())
             .then((data) => setRooms(data))
             .catch(() => setRooms([]));
-        fetch("http://localhost:8081/api/receptionist")
+        fetch("http://localhost:8081/api/receptionist", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+        })
             .then((res) => res.json())
             .then((data) => setReceptionists(data))
             .catch(() => setReceptionists([]));
@@ -90,12 +130,24 @@ export default function AppointmentReceptionist() {
             ? `http://localhost:8081/api/appointment/update/${editing.id}`
             : "http://localhost:8081/api/appointment/create";
         // Chuyển đổi scheduledTime sang ISO-8601 có 'Z'
-        let scheduledTime = form.scheduledTime;
-        if (scheduledTime && !scheduledTime.endsWith('Z')) {
-            // Nếu thiếu giây, thêm :00
-            if (scheduledTime.length === 16) scheduledTime += ":00";
-            scheduledTime += "Z";
+        let scheduledTime = form.scheduledTime || detailForm.scheduledTime;
+        if (scheduledTime && scheduledTime.length === 16) scheduledTime += ":00";
+        if (scheduledTime) {
+            const selectedDate = new Date(scheduledTime);
+            const now = new Date();
+
+            // Kiểm tra nếu thời gian đã chọn nhỏ hơn hiện tại thì thông báo lỗi
+            if (selectedDate < now) {
+                alert("Không được chọn thời gian trong quá khứ!");
+                return; // hoặc throw lỗi, hoặc return false nếu trong hàm
+            }
+
+            // Nếu hợp lệ, chuyển sang định dạng chuẩn UTC ISO (thêm 'Z')
+            if (!isNaN(selectedDate.getTime())) {
+                scheduledTime = selectedDate.toISOString();
+            }
         }
+        // luôn gửi UTC
         const body = {
             ...editing,
             patientId: patients.find((p) => p.id === form.patient).id,
@@ -114,7 +166,12 @@ export default function AppointmentReceptionist() {
         })
             .then(() => {
                 // Reload list
-                return fetch("http://localhost:8081/api/appointment").then((res) => res.json());
+                return fetch("http://localhost:8081/api/appointment", {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    },
+                }).then((res) => res.json());
             })
             .then((data) => setAppointments(data))
             .finally(closeModal);
@@ -128,12 +185,18 @@ export default function AppointmentReceptionist() {
                     Authorization: `Bearer ${token}`,
                 },
             })
-                .then(() => fetch("http://localhost:8081/api/appointment"))
+                .then(() => fetch("http://localhost:8081/api/appointment", {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    },
+                }))
                 .then((res) => res.json())
                 .then((data) => setAppointments(data));
         }
     };
 
+    // Xem chi tiết (không cho đổi trạng thái)
     const openDetail = (item) => {
         setDetailData(item);
         setDetailForm({
@@ -146,10 +209,27 @@ export default function AppointmentReceptionist() {
         });
         setShowDetail(true);
     };
-    const closeDetail = () => {
-        setShowDetail(false);
-        setDetailData(null);
+
+    // Mở modal duyệt (cho phép đổi trạng thái)
+    const openApproveModal = (item) => {
+        setDetailData(item);
+        setDetailForm({
+            patient: item.patient?.id || "",
+            doctor: item.doctor?.id || "",
+            room: item.room?.id || "",
+            scheduledTime: item.scheduledTime || "",
+            status: item.status || "",
+            receptionistId: item.approvedBy?.id || "",
+        });
+        setShowApproveModal(true);
     };
+
+    const closeApproveModal = () => {
+        setShowApproveModal(false);
+        setDetailData(null)
+        setShowConfirm(false);
+    };
+
     const handleDetailChange = (e) => {
         setDetailForm({ ...detailForm, [e.target.name]: e.target.value });
     };
@@ -158,15 +238,8 @@ export default function AppointmentReceptionist() {
         setShowConfirm(true);
     };
     const confirmUpdateDetail = () => {
-        // Chuyển đổi scheduledTime sang ISO-8601 có 'Z'
-        let scheduledTime = detailForm.scheduledTime;
-        if (scheduledTime && !scheduledTime.endsWith('Z')) {
-            if (scheduledTime.length === 16) scheduledTime += ":00";
-            scheduledTime += "Z";
-        }
         const body = {
-            status: detailForm.status,
-            receptionistId: detailForm.approvedBy || null,
+            status: detailForm.status
         };
         fetch(`http://localhost:8081/api/appointment/status/${detailData.id}`, {
             method: "PUT",
@@ -176,12 +249,19 @@ export default function AppointmentReceptionist() {
             },
             body: JSON.stringify(body),
         })
-            .then(() => fetch("http://localhost:8081/api/appointment").then((res) => res.json()))
+            .then(() => fetch("http://localhost:8081/api/appointment", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+            }).then((res) => res.json()))
             .then((data) => setAppointments(data))
             .finally(() => {
                 setShowConfirm(false);
                 closeDetail();
+                setShowApproveModal(false);
             });
+
     };
 
     const handleSearch = (e) => {
@@ -190,7 +270,12 @@ export default function AppointmentReceptionist() {
         let url = `http://localhost:8081/api/appointment?keyword=${encodeURIComponent(search)}`;
         if (filterStatus) url += `&status=${filterStatus}`;
         if (sortScheduledTime) url += `&isIncreaseScheduleDate=${sortScheduledTime}`;
-        fetch(url)
+        fetch(url, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+        })
             .then((res) => res.json())
             .then((data) => setAppointments(data))
             .catch(() => setAppointments([]));
@@ -198,13 +283,25 @@ export default function AppointmentReceptionist() {
 
     function formatDate(dateString) {
         if (!dateString) return "null";
-        const d = new Date(dateString);
+
+        let d = new Date(
+            /(\+|\-)\d{2}:\d{2}|Z$/.test(dateString)
+                ? dateString
+                : dateString.replace(' ', 'T')
+        );
+
         if (isNaN(d.getTime())) return dateString;
+
+        // Hiển thị theo múi giờ máy người dùng (local time)
         const day = String(d.getDate()).padStart(2, '0');
         const month = String(d.getMonth() + 1).padStart(2, '0');
         const year = d.getFullYear();
-        return `${day}/${month}/${year}`;
+        const hour = String(d.getHours()).padStart(2, '0');
+        const minute = String(d.getMinutes()).padStart(2, '0');
+
+        return `${day}/${month}/${year} ${hour}:${minute}`;
     }
+
 
     const paginatedAppointments = appointments.slice((currentPage - 1) * pageSize, currentPage * pageSize);
     const totalPages = Math.ceil(appointments.length / pageSize);
@@ -212,6 +309,10 @@ export default function AppointmentReceptionist() {
     const handlePageChange = (page) => {
         if (page >= 1 && page <= totalPages) setCurrentPage(page);
     };
+
+    const closeDetail = () => {
+        setShowDetail(false);
+    }
 
     return (
         <div className="container mt-4">
@@ -277,10 +378,11 @@ export default function AppointmentReceptionist() {
                             <td>{a.createdBy?.username}</td>
                             <td>{a.createdRole}</td>
                             <td>{a.approvedBy?.fullName ?? 'null'}</td>
-                            <td>{a.approvalStatus ??'null'}</td>
+                            <td>{a.approvalStatus ?? 'null'}</td>
                             <td>{formatDate(a.approvedAt) ?? 'null'}</td>
                             <td>
                                 <button className="btn btn-sm btn-info me-2" onClick={() => openDetail(a)}>Xem chi tiết</button>
+                                <button className="btn btn-sm btn-success me-2" onClick={() => openApproveModal(a)}>Duyệt</button>
                                 <button className="btn btn-sm btn-warning me-2" onClick={() => openModal(a)}>Sửa</button>
                                 <button className="btn btn-sm btn-danger" onClick={() => handleDelete(a.id)}>Xóa</button>
                             </td>
@@ -336,9 +438,10 @@ export default function AppointmentReceptionist() {
                                             value={form.scheduledTime}
                                             onChange={handleChange}
                                             required
-                                            step="1"
+                                            step="60" // chỉ cho chọn đến phút, không chọn giây
+                                            min={getNowForInput()}
                                         />
-                                     </div>
+                                    </div>
 
 
 
@@ -354,7 +457,7 @@ export default function AppointmentReceptionist() {
                 </div>
             )}
 
-            {/* Modal xem chi tiết */}
+            {/* Modal xem chi tiết (không cho đổi trạng thái) */}
             {showDetail && (
                 <div className="modal show" style={{ display: "block", background: "rgba(0,0,0,0.3)" }}>
                     <div className="modal-dialog">
@@ -363,62 +466,82 @@ export default function AppointmentReceptionist() {
                                 <h5 className="modal-title">Chi tiết lịch hẹn</h5>
                                 <button type="button" className="btn-close" onClick={closeDetail}></button>
                             </div>
+                            <div className="modal-body">
+                                <div className="mb-2">
+                                    <label>Bệnh nhân</label>
+                                    <select className="form-control" value={detailForm.patient} disabled>
+                                        <option value="">-- Chọn bệnh nhân --</option>
+                                        {patients.map((p) => (
+                                            <option key={p.id} value={p.id}>{p.fullName}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="mb-2">
+                                    <label>Bác sĩ</label>
+                                    <select className="form-control" value={detailForm.doctor} disabled>
+                                        <option value="">-- Chọn bác sĩ --</option>
+                                        {doctors.map((d) => (
+                                            <option key={d.id} value={d.id}>{d.fullName}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="mb-2">
+                                    <label>Phòng</label>
+                                    <select className="form-control" value={detailForm.room} disabled>
+                                        <option value="">-- Chọn phòng --</option>
+                                        {rooms.map((r) => (
+                                            <option key={r.id} value={r.id}>{r.roomName}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="mb-2">
+                                    <label>Thời gian</label>
+                                    <input
+                                        type="datetime-local"
+                                        className="form-control"
+                                        value={form.scheduledTime}
+                                        disabled
+                                        step="60"
+                                    />
+                                </div>
+                                <div className="mb-2">
+                                    <label>Trạng thái</label>
+                                    <input className="form-control" value={detailForm.status} disabled />
+                                </div>
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-secondary" onClick={closeDetail}>Đóng</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Modal duyệt (cho phép đổi trạng thái) */}
+            {showApproveModal && (
+                <div className="modal show" style={{ display: "block", background: "rgba(0,0,0,0.3)" }}>
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">Duyệt lịch hẹn</h5>
+                                <button type="button" className="btn-close" onClick={closeApproveModal}></button>
+                            </div>
                             <form onSubmit={handleUpdateDetail}>
                                 <div className="modal-body">
-                                    <div className="mb-2">
-                                        <label>Bệnh nhân</label>
-                                        <select name="patient" className="form-control" value={detailForm.patient} onChange={handleDetailChange} required disabled>
-                                            <option value="">-- Chọn bệnh nhân --</option>
-                                            {patients.map((p) => (
-                                                <option key={p.id} value={p.id}>{p.fullName}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                    <div className="mb-2">
-                                        <label>Bác sĩ</label>
-                                        <select name="doctor" className="form-control" value={detailForm.doctor} onChange={handleDetailChange} required disabled>
-                                            <option value="">-- Chọn bác sĩ --</option>
-                                            {doctors.map((d) => (
-                                                <option key={d.id} value={d.id}>{d.fullName}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                    <div className="mb-2">
-                                        <label>Phòng</label>
-                                        <select name="room" className="form-control" value={detailForm.room} onChange={handleDetailChange} required disabled>
-                                            <option value="">-- Chọn phòng --</option>
-                                            {rooms.map((r) => (
-                                                <option key={r.id} value={r.id}>{r.roomName}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                    <div className="mb-2">
-                                        <label>Thời gian</label>
-                                        <input
-                                            name="scheduledTime"
-                                            type="datetime-local"
-                                            className="form-control"
-                                            value={detailForm.scheduledTime}
-                                            onChange={handleDetailChange}
-                                            required
-                                            step="1"
-                                            disabled
-                                        />
-                                    </div>
                                     <div className="mb-2">
                                         <label>Trạng thái</label>
                                         <select name="status" className="form-control" value={detailForm.status} onChange={handleDetailChange} required>
                                             <option value="">-- Chọn trạng thái --</option>
-                                            <option value="PENDING">PENDING</option>
-                                            <option value="APPROVED">APPROVED</option>
-                                            <option value="CANCELLED">CANCELLED</option>
-                                            <option value="DONE">DONE</option>
+                                            <option value="PENDING">Pending</option>
+                                            <option value="APPROVED">Approved</option>
+                                            <option value="CANCELLED">Cancelled</option>
+                                            <option value="DONE">Done</option>
                                         </select>
                                     </div>
-                                   
+
                                 </div>
                                 <div className="modal-footer">
-                                    <button type="button" className="btn btn-secondary" onClick={closeDetail}>Đóng</button>
+                                    <button type="button" className="btn btn-secondary" onClick={closeApproveModal}>Đóng</button>
                                     <button type="submit" className="btn btn-primary">Cập nhật</button>
                                 </div>
                             </form>
@@ -429,6 +552,7 @@ export default function AppointmentReceptionist() {
             {showConfirm && (
                 <div className="modal show" style={{ display: "block", background: "rgba(0,0,0,0.3)" }}>
                     <div className="modal-dialog">
+                        {showConfirm}
                         <div className="modal-content">
                             <div className="modal-header">
                                 <h5 className="modal-title">Xác nhận cập nhật</h5>
