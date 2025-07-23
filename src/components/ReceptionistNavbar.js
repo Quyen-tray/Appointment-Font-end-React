@@ -11,7 +11,7 @@ export default function ReceptionistNavbar() {
 
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-success px-3">
-            <Link className="navbar-brand" to="/receptionist">Receptionist Panel</Link>
+            <Link className="navbar-brand" to="/receptionist">Lễ Tân</Link>
 
             <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#receptionistNavbar" aria-controls="receptionistNavbar" aria-expanded="false" aria-label="Toggle navigation">
                 <span className="navbar-toggler-icon"></span>
@@ -21,19 +21,19 @@ export default function ReceptionistNavbar() {
                 <ul className="navbar-nav me-auto mb-2 mb-lg-0">
 
                     <li className="nav-item">
-                        <Link className="nav-link" to="/receptionist/appointments">List Appointment</Link>
+                        <Link className="nav-link" to="/receptionist/appointments">Danh Sách Lịch Hẹn</Link>
                     </li>
 
                     <li className="nav-item">
-                        <Link className="nav-link" to="/receptionist/patients">List Patient</Link>
+                        <Link className="nav-link" to="/receptionist/patients">Danh Sách Bệnh Nhân</Link>
                     </li>
 
                     <li className="nav-item">
-                        <Link className="nav-link" to="/receptionist/rooms">Room</Link>
+                        <Link className="nav-link" to="/receptionist/rooms">Danh Sách Phòng</Link>
                     </li>
 
                     <li className="nav-item">
-                        <Link className="nav-link" to="/receptionist/doctors">List Doctor</Link>
+                        <Link className="nav-link" to="/receptionist/doctors">Danh Sách Bác Sĩ</Link>
                     </li>
 
                 </ul>
