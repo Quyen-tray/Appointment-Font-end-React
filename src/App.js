@@ -41,6 +41,7 @@ import UserAccountPage from "./pages/admin/UserAccountPage";
 import UserPatientPage from "./pages/admin/UserPatientPage";
 import UserReceptionistPage from "./pages/admin/UserReceptionistPage";
 import UserActivityLogPage from "./pages/admin/UserActivityLogPage";
+import ChangePassword from "./pages/patient/ChangePassword";
 
 import DoctorDetail from "./pages/DoctorDetail";
 function App() {
@@ -82,7 +83,9 @@ function App() {
                     <Route path="medicalvisit" element={<MedicalVisit />} />
                     <Route path="feedback" element={<PatientFeedback />} />
                     <Route path="feedback/submit" element={<SubmitFeedback />} />
+                    <Route path="change-password" element={<ChangePassword />} />
                 </Route>
+                
 
                 {/* Admin layout + routes */}
                 <Route path="/admin" element={

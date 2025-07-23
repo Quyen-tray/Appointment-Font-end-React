@@ -78,31 +78,27 @@ export default function PatientAppointments() {
   };
   const handleSaveReschedule = async (newTime) => {
     try {
-      // Convert date to UTC by subtracting 7 hours
-      const utcDate = new Date(newTime);
-      utcDate.setHours(utcDate.getHours());
+      const dateVN = new Date(newTime);
 
-      // Format to yyyy-MM-ddTHH:mm:ss
       const pad = (n) => String(n).padStart(2, "0");
       const localTimeStr =
-        utcDate.getFullYear() +
+        dateVN.getFullYear() +
         "-" +
-        pad(utcDate.getMonth() + 1) +
+        pad(dateVN.getMonth() + 1) +
         "-" +
-        pad(utcDate.getDate()) +
+        pad(dateVN.getDate()) +
         "T" +
-        pad(utcDate.getHours()) +
+        pad(dateVN.getHours()) +
         ":" +
-        pad(utcDate.getMinutes()) +
+        pad(dateVN.getMinutes()) +
         ":" +
-        pad(utcDate.getSeconds());
-
-      console.log("Gửi lên (UTC):", localTimeStr);
+        pad(dateVN.getSeconds());
 
       await axios.put(
         `http://localhost:8081/api/patient/updateTime-appointment/${rescheduleId}`,
         {
-          newScheduledTime: localTimeStr,
+
+          scheduledTime: localTimeStr
         },
         {
           headers: {

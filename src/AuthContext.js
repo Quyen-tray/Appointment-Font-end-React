@@ -82,7 +82,7 @@ export function AuthProvider({ children }) {
             }
         } catch (error) {
             console.log(error);
-            return { success: false, message: "Server error: " + error.message };
+            return { success: false, message: error.message };
         }
     };
 
