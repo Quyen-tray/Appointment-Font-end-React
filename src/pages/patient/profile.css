@@ -24,88 +24,16 @@
 .profile-avatar {
   flex: 0 0 180px;
   text-align: center;
-}
-
-.profile-avatar img {
-  width: 180px;
-  height: 180px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid #1e88e5;
-}
-
-.avatar-placeholder {
-  width: 180px;
-  height: 180px;
-  border-radius: 50%;
-  background: #e2e8f0;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  color: #555;
-}
-
-.profile-form {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.form-group label {
-  font-weight: 600;
-  margin-bottom: 6px;
-}
-
-.form-group input {
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 15px;
-}
-
-button {
-  padding: 12px;
-  background-color: #1e88e5;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-button:hover:not(:disabled) {
-  background-color: #1565c0;
-}
-
-button:disabled {
-  background-color: #90caf9;
-  cursor: not-allowed;
-}
-
-.success {
-  color: green;
-  margin-top: 10px;
-  font-weight: 500;
 }
 
 .avatar-wrapper {
   position: relative;
   width: 180px;
   height: 180px;
-}
-
-.avatar-wrapper {
-  position: relative;
-  width: 180px;
-  height: 180px;
+  margin-bottom: 10px;
 }
 
 .avatar-wrapper img,
@@ -115,6 +43,12 @@ button:disabled {
   border-radius: 50%;
   object-fit: cover;
   border: 3px solid #1e88e5;
+  background-color: #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #555;
 }
 
 .avatar-overlay {
@@ -142,6 +76,42 @@ button:disabled {
   cursor: pointer;
 }
 
+.change-password-btn {
+  margin-top: 12px;
+  padding: 8px 16px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+.change-password-btn:hover {
+  background-color: #125ea6;
+}
+
+.profile-form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.form-group input,
 .input-style {
   width: 100%;
   padding: 10px 14px;
@@ -150,10 +120,10 @@ button:disabled {
   font-size: 15px;
   font-family: inherit;
   transition: all 0.2s ease;
-  margin: 10px;
 }
 
-.input-style:focus {
+.input-style:focus,
+.form-group input:focus {
   border-color: #1e88e5;
   box-shadow: 0 0 0 2px rgba(30, 136, 229, 0.2);
   outline: none;
@@ -174,4 +144,39 @@ button:disabled {
   border-color: #1e88e5;
   box-shadow: 0 0 0 2px rgba(30, 136, 229, 0.2);
   outline: none;
+}
+
+button {
+  padding: 12px;
+  background-color: #1e88e5;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover:not(:disabled) {
+  background-color: #1565c0;
+}
+
+button:disabled {
+  background-color: #90caf9;
+  cursor: not-allowed;
+}
+
+.success {
+  color: green;
+  margin-top: 10px;
+  font-weight: 500;
+}
+input.invalid {
+  border: 1px solid red;
+}
+
+.error-message {
+  color: red;
+  font-size: 13px;
+  margin-top: 4px;
 }
