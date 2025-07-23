@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export default function AdminNavbar() {
     // const navigate = useNavigate();
@@ -21,24 +21,24 @@ export default function AdminNavbar() {
                 <ul className="navbar-nav me-auto mb-2 mb-lg-0">
 
                     <li className="nav-item">
-                        <Link className="nav-link" to="/admin/usersAccount">Account Management</Link>
+                        <Link className="nav-link" to="/admin/usersAccount">Quản Lý Tài Khoản</Link>
                     </li>
 
                     <li className="nav-item">
-                        <Link className="nav-link" to="/admin/usersPatient">Patient Management</Link>
+                        <Link className="nav-link" to="/admin/usersPatient">Quản Lý Bệnh Nhân</Link>
                     </li>
 
                     <li className="nav-item">
-                        <Link className="nav-link" to="/admin/usersReceptionist">Reception Management</Link>
+                        <Link className="nav-link" to="/admin/usersReceptionist">Quản Lý Lễ Tân</Link>
                     </li>
 
                     <li className="nav-item">
-                        <Link className="nav-link" to="/admin/usersActivityLog">Log Management</Link>
+                        <Link className="nav-link" to="/admin/usersActivityLog"> Lịch Sử Truy Cập</Link>
                     </li>
 
-                    <li className="nav-item">
-                        <Link className="nav-link" to="/admin/feedbacks">Feedback Management</Link>
-                    </li>
+                    {/*<li className="nav-item">*/}
+                    {/*    <Link className="nav-link" to="/admin/feedbacks">Feedback Management</Link>*/}
+                    {/*</li>*/}
                 </ul>
 
                 {/*<button className="btn btn-outline-light btn-sm" onClick={handleLogout}>Logout</button>*/}

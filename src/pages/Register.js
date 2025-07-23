@@ -26,22 +26,22 @@ function Register() {
         const { username, email, password, confirmPassword } = formData;
 
         if (!username || !email || !password || !confirmPassword) {
-            setError("⚠️ Please fill in all fields.");
+            setError("⚠️ Vui lòng điền vào tất cả các trường.");
             return;
         }
 
         if (password.length < 6) {
-            setError("⚠️ Password must be at least 6 characters.");
+            setError("⚠️ Mật khẩu phải có ít nhất 6 ký tự.");
             return;
         }
 
         if (password !== confirmPassword) {
-            setError("❌ Passwords do not match.");
+            setError("❌ Mật khẩu không khớp.");
             return;
         }
 
         const requestBody = { username, email, password };
-        setLoading(true); // ✅ Start loading
+        setLoading(true); //  Start loading
         try {
             const res = await fetch("http://localhost:8081/api/auth/register", {
                 method: "POST",
@@ -51,19 +51,19 @@ function Register() {
                 body: JSON.stringify(requestBody)
             });
 
-            setLoading(false); // ✅ Start loading
+            setLoading(false); //  Start loading
 
             if (!res.ok) {
                 const errorData = await res.json();
-                setError(errorData.message || "❌ Registration failed.");
+                setError(errorData.message || "❌ Đăng ký thất bại.");
                 return;
             }
 
-            setSuccess("✅ Registration successful! Redirecting to login...");
+            setSuccess(" Đăng Ký Thành Công ! Redirecting to login...");
             setTimeout(() => navigate("/login"), 1000);
         } catch (err) {
             console.error("❌ Register error:", err);
-            setError("❌ Something went wrong. Please try again later.");
+            setError("❌ Tài Khoản or email  đã được dung.");
         }
     };
 
@@ -86,7 +86,7 @@ function Register() {
                 )}
                 <form onSubmit={handleSubmit}>
                     <div className="mb-3">
-                        <label className="form-label">Username</label>
+                        <label className="form-label">Tên Tài Khoản</label>
                         <input type="text" name="username" className="form-control" value={formData.username} onChange={handleChange} required />
                     </div>
                     <div className="mb-3">
@@ -94,18 +94,18 @@ function Register() {
                         <input type="email" name="email" className="form-control" value={formData.email} onChange={handleChange} required />
                     </div>
                     <div className="mb-3">
-                        <label className="form-label">Password</label>
+                        <label className="form-label">Mật Khẩu</label>
                         <input type="password" name="password" className="form-control" value={formData.password} onChange={handleChange} required />
                     </div>
                     <div className="mb-3">
-                        <label className="form-label">Confirm Password</label>
+                        <label className="form-label">Nhập Lại Mật Khẩu</label>
                         <input type="password" name="confirmPassword" className="form-control" value={formData.confirmPassword} onChange={handleChange} required />
                     </div>
-                    <button type="submit" className="btn btn-success w-100">Register</button>
+                    <button type="submit" className="btn btn-success w-100">Đăng Ký</button>
                 </form>
 
                 <div className="text-center mt-3">
-                    Already have an account? <Link to="/login">Login</Link>
+                    Đã có tài khoản? <Link to="/login">Đăng Nhập</Link>
                 </div>
 
                 {error && <div className="alert alert-danger mt-3">{error}</div>}
