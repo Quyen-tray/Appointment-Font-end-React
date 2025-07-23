@@ -11,8 +11,13 @@ function PatientList() {
   const [totalPages, setTotalPages] = useState(0);
 
   const fetchPatients = () => {
+    const token = localStorage.getItem("token");
     axios
-      .get(`http://localhost:8081/api/patients/paged?page=${page}&size=5`)
+      .get(`http://localhost:8081/api/patients/paged?page=${page}&size=3`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         setPatients(response.data.content);
         setTotalPages(response.data.totalPages);
@@ -30,8 +35,14 @@ function PatientList() {
       return;
     }
 
+    const token = localStorage.getItem("token");
+
     axios
-      .get(`http://localhost:8081/api/patients/${searchId}`)
+      .get(`http://localhost:8081/api/patients/${searchId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         setPatients([response.data]);
         setTotalPages(1);
@@ -51,8 +62,14 @@ function PatientList() {
       return;
     }
 
+    const token = localStorage.getItem("token");
+
     axios
-      .get(`http://localhost:8081/api/patients/filter?gender=${gender}`)
+      .get(`http://localhost:8081/api/patients/filter?gender=${gender}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         setPatients(response.data);
         setTotalPages(1);
@@ -72,8 +89,14 @@ function PatientList() {
       return;
     }
 
+    const token = localStorage.getItem("token");
+
     axios
-      .get(`http://localhost:8081/api/patients/status?status=${status}`)
+      .get(`http://localhost:8081/api/patients/status?status=${status}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         setPatients(response.data);
         setTotalPages(1);
@@ -105,6 +128,14 @@ function PatientList() {
     const status = event.target.value;
     setStatusFilter(status);
     fetchPatientsByStatus(status);
+  };
+
+  const handleReset = () => {
+    setSearchId("");
+    setGenderFilter("");
+    setStatusFilter("");
+    setPage(0);
+    fetchPatients();
   };
 
   const handleViewHistory = (id) => {
@@ -143,6 +174,12 @@ function PatientList() {
             className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
           >
             Tìm kiếm
+          </button>
+          <button
+            onClick={handleReset}
+            className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
+          >
+            Đặt lại
           </button>
         </div>
         <div className="flex gap-4">

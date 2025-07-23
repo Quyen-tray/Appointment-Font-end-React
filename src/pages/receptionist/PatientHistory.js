@@ -9,16 +9,23 @@ function PatientHistory() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    if (!patientDetail) {
-      setLoading(true);
-      axios
-        .get(`http://localhost:8081/api/patients/${id}/history`)
-        .then((res) => setPatientDetail(res.data))
-        .catch(() => setError("Không thể tải dữ liệu lịch sử khám bệnh"))
-        .finally(() => setLoading(false));
-    }
-  }, [id, patientDetail]);
+useEffect(() => {
+  if (!patientDetail) {
+    setLoading(true);
+    const token = localStorage.getItem("token"); 
+
+    axios
+      .get(`http://localhost:8081/api/patients/${id}/history`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => setPatientDetail(res.data))
+      .catch(() => setError("Không thể tải dữ liệu lịch sử khám bệnh"))
+      .finally(() => setLoading(false));
+  }
+}, [id, patientDetail]);
+
 
   if (loading) {
     return <div className="text-center">Đang tải dữ liệu...</div>;
