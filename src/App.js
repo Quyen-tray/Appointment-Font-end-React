@@ -41,6 +41,7 @@ import UserReceptionistPage from "./pages/admin/UserReceptionistPage";
 import UserActivityLogPage from "./pages/admin/UserActivityLogPage";
 
 import DoctorDetail from "./pages/DoctorDetail";
+import ReceptionistProfile from "./pages/receptionist/ReceptionistProfile";
 function App() {
   return (
       <Router>
@@ -106,6 +107,7 @@ function App() {
                     <Route path="rooms" element={<RoomList />} />
                     <Route path="/receptionist/patient-history/:id" element={<PatientHistory />} />
                     <Route path="appointments" element={<AppointmentReceptionist />} />
+                    <Route path="profile" element={<ReceptionistProfile />} />
                     
                 {/*<Route path="appointments" element={<ManageAppointments />} />*/}
             </Route>
