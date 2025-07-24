@@ -39,7 +39,9 @@ export default function ReceptionistNavbar() {
                     <li className="nav-item">
                         <Link className="nav-link" to="/receptionist/profile">Profile</Link>
                     </li>
-
+                    <li className="nav-item">
+                        <Link className="nav-link" to="/receptionist/change-password">Change Password</Link>
+                    </li>
                 </ul>
 
                 {/*<button className="btn btn-outline-light btn-sm" onClick={handleLogout}>*/}
