@@ -36,7 +36,7 @@ function Register() {
         }
 
         if (password !== confirmPassword) {
-            setError("❌ Mật khẩu không khớp.");
+            setError(" Mật khẩu không khớp.");
             return;
         }
 
@@ -55,15 +55,15 @@ function Register() {
 
             if (!res.ok) {
                 const errorData = await res.json();
-                setError(errorData.message || "❌ Đăng ký thất bại.");
+                setError(errorData.message || " Đăng ký thất bại.");
                 return;
             }
 
             setSuccess(" Đăng Ký Thành Công ! Redirecting to login...");
             setTimeout(() => navigate("/login"), 1000);
         } catch (err) {
-            console.error("❌ Register error:", err);
-            setError("❌ Tài Khoản or email  đã được dung.");
+            console.error(" Register error:", err);
+            setError("Đã có lỗi trong bên máy chủ");
         }
     };
 
