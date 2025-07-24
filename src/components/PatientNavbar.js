@@ -22,7 +22,7 @@ export default function PatientNavbar() {
                     </li>
 
                     <li className="nav-item">
-                        <Link className="nav-link" to="/patient/medicalvisit">Medical Visit</Link>
+                        <Link className="nav-link" to="/patient/medicalvisit">lịch sử khám bệnh</Link>
                     </li>
 
                     <li className="nav-item">
