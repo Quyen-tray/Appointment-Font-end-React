@@ -27,7 +27,7 @@ export default function AppointmentReceptionist() {
     const [sortScheduledTime, setSortScheduledTime] = useState();
     const [showApproveModal, setShowApproveModal] = useState(false);
 
-
+// ho tro dinh dang thoi gian
     function getNowForInput(offsetMinutes = 2) {
         const now = new Date(Date.now() + offsetMinutes * 60000);
         const year = now.getFullYear();
@@ -164,7 +164,13 @@ export default function AppointmentReceptionist() {
             },
             body: JSON.stringify(body),
         })
-            .then(() => {
+            .then((res) => {
+
+                if (!res.ok) {
+                    return res.text().then((text) => {
+                        throw new Error(text);
+                    });
+                }
                 // Reload list
                 return fetch("http://localhost:8081/api/appointment", {
                     headers: {
@@ -174,6 +180,9 @@ export default function AppointmentReceptionist() {
                 }).then((res) => res.json());
             })
             .then((data) => setAppointments(data))
+            .catch((error) => {
+                alert(error.message);
+            })
             .finally(closeModal);
     };
 
@@ -404,7 +413,7 @@ export default function AppointmentReceptionist() {
                                 <div className="modal-body">
                                     <div className="mb-2">
                                         <label>Bệnh nhân</label>
-                                        <select name="patient" className="form-control" value={form.patient} onChange={handleChange} required>
+                                        <select name="patient" className="form-control" value={form.patient} onChange={handleChange} required  disabled={!!editing}>
                                             <option value="">-- Chọn bệnh nhân --</option>
                                             {patients.map((p) => (
                                                 <option key={p.id} value={p.id}>{p.fullName}</option>

@@ -15,9 +15,10 @@ function SubmitFeedback() {
         if (!user?.id) return;
         const fetchPatientId = async () => {
             try {
-                const res = await axios.get(`http://localhost:8081/api/patient/by-user/${user.id}`, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+                const res = await axios.get(
+                    `http://localhost:8081/api/patient/by-user/${user.id}`,
+                    { headers: { Authorization: `Bearer ${token}` } }
+                );
                 setPatientId(res.data?.id || "");
             } catch (err) {
                 console.error("Không lấy được patientId:", err);
@@ -29,9 +30,10 @@ function SubmitFeedback() {
     useEffect(() => {
         const fetchDoctors = async () => {
             try {
-                const res = await axios.get("http://localhost:8081/api/doctor/list-doctor", {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+                const res = await axios.get(
+                    "http://localhost:8081/api/doctor/list-doctor",
+                    { headers: { Authorization: `Bearer ${token}` } }
+                );
                 setDoctors(res.data);
             } catch (err) {
                 console.error("Không lấy được danh sách bác sĩ:", err);
@@ -42,19 +44,35 @@ function SubmitFeedback() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (score <= 0) {
+            setMessage("Vui lòng chọn số sao đánh giá trước khi gửi!");
+            return;
+        }
+
         try {
-            const res = await axios.post("http://localhost:8081/api/feedback", {
-                doctorId,
-                patientId,
-                score,
-                comment
-            }, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json"
+            const res = await axios.post(
+                "http://localhost:8081/api/feedback",
+                { doctorId, patientId, score, comment },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
                 }
-            });
-            setMessage(res.status === 200 || res.status === 201 ? "Gửi phản hồi thành công!" : "Gửi phản hồi thất bại.");
+            );
+
+            if (res.status === 200 || res.status === 201) {
+                // Hiển thị hộp thoại cảm ơn giống confirm
+                window.alert("Cảm ơn, chúng tôi đã nhận được phản hồi từ bạn!");
+                // Clear form
+                setDoctorId("");
+                setScore(0);
+                setComment("");
+                setMessage("");
+            } else {
+                setMessage("Gửi phản hồi thất bại.");
+            }
         } catch (err) {
             console.error("❌ Lỗi gửi feedback:", err);
             setMessage("Gửi phản hồi thất bại.");
@@ -63,10 +81,15 @@ function SubmitFeedback() {
 
     return (
         <div className="container py-5">
-            <div className="card shadow rounded-4 p-4 mx-auto" style={{ maxWidth: 600 }}>
+            <div
+                className="card shadow rounded-4 p-4 mx-auto"
+                style={{ maxWidth: 600 }}
+            >
                 <h3 className="mb-4 text-center">Gửi Phản Hồi</h3>
 
-                {message && <div className="alert alert-info text-center">{message}</div>}
+                {message && (
+                    <div className="alert alert-info text-center">{message}</div>
+                )}
 
                 <form onSubmit={handleSubmit}>
                     <div className="mb-3">
@@ -79,7 +102,9 @@ function SubmitFeedback() {
                         >
                             <option value="">-- Chọn bác sĩ --</option>
                             {doctors.map((doc) => (
-                                <option key={doc.id} value={doc.id}>{doc.fullName}</option>
+                                <option key={doc.id} value={doc.id}>
+                                    {doc.fullName}
+                                </option>
                             ))}
                         </select>
                     </div>
@@ -91,10 +116,10 @@ function SubmitFeedback() {
                                 <span
                                     key={value}
                                     onClick={() => setScore(value)}
-                                    onMouseOver={(e) => e.target.style.cursor = 'pointer'}
                                     style={{
                                         fontSize: "1.8rem",
-                                        color: value <= score ? "gold" : "#ccc"
+                                        color: value <= score ? "gold" : "#ccc",
+                                        cursor: "pointer",
                                     }}
                                 >
                                     ★
@@ -115,7 +140,11 @@ function SubmitFeedback() {
                     </div>
 
                     <div className="text-end">
-                        <button className="btn btn-primary px-4" type="submit" disabled={!patientId}>
+                        <button
+                            className="btn btn-primary px-4"
+                            type="submit"
+                            disabled={!patientId}
+                        >
                             Gửi phản hồi
                         </button>
                     </div>

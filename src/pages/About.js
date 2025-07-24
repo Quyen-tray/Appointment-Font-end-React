@@ -11,7 +11,7 @@ function About() {
                 <div className="row py-3">
                     <div className="col-12 text-center">
                         <h1 className="display-3 text-white">About Us</h1>
-                        <Link to="/" className="h4 text-white">Home</Link>
+                        <Link to="/" className="h4 text-white">Trang chủ</Link>
                         <i className="far fa-circle text-white px-2"></i>
                         <Link to="/about" className="h4 text-white">About</Link>
                     </div>
@@ -66,7 +66,7 @@ function About() {
                                 transition={{ delay: 0.6 }}
                                 viewport={{ once: true }}
                             >
-                                <Link to="/appointment" className="btn btn-primary py-3 px-5 mt-4">Make Appointment</Link>
+                                <Link to="/appointment" className="btn btn-primary py-3 px-5 mt-4">Đặt lịch</Link>
                             </motion.div>
                         </div>
 
