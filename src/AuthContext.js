@@ -78,11 +78,11 @@ export function AuthProvider({ children }) {
                 setIsLoggedIn(true);
                 return { success: true };
             } else {
-                return { success: false, message: data.message + " login failed" };
+                return { success: false, message: data.message + " Đăng nhập thất bại" };
             }
         } catch (error) {
             console.log(error);
-            return { success: false, message: "Server error: " + error.message };
+            return { success: false, message: "Đã có lỗi trong quá trình kêt nối với máy chủ" };
         }
     };
 
@@ -96,7 +96,7 @@ export function AuthProvider({ children }) {
             });
 
             if (res.status !== 200) {
-                throw new Error("Logout failed on server");
+                throw new Error("Đăng xuat thất bại trên máy chủ");
             } else {
                 localStorage.removeItem("token");
                 setUser(null);
@@ -109,7 +109,7 @@ export function AuthProvider({ children }) {
             }
 
         } catch (error) {
-            console.error("Logout error:", error);
+            console.error("Lỗi:", error);
             return { success: false, message: error.message };
         }
     };

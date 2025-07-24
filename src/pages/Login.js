@@ -51,12 +51,14 @@ function Login() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
         >
-            <div className="card shadow p-4 position-relative" style={{ maxWidth: "400px", width: "100%" }}>
+            <div className="card shadow p-4 position-relative" style={{maxWidth: "400px", width: "100%"}}>
                 <h3 className="text-center mb-4">Login</h3>
 
                 {/*  Spinner overlay */}
                 {loading && (
-                    <div className="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-white bg-opacity-75" style={{ zIndex: 10 }}>
+                    <div
+                        className="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-white bg-opacity-75"
+                        style={{zIndex: 10}}>
                         <div className="spinner-border text-primary" role="status">
                             <span className="visually-hidden">Loading...</span>
                         </div>
@@ -65,7 +67,7 @@ function Login() {
 
                 <form onSubmit={handleSubmit}>
                     <div className="mb-3">
-                        <label className="form-label">Username</label>
+                        <label className="form-label">Tên Tài Khoản</label>
                         <input
                             type="text"
                             name="username"
@@ -77,7 +79,7 @@ function Login() {
                         />
                     </div>
                     <div className="mb-3">
-                        <label className="form-label">Password</label>
+                        <label className="form-label">Mật Khẩu</label>
                         <input
                             type="password"
                             name="password"
@@ -89,12 +91,16 @@ function Login() {
                         />
                     </div>
                     <button type="submit" className="btn btn-primary w-100" disabled={loading}>
-                        {loading ? "Đang đăng nhập..." : "Login"}
+                        {loading ? "Đang đăng nhập..." : "Đăng Nhập"}
                     </button>
                 </form>
 
                 <div className="text-center mt-3">
-                    Don't have an account? <Link to="/register">Register</Link>
+                    <Link to="/forgotPasswordPage">Quên mật khẩu?</Link>
+                </div>
+
+                <div className="text-center mt-3">
+                    Bạn chưa có tài khoản ? <Link to="/register">Đăng Ký</Link>
                 </div>
 
                 {message && <div className="mt-3 alert alert-info">{message}</div>}

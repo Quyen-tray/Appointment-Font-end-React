@@ -9,7 +9,7 @@ function RoomList() {
 
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-  const pageSize = 3; //size 
+  const pageSize = 3;
 
   useEffect(() => {
     if (!searchId && !selectedType) {
@@ -18,8 +18,13 @@ function RoomList() {
   }, [page]);
 
   const fetchRoomsPaginated = (pageNumber) => {
+    const token = localStorage.getItem("token");
     axios
-      .get(`http://localhost:8081/api/rooms/paginated?page=${pageNumber}&size=${pageSize}`)
+      .get(`http://localhost:8081/api/rooms/paginated?page=${pageNumber}&size=${pageSize}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         setRooms(response.data.content);
         setTotalPages(response.data.totalPages);
@@ -32,12 +37,17 @@ function RoomList() {
   };
 
   const fetchAllRooms = () => {
+    const token = localStorage.getItem("token");
     axios
-      .get("http://localhost:8081/api/rooms")
+      .get("http://localhost:8081/api/rooms", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         setRooms(response.data);
         setError("");
-        setTotalPages(0); // ẩn phân trang khi không dùng
+        setTotalPages(0);
       })
       .catch((error) => {
         console.error("Lỗi khi lấy danh sách phòng:", error);
@@ -52,8 +62,13 @@ function RoomList() {
       return;
     }
 
+    const token = localStorage.getItem("token");
     axios
-      .get(`http://localhost:8081/api/rooms/${searchId}`)
+      .get(`http://localhost:8081/api/rooms/${searchId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         setRooms([response.data]);
         setError("");
@@ -69,7 +84,7 @@ function RoomList() {
 
   const handleFilterByType = (type) => {
     setSelectedType(type);
-    setSearchId(""); // reset tìm kiếm khi lọc
+    setSearchId("");
 
     if (!type) {
       setPage(0);
@@ -77,12 +92,17 @@ function RoomList() {
       return;
     }
 
+    const token = localStorage.getItem("token");
     axios
-      .get(`http://localhost:8081/api/rooms/filter?type=${encodeURIComponent(type)}`)
+      .get(`http://localhost:8081/api/rooms/filter?type=${encodeURIComponent(type)}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         setRooms(response.data);
         setError("");
-        setTotalPages(0); // ẩn phân trang khi lọc
+        setTotalPages(0);
       })
       .catch((error) => {
         console.error("Lỗi khi lọc theo loại phòng:", error);
@@ -92,11 +112,18 @@ function RoomList() {
       });
   };
 
+  const handleReset = () => {
+    setSearchId("");
+    setSelectedType("");
+    setPage(0);
+    fetchRoomsPaginated(0);
+  };
+
   return (
     <div className="p-6">
       <h2 className="text-2xl font-bold mb-4">Danh sách phòng</h2>
 
-      {/* Tìm kiếm theo ID */}
+      {/* Tìm kiếm theo ID và nút Đặt lại */}
       <div className="flex gap-2 mb-4">
         <input
           type="text"
@@ -110,6 +137,12 @@ function RoomList() {
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
         >
           Tìm kiếm
+        </button>
+        <button
+          onClick={handleReset}
+          className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded"
+        >
+          Đặt lại
         </button>
       </div>
 

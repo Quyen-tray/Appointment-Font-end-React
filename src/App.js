@@ -12,6 +12,7 @@ import Footer from "./components/Footer";
 import HeaderSub from "./components/HeaderSub";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 
 import "./assets/css/style.css";
 import PatientLayout from "./pages/patient/PatientLayout";
@@ -19,11 +20,14 @@ import AdminLayout from "./pages/admin/AdminLayout";
 import ReceptionistLayout from "./pages/receptionist/ReceptionistLayout";
 import Unauthorized from "./pages/Unauthorized";
 import PublicLayout from "./pages/PublicLayout";
+// import PatientDashboard from "./pages/patient/PatientDashboard";
 
 import ReceptionistDashboard from './pages/receptionist/ReceptionistDashboard';
 import RoomList from "./pages/receptionist/RoomList";
 import PatientList from "./pages/receptionist/PatientList";
 import PatientHistory from "./pages/receptionist/PatientHistory";
+import DoctorList from "./pages/receptionist/DoctorList";
+
 import AppointmentReceptionist from "./pages/receptionist/AppointmentReceptionist";
 import MedicalVisit from "./pages/patient/MedicalVisit";
 import PrivateRoute from "./components/PrivateRoute";
@@ -33,11 +37,11 @@ import Profile from "./pages/patient/Profile";
 import BookingForm from "./pages/patient/BookingForm";
 import BookingSuccess from "./pages/patient/BookingSuccess";
 import HistoryAppointment from"./pages/patient/HistoryAppointment";
-import Invoice from "./pages/patient/Invoice";
 import UserAccountPage from "./pages/admin/UserAccountPage";
 import UserPatientPage from "./pages/admin/UserPatientPage";
 import UserReceptionistPage from "./pages/admin/UserReceptionistPage";
 import UserActivityLogPage from "./pages/admin/UserActivityLogPage";
+import ChangePassword from "./pages/patient/ChangePassword";
 
 import DoctorDetail from "./pages/DoctorDetail";
 import ReceptionistProfile from "./pages/receptionist/ReceptionistProfile";
@@ -61,6 +65,7 @@ function App() {
                 <Route path="testimonial" element={<Testimonial />} />
                 <Route path="login" element={<Login />} />
                 <Route path="register" element={<Register />} />
+                <Route path="forgotPasswordPage" element={<ForgotPasswordPage />} />
             </Route>
 
                 {/* Route riêng cho Unauthorized */}
@@ -72,7 +77,7 @@ function App() {
                         <PatientLayout />
                     </PrivateRoute>
                 }>
-                    {/*<Route index element={<PatientDashboard />} />*/}
+                    {/* <Route index element={<PatientDashboard />} /> */}
                     {/*<Route path="profile" element={<PatientProfile />} />*/}
                     <Route path="booking" element={<BookingForm />} />
                     <Route path="booking-success" element={<BookingSuccess />} />
@@ -81,7 +86,9 @@ function App() {
                     <Route path="medicalvisit" element={<MedicalVisit />} />
                     <Route path="feedback" element={<PatientFeedback />} />
                     <Route path="feedback/submit" element={<SubmitFeedback />} />
+                    <Route path="change-password" element={<ChangePassword />} />
                 </Route>
+                
 
                 {/* Admin layout + routes */}
                 <Route path="/admin" element={
@@ -107,6 +114,7 @@ function App() {
                     <Route path="patients" element={<PatientList />} />
                     <Route path="rooms" element={<RoomList />} />
                     <Route path="/receptionist/patient-history/:id" element={<PatientHistory />} />
+                    <Route path="/receptionist/doctors" element={<DoctorList />} />
                     <Route path="appointments" element={<AppointmentReceptionist />} />
                     <Route path="profile" element={<ReceptionistProfile />} />
                     <Route path="change-password" element={<ChangePassword />} />

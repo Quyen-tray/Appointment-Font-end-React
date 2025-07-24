@@ -4,7 +4,7 @@ export default function PatientNavbar() {
 
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-primary px-3">
-            <Link className="navbar-brand" to="/patient">Patient Panel</Link>
+            <Link className="navbar-brand" to="/patient">Trang chủ</Link>
 
             <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#patientNavbar" aria-controls="patientNavbar" aria-expanded="false" aria-label="Toggle navigation">
                 <span className="navbar-toggler-icon"></span>
@@ -18,11 +18,11 @@ export default function PatientNavbar() {
                     </li>
 
                     <li className="nav-item">
-                        <Link className="nav-link" to="/patient/appointments/history">Lịch sử lịch hẹn</Link>
+                        <Link className="nav-link" to="/patient/appointments/history">Lịch sử hẹn khám</Link>
                     </li>
 
                     <li className="nav-item">
-                        <Link className="nav-link" to="/patient/medicalvisit">Medical Visit</Link>
+                        <Link className="nav-link" to="/patient/medicalvisit">lịch sử khám bệnh</Link>
                     </li>
 
                     <li className="nav-item">
@@ -31,6 +31,10 @@ export default function PatientNavbar() {
 
                     <li className="nav-item">
                         <Link className="nav-link" to="/patient/feedback/submit">Gửi Feedback</Link>
+                    </li>
+
+                    <li className="nav-item">
+                        <Link className="nav-link" to="/patient/invoice">Xem hóa đơn</Link>
                     </li>
 
                     <li className="nav-item">
