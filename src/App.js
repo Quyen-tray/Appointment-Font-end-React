@@ -13,6 +13,7 @@ import Footer from "./components/Footer";
 import HeaderSub from "./components/HeaderSub";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 
 import "./assets/css/style.css";
 import PatientLayout from "./pages/patient/PatientLayout";
@@ -64,6 +65,7 @@ function App() {
                 <Route path="testimonial" element={<Testimonial />} />
                 <Route path="login" element={<Login />} />
                 <Route path="register" element={<Register />} />
+                <Route path="forgotPasswordPage" element={<ForgotPasswordPage />} />
             </Route>
 
                 {/* Route riêng cho Unauthorized */}
