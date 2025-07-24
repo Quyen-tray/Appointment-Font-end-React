@@ -36,6 +36,10 @@ export default function ReceptionistNavbar() {
                         <Link className="nav-link" to="/receptionist/doctors">Danh Sách Bác Sĩ</Link>
                     </li>
 
+                    <li className="nav-item">
+                        <Link className="nav-link" to="/receptionist/profile">Profile</Link>
+                    </li>
+
                 </ul>
 
                 {/*<button className="btn btn-outline-light btn-sm" onClick={handleLogout}>*/}

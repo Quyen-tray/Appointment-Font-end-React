@@ -44,6 +44,7 @@ import UserActivityLogPage from "./pages/admin/UserActivityLogPage";
 import ChangePassword from "./pages/patient/ChangePassword";
 
 import DoctorDetail from "./pages/DoctorDetail";
+import ReceptionistProfile from "./pages/receptionist/ReceptionistProfile";
 function App() {
   return (
       <Router>
@@ -112,6 +113,7 @@ function App() {
                     <Route path="/receptionist/patient-history/:id" element={<PatientHistory />} />
                     <Route path="/receptionist/doctors" element={<DoctorList />} />
                     <Route path="appointments" element={<AppointmentReceptionist />} />
+                    <Route path="profile" element={<ReceptionistProfile />} />
                     
                 {/*<Route path="appointments" element={<ManageAppointments />} />*/}
             </Route>
