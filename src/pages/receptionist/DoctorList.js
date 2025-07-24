@@ -21,7 +21,7 @@ function DoctorList() {
   ];
 
   useEffect(() => {
-    axios.get("http://localhost:8081/api/doctor/list-doctor")
+    axios.get("http://localhost:8081/api/doctor")
       .then(response => {
         setDoctors(response.data);
         setFilteredDoctors(response.data);
