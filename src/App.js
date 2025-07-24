@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -42,6 +41,7 @@ import UserActivityLogPage from "./pages/admin/UserActivityLogPage";
 
 import DoctorDetail from "./pages/DoctorDetail";
 import ReceptionistProfile from "./pages/receptionist/ReceptionistProfile";
+import ChangePassword from "./pages/ChangePassword";
 function App() {
   return (
       <Router>
@@ -92,6 +92,7 @@ function App() {
                     <Route path="usersPatient" element={<UserPatientPage />} />
                     <Route path="usersReceptionist" element={<UserReceptionistPage />} />
                     <Route path="usersActivityLog" element={<UserActivityLogPage />} />
+                    <Route path="change-password" element={<ChangePassword />} />
                     {/*<Route index element={<AdminDashboard />} />*/}
                     {/*<Route path="users" element={<UserManagement />} />*/}
                 </Route>
@@ -108,7 +109,7 @@ function App() {
                     <Route path="/receptionist/patient-history/:id" element={<PatientHistory />} />
                     <Route path="appointments" element={<AppointmentReceptionist />} />
                     <Route path="profile" element={<ReceptionistProfile />} />
-                    
+                    <Route path="change-password" element={<ChangePassword />} />
                 {/*<Route path="appointments" element={<ManageAppointments />} />*/}
             </Route>
 
