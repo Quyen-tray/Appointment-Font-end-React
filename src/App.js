@@ -20,6 +20,7 @@ import AdminLayout from "./pages/admin/AdminLayout";
 import ReceptionistLayout from "./pages/receptionist/ReceptionistLayout";
 import Unauthorized from "./pages/Unauthorized";
 import PublicLayout from "./pages/PublicLayout";
+// import PatientDashboard from "./pages/patient/PatientDashboard";
 
 import ReceptionistDashboard from './pages/receptionist/ReceptionistDashboard';
 import RoomList from "./pages/receptionist/RoomList";
@@ -36,7 +37,6 @@ import Profile from "./pages/patient/Profile";
 import BookingForm from "./pages/patient/BookingForm";
 import BookingSuccess from "./pages/patient/BookingSuccess";
 import HistoryAppointment from"./pages/patient/HistoryAppointment";
-import Invoice from "./pages/patient/Invoice";
 import UserAccountPage from "./pages/admin/UserAccountPage";
 import UserPatientPage from "./pages/admin/UserPatientPage";
 import UserReceptionistPage from "./pages/admin/UserReceptionistPage";
@@ -74,7 +74,7 @@ function App() {
                         <PatientLayout />
                     </PrivateRoute>
                 }>
-                    {/*<Route index element={<PatientDashboard />} />*/}
+                    {/* <Route index element={<PatientDashboard />} /> */}
                     {/*<Route path="profile" element={<PatientProfile />} />*/}
                     <Route path="booking" element={<BookingForm />} />
                     <Route path="booking-success" element={<BookingSuccess />} />

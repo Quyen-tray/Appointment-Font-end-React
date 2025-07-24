@@ -76,12 +76,6 @@ function Footer() {
                     <div className="col-md-6 text-center text-md-start">
                         <p className="mb-md-0">&copy; <Link className="text-white border-bottom" to="#">Your Site Name</Link>. All Rights Reserved.</p>
                     </div>
-                    <div className="col-md-6 text-center text-md-end">
-                        <p className="mb-0">Designed by <a className="text-white border-bottom" href="https://htmlcodex.com">HTML Codex</a><br />
-                            Distributed by <a className="text-white border-bottom" href="https://themewagon.com">ThemeWagon</a>
-
-                        </p>
-                    </div>
                 </div>
             </div>
         </div>
