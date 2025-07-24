@@ -80,6 +80,7 @@ function App() {
                     <Route path="medicalvisit" element={<MedicalVisit />} />
                     <Route path="feedback" element={<PatientFeedback />} />
                     <Route path="feedback/submit" element={<SubmitFeedback />} />
+                    <Route path="invoice" element={<Invoice />} />
                 </Route>
 
                 {/* Admin layout + routes */}
