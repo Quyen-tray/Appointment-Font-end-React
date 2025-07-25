@@ -20,6 +20,7 @@ import AdminLayout from "./pages/admin/AdminLayout";
 import ReceptionistLayout from "./pages/receptionist/ReceptionistLayout";
 import Unauthorized from "./pages/Unauthorized";
 import PublicLayout from "./pages/PublicLayout";
+import PatientDashboard from "./pages/patient/PatientDashboard";
 // import PatientDashboard from "./pages/patient/PatientDashboard";
 
 import ReceptionistDashboard from './pages/receptionist/ReceptionistDashboard';
@@ -42,10 +43,11 @@ import UserPatientPage from "./pages/admin/UserPatientPage";
 import UserReceptionistPage from "./pages/admin/UserReceptionistPage";
 import UserActivityLogPage from "./pages/admin/UserActivityLogPage";
 import ChangePassword from "./pages/patient/ChangePassword";
+import AppointmentDetailModal from "./pages/patient/AppointmentDetailModal";
 
 import DoctorDetail from "./pages/DoctorDetail";
 import ReceptionistProfile from "./pages/receptionist/ReceptionistProfile";
-import ChangePassword from "./pages/ChangePassword";
+import ChangePassword2 from "./pages/ChangePassword";
 function App() {
   return (
       <Router>
@@ -77,7 +79,7 @@ function App() {
                         <PatientLayout />
                     </PrivateRoute>
                 }>
-                    {/* <Route index element={<PatientDashboard />} /> */}
+                    <Route index element={<PatientDashboard />} />
                     {/*<Route path="profile" element={<PatientProfile />} />*/}
                     <Route path="booking" element={<BookingForm />} />
                     <Route path="booking-success" element={<BookingSuccess />} />
@@ -87,6 +89,7 @@ function App() {
                     <Route path="feedback" element={<PatientFeedback />} />
                     <Route path="feedback/submit" element={<SubmitFeedback />} />
                     <Route path="change-password" element={<ChangePassword />} />
+                    <Route path="appointmentDetail" element={<AppointmentDetailModal />} />
                 </Route>
                 
 
@@ -99,7 +102,7 @@ function App() {
                     <Route path="usersPatient" element={<UserPatientPage />} />
                     <Route path="usersReceptionist" element={<UserReceptionistPage />} />
                     <Route path="usersActivityLog" element={<UserActivityLogPage />} />
-                    <Route path="change-password" element={<ChangePassword />} />
+                    <Route path="change-password" element={<ChangePassword2 />} />
                     {/*<Route index element={<AdminDashboard />} />*/}
                     {/*<Route path="users" element={<UserManagement />} />*/}
                 </Route>
