@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import RescheduleModal from "../../components/RescheduleModal";
+import AppointmentDetailModal from "./AppointmentDetailModal";
+
 
 export default function PatientAppointments() {
   const [appointments, setAppointments] = useState([]);
@@ -13,6 +15,10 @@ export default function PatientAppointments() {
   const [totalPages, setTotalPages] = useState(0);
   const pageSize = 7;
   const [sortStatus, setSortStatus] = useState("All");
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
+  const [showDetailModal, setShowDetailModal] = useState(false);
+
+
 
   const fetchAppointments = async () => {
     try {
@@ -168,6 +174,7 @@ export default function PatientAppointments() {
                   <th>Phòng</th>
                   <th>Trạng thái</th>
                   <th className="text-center">Thao tác</th>
+                  <th className="text-center">Chi tiết</th>
                 </tr>
               </thead>
               <tbody>
@@ -204,6 +211,17 @@ export default function PatientAppointments() {
                           <span className="badge bg-danger">Đã huỷ</span>
                         )}
                       </td>
+                      <td className="text-center align-middle">
+                        <button
+                          className="btn btn-sm btn-info text-white"
+                          onClick={() => {
+                            setSelectedAppointment(appt);
+                            setShowDetailModal(true);
+                          }}
+                        >
+                          Xem chi tiết
+                        </button>
+                      </td>
                     </tr>
                   );
                 })}
@@ -219,6 +237,13 @@ export default function PatientAppointments() {
         onClose={() => setShowModal(false)}
         onSave={handleSaveReschedule}
       />
+      <AppointmentDetailModal
+        show={showDetailModal}
+        onClose={() => setShowDetailModal(false)}
+        data={selectedAppointment}
+      />
+
     </div>
   );
+
 }

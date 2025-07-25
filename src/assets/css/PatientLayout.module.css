@@ -1,0 +1,130 @@
+.patientContainer {
+    padding: 20px;
+    background: linear-gradient(135deg, #e6f3ff, #f0e6ff);
+    min-height: calc(100vh - 60px);
+}
+
+.contentWrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 20px;
+}
+
+.patientInfo, .upcomingAppointments, .notifications, .medicalHistory {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    height: 300px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.patientInfo:hover, .upcomingAppointments:hover, .notifications:hover, .medicalHistory:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.patientInfo h2, .upcomingAppointments h2, .notifications h2, .medicalHistory h2 {
+    margin-top: 0;
+    color: #2c3e50;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 5px;
+}
+
+.patientInfo p, .upcomingAppointments li, .notifications li, .medicalHistory li {
+    margin: 10px 0;
+    color: #34495e;
+}
+
+.upcomingAppointments ul, .notifications ul, .medicalHistory ul {
+    list-style-type: none;
+    padding: 0;
+    flex-grow: 1; /* Cho phép ul chiếm phần lớn không gian */
+}
+
+.appointmentItem {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    background: #f9f9f9;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    transition: background 0.3s ease;
+}
+
+.appointmentItem:hover {
+    background: #e0e0e0;
+}
+
+.doctorName {
+    font-weight: bold;
+    color: #e74c3c;
+}
+
+.notificationItem {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    background: #f9f9f9;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    transition: background 0.3s ease;
+}
+
+.notificationItem:hover {
+    background: #e0e0e0;
+}
+
+.historyItem {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    background: #f9f9f9;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    transition: background 0.3s ease;
+}
+
+.historyItem:hover {
+    background: #e0e0e0;
+}
+
+.editBtn, .viewAllBtn {
+    background: linear-gradient(90deg, #3498db, #8e44ad);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+    width: 100%;
+    margin-top: 10px; /* Điều chỉnh khoảng cách trên */
+}
+
+.editBtn:hover, .viewAllBtn:hover {
+    background: linear-gradient(90deg, #2980b9, #8e44ad);
+    transform: scale(1.05);
+}
+.bookNowBtn {
+    background: linear-gradient(90deg, #3498db, #8e44ad);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+    font-size: 16px;
+    margin: 20px auto 0;
+    display: block;
+    width: 300px; 
+    min-width: 10px; 
+    text-align: center;
+}
+

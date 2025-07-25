@@ -12,11 +12,11 @@ export default function BookingSuccess() {
 
   const translateStatus = (status) => {
     switch (status) {
-      case "Pending":
+      case "PENDING":
         return "Đang chờ xác nhận";
-      case "Confirmed":
+      case "CONFIRMED":
         return "Đã xác nhận";
-      case "Cancelled":
+      case "CANCELLED":
         return "Đã hủy";
       default:
         return status;
