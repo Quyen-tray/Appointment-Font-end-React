@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "../../AuthContext";
+import feedbackBg from "../../assets/img/empty-wooden-table-blurred-veterinary-260nw-2630198185.webp";
 
 function SubmitFeedback() {
     const { token, user } = useAuth();
@@ -63,9 +64,7 @@ function SubmitFeedback() {
             );
 
             if (res.status === 200 || res.status === 201) {
-                // Hiển thị hộp thoại cảm ơn giống confirm
                 window.alert("Cảm ơn, chúng tôi đã nhận được phản hồi từ bạn!");
-                // Clear form
                 setDoctorId("");
                 setScore(0);
                 setComment("");
@@ -80,75 +79,90 @@ function SubmitFeedback() {
     };
 
     return (
-        <div className="container py-5">
+        <div
+            style={{
+                backgroundImage: `url(${feedbackBg})`,
+                backgroundSize: "cover",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center",
+                backgroundAttachment: "fixed",
+                minHeight: "100vh",
+                width: "100vw",
+            }}
+        >
             <div
-                className="card shadow rounded-4 p-4 mx-auto"
-                style={{ maxWidth: 600 }}
+                className="container d-flex justify-content-center align-items-center py-5"
+                style={{ minHeight: "100vh" }}
             >
-                <h3 className="mb-4 text-center">Gửi Phản Hồi</h3>
+                <div
+                    className="card shadow rounded-4 p-4 w-100 bg-light bg-opacity-75"
+                    style={{ maxWidth: 600 }}
+                >
+                    <h3 className="mb-4 text-center">Gửi Phản Hồi</h3>
 
-                {message && (
-                    <div className="alert alert-info text-center">{message}</div>
-                )}
+                    {message && (
+                        <div className="alert alert-info text-center">{message}</div>
+                    )}
 
-                <form onSubmit={handleSubmit}>
-                    <div className="mb-3">
-                        <label className="form-label">Chọn bác sĩ</label>
-                        <select
-                            className="form-select"
-                            value={doctorId}
-                            onChange={(e) => setDoctorId(e.target.value)}
-                            required
-                        >
-                            <option value="">-- Chọn bác sĩ --</option>
-                            {doctors.map((doc) => (
-                                <option key={doc.id} value={doc.id}>
-                                    {doc.fullName}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-
-                    <div className="mb-3">
-                        <label className="form-label">Đánh giá</label>
-                        <div className="d-flex gap-1">
-                            {[1, 2, 3, 4, 5].map((value) => (
-                                <span
-                                    key={value}
-                                    onClick={() => setScore(value)}
-                                    style={{
-                                        fontSize: "1.8rem",
-                                        color: value <= score ? "gold" : "#ccc",
-                                        cursor: "pointer",
-                                    }}
-                                >
-                                    ★
-                                </span>
-                            ))}
+                    <form onSubmit={handleSubmit}>
+                        <div className="mb-3">
+                            <label className="form-label">Chọn bác sĩ</label>
+                            <select
+                                className="form-select"
+                                value={doctorId}
+                                onChange={(e) => setDoctorId(e.target.value)}
+                                required
+                            >
+                                <option value="">-- Chọn bác sĩ --</option>
+                                {doctors.map((doc) => (
+                                    <option key={doc.id} value={doc.id}>
+                                        {doc.fullName}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
-                    </div>
 
-                    <div className="mb-3">
-                        <label className="form-label">Nhận xét</label>
-                        <textarea
-                            className="form-control"
-                            rows={4}
-                            placeholder="Viết nhận xét của bạn tại đây..."
-                            value={comment}
-                            onChange={(e) => setComment(e.target.value)}
-                        />
-                    </div>
+                        <div className="mb-3">
+                            <label className="form-label">Đánh giá</label>
+                            <div className="d-flex gap-1">
+                                {[1, 2, 3, 4, 5].map((value) => (
+                                    <span
+                                        key={value}
+                                        onClick={() => setScore(value)}
+                                        style={{
+                                            fontSize: "1.8rem",
+                                            color: value <= score ? "gold" : "#ccc",
+                                            cursor: "pointer",
+                                        }}
+                                    >
+                                        ★
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
 
-                    <div className="text-end">
-                        <button
-                            className="btn btn-primary px-4"
-                            type="submit"
-                            disabled={!patientId}
-                        >
-                            Gửi phản hồi
-                        </button>
-                    </div>
-                </form>
+                        <div className="mb-3">
+                            <label className="form-label">Nhận xét</label>
+                            <textarea
+                                className="form-control"
+                                rows={4}
+                                placeholder="Viết nhận xét của bạn tại đây..."
+                                value={comment}
+                                onChange={(e) => setComment(e.target.value)}
+                            />
+                        </div>
+
+                        <div className="text-end">
+                            <button
+                                className="btn btn-primary px-4"
+                                type="submit"
+                                disabled={!patientId}
+                            >
+                                Gửi phản hồi
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     );
