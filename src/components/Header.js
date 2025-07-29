@@ -50,9 +50,8 @@ function Header() {
                         <Link to="/" className="nav-item nav-link">Trang Chủ</Link>
                         <Link to="/about" className="nav-item nav-link">Về Chúng Tôi</Link>
                         <Link to="/service" className="nav-item nav-link">Dịch Vụ</Link>
-                        <Link to="/blog" className="dropdown-item">
-                                    <i className="fas fa-blog me-2"></i>Blog Y Tế
-                                </Link>
+                        <Link to="/blog" className="nav-item nav-link">Blog Y Tế
+                        </Link>
                         <div className="nav-item dropdown" ref={dropdownRef}>
                             <button
                                 className="nav-link dropdown-toggle btn btn-link"
