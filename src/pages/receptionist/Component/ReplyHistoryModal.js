@@ -1,25 +1,30 @@
 import React from "react";
 import { Modal, Button } from "react-bootstrap";
+import { FaEnvelopeOpenText, FaClock } from "react-icons/fa";
 
-function ReplyHistoryModal({ show, onClose, history }) {
-    const safeReplies = history || [];
+function ReplyHistoryModal({ show, onClose, replies  }) {
+    const safeReplies = replies  || [];
 
     return (
-        <Modal show={show} onHide={onClose}>
+        <Modal show={show} onHide={onClose} size="lg" centered>
             <Modal.Header closeButton>
-                <Modal.Title>Lịch sử phản hồi</Modal.Title>
+                <Modal.Title className="fw-bold text-primary">
+                    📬 Lịch sử phản hồi
+                </Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 {safeReplies.length === 0 ? (
-                    <p>Chưa có phản hồi nào.</p>
+                    <div className="text-muted text-center">Chưa có phản hồi nào.</div>
                 ) : (
-                    safeReplies.map((r, idx) => (
-                        <div key={idx} className="mb-3 border-bottom pb-2">
-                            <p><strong>Chủ đề:</strong> {r.subject}</p>
-                            <p><strong>Nội dung:</strong> {r.message}</p>
-                            <p><small><strong>Ngày phản hồi:</strong> {new Date(r.sentAt).toLocaleString()}</small></p>
-                        </div>
-                    ))
+                    <div className="timeline">
+                        {safeReplies.map((r, idx) => (
+                            <div key={idx} className="mb-4 p-3 rounded shadow-sm border border-light bg-light">
+                                <h6 className="text-primary mb-2"><FaEnvelopeOpenText className="me-2" />{r.subject}</h6>
+                                <p className="mb-2">{r.message}</p>
+                                <small className="text-muted"><FaClock className="me-1" />{new Date(r.sentAt).toLocaleString()}</small>
+                            </div>
+                        ))}
+                    </div>
                 )}
             </Modal.Body>
             <Modal.Footer>

@@ -9,126 +9,84 @@ function PatientList() {
   const [error, setError] = useState("");
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  const token = localStorage.getItem("token");
 
   const fetchPatients = () => {
-    const token = localStorage.getItem("token");
     axios
-      .get(`http://localhost:8081/api/patients/paged?page=${page}&size=3`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        setPatients(response.data.content);
-        setTotalPages(response.data.totalPages);
-        setError("");
-      })
-      .catch(() => {
-        setError("Không thể tải danh sách bệnh nhân.");
-        setPatients([]);
-      });
+        .get(`http://localhost:8081/api/patients/paged?page=${page}&size=8`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+          setPatients(res.data.content);
+          setTotalPages(res.data.totalPages);
+          setError("");
+        })
+        .catch(() => {
+          setPatients([]);
+          setError("Không thể tải danh sách bệnh nhân.");
+        });
   };
 
   const fetchPatientById = () => {
-    if (!searchId.trim()) {
-      fetchPatients();
-      return;
-    }
-
-    const token = localStorage.getItem("token");
-
+    if (!searchId.trim()) return fetchPatients();
     axios
-      .get(`http://localhost:8081/api/patients/${searchId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        setPatients([response.data]);
-        setTotalPages(1);
-        setPage(0);
-        setError("");
-      })
-      .catch(() => {
-        setPatients([]);
-        setTotalPages(0);
-        setError("Không tìm thấy bệnh nhân.");
-      });
+        .get(`http://localhost:8081/api/patients/${searchId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+          setPatients([res.data]);
+          setPage(0);
+          setTotalPages(1);
+          setError("");
+        })
+        .catch(() => {
+          setPatients([]);
+          setError("Không tìm thấy bệnh nhân.");
+          setTotalPages(0);
+        });
   };
 
   const fetchPatientsByGender = (gender) => {
-    if (!gender) {
-      fetchPatients();
-      return;
-    }
-
-    const token = localStorage.getItem("token");
-
+    if (!gender) return fetchPatients();
     axios
-      .get(`http://localhost:8081/api/patients/filter?gender=${gender}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        setPatients(response.data);
-        setTotalPages(1);
-        setPage(0);
-        setError("");
-      })
-      .catch(() => {
-        setPatients([]);
-        setTotalPages(0);
-        setError("Không tìm thấy bệnh nhân theo giới tính.");
-      });
+        .get(`http://localhost:8081/api/patients/filter?gender=${gender}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+          setPatients(res.data);
+          setTotalPages(1);
+          setPage(0);
+          setError("");
+        })
+        .catch(() => {
+          setPatients([]);
+          setError("Không tìm thấy bệnh nhân theo giới tính.");
+          setTotalPages(0);
+        });
   };
 
   const fetchPatientsByStatus = (status) => {
-    if (!status) {
-      fetchPatients();
-      return;
-    }
-
-    const token = localStorage.getItem("token");
-
+    if (!status) return fetchPatients();
     axios
-      .get(`http://localhost:8081/api/patients/status?status=${status}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        setPatients(response.data);
-        setTotalPages(1);
-        setPage(0);
-        setError("");
-      })
-      .catch(() => {
-        setPatients([]);
-        setTotalPages(0);
-        setError("Không tìm thấy bệnh nhân theo trạng thái khám.");
-      });
+        .get(`http://localhost:8081/api/patients/status?status=${status}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+          setPatients(res.data);
+          setTotalPages(1);
+          setPage(0);
+          setError("");
+        })
+        .catch(() => {
+          setPatients([]);
+          setError("Không tìm thấy bệnh nhân theo trạng thái.");
+          setTotalPages(0);
+        });
   };
 
   useEffect(() => {
     fetchPatients();
   }, [page]);
-
-  const handleSearch = () => {
-    fetchPatientById();
-  };
-
-  const handleGenderChange = (event) => {
-    const gender = event.target.value;
-    setGenderFilter(gender);
-    fetchPatientsByGender(gender);
-  };
-
-  const handleStatusChange = (event) => {
-    const status = event.target.value;
-    setStatusFilter(status);
-    fetchPatientsByStatus(status);
-  };
 
   const handleReset = () => {
     setSearchId("");
@@ -136,10 +94,6 @@ function PatientList() {
     setStatusFilter("");
     setPage(0);
     fetchPatients();
-  };
-
-  const handleViewHistory = (id) => {
-    window.location.href = `/receptionist/patient-history/${id}`;
   };
 
   const translateStatus = (status) => {
@@ -157,115 +111,146 @@ function PatientList() {
     }
   };
 
+  const handleViewHistory = (id) => {
+    window.location.href = `/receptionist/patient-history/${id}`;
+  };
+
   return (
-    <div className="container mx-auto p-6">
-      <h2 className="text-2xl font-bold mb-4">Danh sách bệnh nhân</h2>
-      <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-        <div className="flex gap-2">
-          <input
-            type="text"
-            value={searchId}
-            onChange={(e) => setSearchId(e.target.value)}
-            placeholder="Nhập ID bệnh nhân"
-            className="border rounded px-4 py-2 w-64"
-          />
-          <button
-            onClick={handleSearch}
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-          >
-            Tìm kiếm
-          </button>
-          <button
-            onClick={handleReset}
-            className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
-          >
-            Đặt lại
-          </button>
-        </div>
-        <div className="flex gap-4">
-          <select
-            value={genderFilter}
-            onChange={handleGenderChange}
-            className="border rounded px-4 py-2"
-          >
-            <option value="">Lọc theo giới tính</option>
-            <option value="Nam">Nam</option>
-            <option value="Nữ">Nữ</option>
-          </select>
-          <select
-            value={statusFilter}
-            onChange={handleStatusChange}
-            className="border rounded px-4 py-2"
-          >
-            <option value="">Lọc theo trạng thái khám</option>
-            <option value="Scheduled">Chờ khám</option>
-            <option value="Under examination">Đang khám</option>
-            <option value="Completed">Đã khám</option>
-            <option value="Cancelled">Đã hủy</option>
-          </select>
-        </div>
-      </div>
+      <div className="max-w-screen-xl mx-auto p-6">
+        <h2 style={{ color: '#2563eb' }} className="mb-6 font-bold text-center text-2xl">
+          🧑‍⚕️ Danh sách bệnh nhân
+        </h2>
+        <p className="text-center text-gray-600 mb-4">
+          Tìm thấy <strong>{patients.length}</strong> Bệnh nhân
+        </p>
 
-      {error && <div className="text-red-500 text-center mb-4">{error}</div>}
+        {/* Tìm kiếm và lọc */}
+        <div className="bg-white p-4 rounded-lg shadow-md mb-6">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="flex gap-2 flex-wrap">
+              <input
+                  type="text"
+                  value={searchId}
+                  onChange={(e) => setSearchId(e.target.value)}
+                  placeholder="🔍 Nhập ID bệnh nhân"
+                  className="border border-gray-300 rounded px-4 py-2 w-64 shadow-sm focus:ring-2 focus:ring-blue-300"
+              />
+              <button
+                  onClick={fetchPatientById}
+                  className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition"
+              >
+                Tìm kiếm
+              </button>
+              <button
+                  onClick={handleReset}
+                  className="bg-gray-400 text-white px-4 py-2 rounded shadow hover:bg-gray-500 transition"
+              >
+                Đặt lại
+              </button>
+            </div>
 
-      <div className="overflow-x-auto">
-        <table className="min-w-full border">
-          <thead className="bg-gray-100">
+            <div className="flex gap-4 flex-wrap">
+              <select
+                  value={genderFilter}
+                  onChange={(e) => {
+                    setGenderFilter(e.target.value);
+                    fetchPatientsByGender(e.target.value);
+                  }}
+                  className="border rounded px-4 py-2 shadow-sm focus:ring-2 focus:ring-blue-300"
+              >
+                <option value="">🚻 Giới tính</option>
+                <option value="Nam">Nam</option>
+                <option value="Nữ">Nữ</option>
+              </select>
+
+              <select
+                  value={statusFilter}
+                  onChange={(e) => {
+                    setStatusFilter(e.target.value);
+                    fetchPatientsByStatus(e.target.value);
+                  }}
+                  className="border rounded px-4 py-2 shadow-sm focus:ring-2 focus:ring-blue-300"
+              >
+                <option value="">📌 Trạng thái</option>
+                <option value="Scheduled">Chờ khám</option>
+                <option value="Under examination">Đang khám</option>
+                <option value="Completed">Đã khám</option>
+                <option value="Cancelled">Đã hủy</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        {/* Lỗi */}
+        {error && (
+            <div className="text-red-500 text-center mb-4 font-semibold">
+              {error}
+            </div>
+        )}
+
+        {/* Bảng */}
+        <div className="overflow-x-auto shadow-md rounded-lg">
+          <table className="min-w-full bg-white text-sm text-center">
+            <thead className="bg-blue-100 text-gray-700 font-semibold">
             <tr>
-              <th className="px-4 py-2 border">ID</th>
-              <th className="px-4 py-2 border">Tên</th>
-              <th className="px-4 py-2 border">Email</th>
-              <th className="px-4 py-2 border">SĐT</th>
-              <th className="px-4 py-2 border">Ngày sinh</th>
-              <th className="px-4 py-2 border">Giới tính</th>
-              <th className="px-4 py-2 border">Địa chỉ</th>
-              <th className="px-4 py-2 border">Trạng thái gần nhất</th>
-              <th className="px-4 py-2 border">Lịch sử khám</th>
+              <th className="px-4 py-3">ID</th>
+              <th className="px-4 py-3">Tên</th>
+              <th className="px-4 py-3">Email</th>
+              <th className="px-4 py-3">SĐT</th>
+              <th className="px-4 py-3">Ngày sinh</th>
+              <th className="px-4 py-3">Giới tính</th>
+              <th className="px-4 py-3">Địa chỉ</th>
+              <th className="px-4 py-3">Trạng thái</th>
+              <th className="px-4 py-3">Lịch sử</th>
             </tr>
-          </thead>
-          <tbody>
-            {patients.map((patient) => (
-              <tr key={patient.id} className="hover:bg-gray-50 align-top">
-                <td className="px-4 py-2 border text-center">{patient.id}</td>
-                <td className="px-4 py-2 border">{patient.fullName}</td>
-                <td className="px-4 py-2 border">{patient.email}</td>
-                <td className="px-4 py-2 border">{patient.phone}</td>
-                <td className="px-4 py-2 border">{patient.dob}</td>
-                <td className="px-4 py-2 border">{patient.gender}</td>
-                <td className="px-4 py-2 border">{patient.address}</td>
-                <td className="px-4 py-2 border text-center">
-                  {translateStatus(patient.latestStatus)}
-                </td>
-                <td className="px-4 py-2 border text-center">
-                  <button
-                    onClick={() => handleViewHistory(patient.id)}
-                    className="text-blue-600 underline"
-                  >
-                    Xem lịch sử
-                  </button>
-                </td>
-              </tr>
+            </thead>
+            <tbody>
+            {patients.map((p) => (
+                <tr key={p.id} className="hover:bg-gray-50 transition">
+                  <td className="px-4 py-2">{p.id}</td>
+                  <td className="px-4 py-2">{p.fullName}</td>
+                  <td className="px-4 py-2">{p.email}</td>
+                  <td className="px-4 py-2">{p.phone}</td>
+                  <td className="px-4 py-2">{p.dob}</td>
+                  <td className="px-4 py-2">{p.gender}</td>
+                  <td className="px-4 py-2">{p.address}</td>
+                  <td className="px-4 py-2">{translateStatus(p.latestStatus)}</td>
+                  <td className="px-4 py-2">
+                    <button
+                        onClick={() => handleViewHistory(p.id)}
+                        className="text-blue-600 underline hover:text-blue-800 transition"
+                    >
+                      Xem
+                    </button>
+                  </td>
+                </tr>
             ))}
-          </tbody>
-        </table>
-      </div>
-
-      {totalPages > 1 && (
-        <div className="flex justify-center mt-6 space-x-2">
-          {[...Array(totalPages).keys()].map((i) => (
-            <button
-              key={i}
-              onClick={() => setPage(i)}
-              className={`px-4 py-2 border rounded ${
-                i === page ? "bg-blue-500 text-white" : "bg-white"
-              }`}
-            >
-              {i + 1}
-            </button>
-          ))}
+            </tbody>
+          </table>
         </div>
-      )}
-    </div>
+
+        {/* Phân trang */}
+        {totalPages > 1 && (
+            <div className="flex justify-center mt-6">
+              <nav className="flex flex-wrap gap-2">
+                {Array.from({ length: totalPages }, (_, i) => (
+                    <button
+                        key={i}
+                        onClick={() => setPage(i)}
+                        className={`min-w-[36px] px-4 py-2 rounded-full border border-blue-500 text-sm font-medium
+                ${
+                            i === page
+                                ? "bg-blue-600 text-white"
+                                : "bg-white text-blue-600 hover:bg-blue-100"
+                        } transition duration-200`}
+                    >
+                      {i + 1}
+                    </button>
+                ))}
+              </nav>
+            </div>
+        )}
+      </div>
   );
 }
 
