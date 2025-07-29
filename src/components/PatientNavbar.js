@@ -26,7 +26,7 @@ export default function PatientNavbar() {
                     </li>
 
                     <li className="nav-item">
-                        <Link className="nav-link" to="/patient/feedback">Đánh Giá</Link> 
+                        <Link className="nav-link" to="/patient/feedback">Đánh Giá</Link>
                     </li>
 
                     <li className="nav-item">
@@ -35,6 +35,13 @@ export default function PatientNavbar() {
 
                     <li className="nav-item">
                         <Link className="nav-link" to="/patient/invoice">Xem hóa đơn</Link>
+                    </li>
+
+                    <li className="nav-item">
+                        <Link className="nav-link" to="/patient/payments">
+                            <i className="fas fa-credit-card me-2"></i>
+                            Thanh toán
+                        </Link>
                     </li>
 
                     <li className="nav-item">

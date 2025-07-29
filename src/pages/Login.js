@@ -19,6 +19,9 @@ function Login() {
                 case 'ROLE_RECEPTIONIST':
                     navigate('/receptionist');
                     break;
+                case 'ROLE_DOCTOR':
+                    navigate('/doctor');
+                    break;
                 case 'ROLE_PATIENT':
                     navigate('/patient');
                     break;

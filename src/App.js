@@ -15,6 +15,9 @@ import Register from "./pages/Register";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 
 import "./assets/css/style.css";
+import "./assets/css/blog.css";
+import "./assets/css/doctor.css";
+import "./assets/css/patient-payment.css";
 import PatientLayout from "./pages/patient/PatientLayout";
 import AdminLayout from "./pages/admin/AdminLayout";
 import ReceptionistLayout from "./pages/receptionist/ReceptionistLayout";
@@ -37,7 +40,7 @@ import SubmitFeedback from "./pages/patient/SubmitFeedback";
 import Profile from "./pages/patient/Profile";
 import BookingForm from "./pages/patient/BookingForm";
 import BookingSuccess from "./pages/patient/BookingSuccess";
-import HistoryAppointment from"./pages/patient/HistoryAppointment";
+import HistoryAppointment from "./pages/patient/HistoryAppointment";
 import UserAccountPage from "./pages/admin/UserAccountPage";
 import UserPatientPage from "./pages/admin/UserPatientPage";
 import UserReceptionistPage from "./pages/admin/UserReceptionistPage";
@@ -48,37 +51,50 @@ import AppointmentDetailModal from "./pages/patient/AppointmentDetailModal";
 import DoctorDetail from "./pages/DoctorDetail";
 import ReceptionistProfile from "./pages/receptionist/ReceptionistProfile";
 import ChangePassword2 from "./pages/ChangePassword";
+import BlogList from "./pages/BlogList";
+import BlogDetail from "./pages/BlogDetail";
+import BlogManagement from "./pages/admin/BlogManagement";
+import DoctorLayout from "./pages/doctor/DoctorLayout";
+import DoctorAppointments from "./pages/doctor/DoctorAppointments";
+import Invoice from "./pages/patient/Invoice";
+import UnpaidInvoices from "./pages/patient/UnpaidInvoices";
+import PaymentSuccess from "./pages/patient/PaymentSuccess";
 function App() {
-  return (
-      <Router>
-        <HeaderSub />
-        <Routes>
-            {/* Public routes */}
-            {/* Layout cho public route */}
-            <Route path="/" element={<PublicLayout />}>
-                <Route index element={<Home />} />  {/* tức là / */}
-                <Route path="about" element={<About />} />
-                <Route path="appointment" element={<Appointment />} />
-                <Route path="contact" element={<Contact />} />
-                <Route path="price" element={<Price />} />
-                <Route path="service" element={<Service />} />
-                <Route path="team" element={<Team />} />
-                <Route path="doctor/:id" element={<DoctorDetail />} />
-                <Route path="testimonial" element={<Testimonial />} />
-                <Route path="login" element={<Login />} />
-                <Route path="register" element={<Register />} />
-                <Route path="forgotPasswordPage" element={<ForgotPasswordPage />} />
-            </Route>
+    return (
+        <Router>
+            <HeaderSub />
+            <Routes>
+                {/* Public routes */}
+                {/* Layout cho public route */}
+                <Route path="/" element={<PublicLayout />}>
+                    <Route index element={<Home />} />  {/* tức là / */}
+                    <Route path="about" element={<About />} />
+                    <Route path="appointment" element={<Appointment />} />
+                    <Route path="contact" element={<Contact />} />
+                    <Route path="price" element={<Price />} />
+                    <Route path="service" element={<Service />} />
+                    <Route path="team" element={<Team />} />
+                    <Route path="doctor/:id" element={<DoctorDetail />} />
+                    <Route path="testimonial" element={<Testimonial />} />
+                    <Route path="blog" element={<BlogList />} />
+                    <Route path="blog/:id" element={<BlogDetail />} />
+                    <Route path="login" element={<Login />} />
+                    <Route path="register" element={<Register />} />
+                    <Route path="forgotPasswordPage" element={<ForgotPasswordPage />} />
+                </Route>
 
                 {/* Route riêng cho Unauthorized */}
                 <Route path="/unauthorized" element={<Unauthorized />} />
 
-            {/* Patient layout + routes */}
+                {/* Patient layout + routes */}
                 <Route path="/patient" element={
                     <PrivateRoute allowedRoles={["ROLE_PATIENT"]}>
                         <PatientLayout />
                     </PrivateRoute>
                 }>
+                    <Route path="invoice" element={<Invoice />} />
+                    <Route path="payments" element={<UnpaidInvoices />} />
+                    <Route path="payment-success" element={<PaymentSuccess />} />
                     <Route index element={<PatientDashboard />} />
                     {/*<Route path="profile" element={<PatientProfile />} />*/}
                     <Route path="booking" element={<BookingForm />} />
@@ -91,7 +107,7 @@ function App() {
                     <Route path="change-password" element={<ChangePassword />} />
                     <Route path="appointmentDetail" element={<AppointmentDetailModal />} />
                 </Route>
-                
+
 
                 {/* Admin layout + routes */}
                 <Route path="/admin" element={
@@ -102,18 +118,19 @@ function App() {
                     <Route path="usersPatient" element={<UserPatientPage />} />
                     <Route path="usersReceptionist" element={<UserReceptionistPage />} />
                     <Route path="usersActivityLog" element={<UserActivityLogPage />} />
+                    <Route path="blog-management" element={<BlogManagement />} />
                     <Route path="change-password" element={<ChangePassword2 />} />
                     {/*<Route index element={<AdminDashboard />} />*/}
                     {/*<Route path="users" element={<UserManagement />} />*/}
                 </Route>
 
-            {/* Receptionist layout + routes */}
-            <Route path="/receptionist" element={
-                <PrivateRoute allowedRoles={["ROLE_RECEPTIONIST"]}>
-                    <ReceptionistLayout />
-                </PrivateRoute>}>
-                {/*<Route index element={<ReceptionistDashboard />} />*/} 
-                    <Route index element={<ReceptionistDashboard />} />   
+                {/* Receptionist layout + routes */}
+                <Route path="/receptionist" element={
+                    <PrivateRoute allowedRoles={["ROLE_RECEPTIONIST"]}>
+                        <ReceptionistLayout />
+                    </PrivateRoute>}>
+                    {/*<Route index element={<ReceptionistDashboard />} />*/}
+                    <Route index element={<ReceptionistDashboard />} />
                     <Route path="patients" element={<PatientList />} />
                     <Route path="rooms" element={<RoomList />} />
                     <Route path="/receptionist/patient-history/:id" element={<PatientHistory />} />
@@ -121,8 +138,20 @@ function App() {
                     <Route path="appointments" element={<AppointmentReceptionist />} />
                     <Route path="profile" element={<ReceptionistProfile />} />
                     <Route path="change-password" element={<ChangePassword />} />
-                {/*<Route path="appointments" element={<ManageAppointments />} />*/}
-            </Route>
+                    {/*<Route path="appointments" element={<ManageAppointments />} />*/}
+                </Route>
+
+                {/* Doctor layout + routes */}
+                <Route path="/doctor" element={
+                    <PrivateRoute allowedRoles={["ROLE_DOCTOR"]}>
+                        <DoctorLayout />
+                    </PrivateRoute>}>
+                    <Route index element={<DoctorAppointments />} />
+                    <Route path="appointments" element={<DoctorAppointments />} />
+                    <Route path="patients" element={<PatientList />} />
+                    <Route path="profile" element={<ReceptionistProfile />} />
+                    <Route path="change-password" element={<ChangePassword />} />
+                </Route>
 
                 {/* 404 Not Found */}
                 <Route path="*" element={<h1>404 Not Found</h1>} />
