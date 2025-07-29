@@ -13,6 +13,7 @@
     "framer-motion": "^12.23.6",
     "jquery": "^3.7.1",
     "react": "^19.1.0",
+    "react-bootstrap": "^2.10.10",
     "react-compare-image": "^3.5.5",
     "react-datepicker": "^8.4.0",
     "react-dom": "^19.1.0",

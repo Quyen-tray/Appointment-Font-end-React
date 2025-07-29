@@ -37,6 +37,10 @@ export default function ReceptionistNavbar() {
                     </li>
 
                     <li className="nav-item">
+                        <Link className="nav-link" to="/receptionist/contacts">Liên hệ</Link>
+                    </li>
+
+                    <li className="nav-item">
                         <Link className="nav-link" to="/receptionist/profile">Profile</Link>
                     </li>
                     <li className="nav-item">

@@ -42,8 +42,12 @@ import UserAccountPage from "./pages/admin/UserAccountPage";
 import UserPatientPage from "./pages/admin/UserPatientPage";
 import UserReceptionistPage from "./pages/admin/UserReceptionistPage";
 import UserActivityLogPage from "./pages/admin/UserActivityLogPage";
+import Invoice from "./pages/patient/Invoice";
 import ChangePassword from "./pages/patient/ChangePassword";
 import AppointmentDetailModal from "./pages/patient/AppointmentDetailModal";
+import ReceptionistContactList from "./pages/receptionist/ReceptionistContactList";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 import DoctorDetail from "./pages/DoctorDetail";
 import ReceptionistProfile from "./pages/receptionist/ReceptionistProfile";
@@ -59,7 +63,7 @@ function App() {
                 <Route index element={<Home />} />  {/* tức là / */}
                 <Route path="about" element={<About />} />
                 <Route path="appointment" element={<Appointment />} />
-                <Route path="contact" element={<Contact />} />
+                      <Route path="contact" element={<Contact />} />
                 <Route path="price" element={<Price />} />
                 <Route path="service" element={<Service />} />
                 <Route path="team" element={<Team />} />
@@ -88,6 +92,7 @@ function App() {
                     <Route path="medicalvisit" element={<MedicalVisit />} />
                     <Route path="feedback" element={<PatientFeedback />} />
                     <Route path="feedback/submit" element={<SubmitFeedback />} />
+                    <Route path="invoice" element={<Invoice />} />
                     <Route path="change-password" element={<ChangePassword />} />
                     <Route path="appointmentDetail" element={<AppointmentDetailModal />} />
                 </Route>
@@ -119,6 +124,7 @@ function App() {
                     <Route path="/receptionist/patient-history/:id" element={<PatientHistory />} />
                     <Route path="/receptionist/doctors" element={<DoctorList />} />
                     <Route path="appointments" element={<AppointmentReceptionist />} />
+                    <Route path="contacts" element={<ReceptionistContactList />} />
                     <Route path="profile" element={<ReceptionistProfile />} />
                     <Route path="change-password" element={<ChangePassword />} />
                 {/*<Route path="appointments" element={<ManageAppointments />} />*/}
