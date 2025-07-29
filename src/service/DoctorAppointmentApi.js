@@ -199,5 +199,18 @@ export const DoctorAppointmentApi = {
             console.error("Error creating lab request:", error);
             throw error;
         }
+    },
+
+    // Delete lab request by ID
+    deleteLabRequest: async (labRequestId) => {
+        try {
+            const response = await axios.delete(`http://localhost:8081/api/labrequests/${labRequestId}`, {
+                headers: getAuthHeader(),
+            });
+            return response.data;
+        } catch (error) {
+            console.error("Error deleting lab request:", error);
+            throw error;
+        }
     }
 }; 

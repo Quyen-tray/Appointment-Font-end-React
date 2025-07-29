@@ -202,14 +202,7 @@ export default function DoctorAppointments() {
 
                 {/* Filters */}
                 <div className="row mb-4">
-                    <div className="col-md-3">
-                        <input
-                            type="date"
-                            className="form-control"
-                            value={filters.date}
-                            onChange={(e) => setFilters({ ...filters, date: e.target.value })}
-                        />
-                    </div>
+                    
                     <div className="col-md-4">
                         <input
                             type="text"

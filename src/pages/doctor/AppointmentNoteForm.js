@@ -33,7 +33,7 @@ export default function AppointmentNoteForm({ appointment, onClose, onSave }) {
             setMedicalVisitId(response.medicalVisit.id);
             setFormData({
                 note: response.medicalVisit.note || "",
-                labRequests: response.labRequests.map(lab => ({
+                labRequests: response.labRequests?.map(lab => ({
                     labId: lab.labId,
                     visitId: lab.visitId,
                     requestedBy: lab.requestedBy,
@@ -76,11 +76,41 @@ export default function AppointmentNoteForm({ appointment, onClose, onSave }) {
         }));
     };
 
-    const removeLabRequest = (index) => {
-        setFormData(prev => ({
-            ...prev,
-            labRequests: prev.labRequests.filter((_, i) => i !== index)
-        }));
+    const removeLabRequest = async (index) => {
+        const labRequest = formData.labRequests[index];
+
+        // If lab request has labId, it means it's already saved in database
+        if (labRequest.labId) {
+            if (!window.confirm(`⚠️ CẢNH BÁO: Bạn đang xóa xét nghiệm "${labRequest.testType}" đã được lưu trong hệ thống.\n\nHành động này không thể hoàn tác. Bạn có chắc chắn muốn tiếp tục?`)) {
+                return;
+            }
+
+            try {
+                setSavingLabRequests(true);
+                // Call API to delete from database
+                await DoctorAppointmentApi.deleteLabRequest(labRequest.labId);
+
+                // Refresh data from server after successful deletion
+                await fetchMedicalVisit();
+
+                alert("✅ Xóa xét nghiệm thành công khỏi hệ thống!");
+            } catch (err) {
+                alert("❌ Có lỗi xảy ra khi xóa xét nghiệm khỏi hệ thống!");
+                console.error("Error deleting lab request:", err);
+            } finally {
+                setSavingLabRequests(false);
+            }
+        } else {
+            // If no labId, just remove from local state (not saved yet)
+            if (labRequest.testType && !window.confirm(`Bạn có muốn xóa xét nghiệm "${labRequest.testType}" khỏi danh sách?`)) {
+                return;
+            }
+
+            setFormData(prev => ({
+                ...prev,
+                labRequests: prev.labRequests.filter((_, i) => i !== index)
+            }));
+        }
     };
 
     const updateLabRequest = (index, field, value) => {
@@ -416,17 +446,21 @@ export default function AppointmentNoteForm({ appointment, onClose, onSave }) {
                                     </div>
                                 </div>
                                 {formData.labRequests.map((request, index) => (
-                                    <div key={request.labId || index} className="border rounded p-3 mb-2 bg-light">
+                                    <div key={request.labId || index} className={`border rounded p-3 mb-2 ${request.labId ? 'lab-request-saved' : 'lab-request-unsaved'}`}>
                                         <div className="row">
                                             <div className="col-md-4">
-                                                <label className="form-label fw-bold">Loại xét nghiệm</label>
+                                                <label className="form-label fw-bold">
+                                                    Loại xét nghiệm
+                                                    {request.labId && <i className="fas fa-check-circle text-success ms-1" title="Đã lưu"></i>}
+                                                    {!request.labId && <i className="fas fa-exclamation-circle text-warning ms-1" title="Chưa lưu"></i>}
+                                                </label>
                                                 <input
                                                     type="text"
                                                     className="form-control form-control-sm"
                                                     placeholder="Nhập tên xét nghiệm"
                                                     value={request.testType}
                                                     onChange={(e) => updateLabRequest(index, 'testType', e.target.value)}
-                                                    disabled={loading || savingLabRequests}
+                                                    disabled={loading || savingLabRequests || !!request.labId}
                                                 />
                                             </div>
                                             <div className="col-md-3">
@@ -437,7 +471,7 @@ export default function AppointmentNoteForm({ appointment, onClose, onSave }) {
                                                     placeholder="0"
                                                     value={request.price}
                                                     onChange={(e) => updateLabRequest(index, 'price', parseFloat(e.target.value) || 0)}
-                                                    disabled={loading || savingLabRequests}
+                                                    disabled={loading || savingLabRequests || !!request.labId}
                                                 />
                                             </div>
                                             <div className="col-md-3">
@@ -448,7 +482,7 @@ export default function AppointmentNoteForm({ appointment, onClose, onSave }) {
                                                     placeholder="Ghi chú cho xét nghiệm"
                                                     value={request.result}
                                                     onChange={(e) => updateLabRequest(index, 'result', e.target.value)}
-                                                    disabled={loading || savingLabRequests}
+                                                    disabled={loading || savingLabRequests || !!request.labId}
                                                 />
                                             </div>
                                             <div className="col-md-2">
@@ -456,22 +490,30 @@ export default function AppointmentNoteForm({ appointment, onClose, onSave }) {
                                                 <div>
                                                     <button
                                                         type="button"
-                                                        className="btn btn-sm btn-outline-danger"
+                                                        className={`btn btn-sm ${request.labId ? 'lab-request-delete-permanent' : 'btn-outline-danger'}`}
                                                         onClick={() => removeLabRequest(index)}
                                                         disabled={loading || savingLabRequests}
-                                                        title="Xóa xét nghiệm"
+                                                        title={request.labId ? "Xóa khỏi hệ thống" : "Xóa khỏi danh sách"}
                                                     >
-                                                        <i className="fas fa-trash"></i>
+                                                        {savingLabRequests ? (
+                                                            <div className="spinner-border spinner-border-sm" role="status"></div>
+                                                        ) : (
+                                                            <i className="fas fa-trash"></i>
+                                                        )}
                                                     </button>
                                                 </div>
                                             </div>
                                         </div>
                                         {request.testType && (
-                                            <div className="mt-2">
+                                            <div className="mt-2 d-flex justify-content-between align-items-center">
                                                 <small className="text-info fw-bold">
                                                     <i className="fas fa-check-circle me-1"></i>
                                                     Trạng thái: {request.status || "PENDING"}
                                                 </small>
+                                                <span className={`lab-request-status-indicator ${request.labId ? 'lab-request-saved-indicator' : 'lab-request-unsaved-indicator'}`}>
+                                                    <i className={`fas ${request.labId ? 'fa-database' : 'fa-clock'} me-1`}></i>
+                                                    {request.labId ? 'Đã lưu vào hệ thống' : 'Chưa lưu'}
+                                                </span>
                                             </div>
                                         )}
                                     </div>
@@ -499,6 +541,24 @@ export default function AppointmentNoteForm({ appointment, onClose, onSave }) {
                                         </div>
                                     </div>
                                 )}
+
+                                {getNewLabRequestsCount() > 0 && (
+                                    <div className="mt-3 p-2 bg-warning bg-opacity-10 rounded border border-warning">
+                                        <div className="d-flex justify-content-between align-items-center">
+                                            <span className="fw-bold text-warning">
+                                                <i className="fas fa-exclamation-triangle me-1"></i>
+                                                Xét nghiệm chưa lưu:
+                                            </span>
+                                            <span className="fw-bold text-danger fs-5">
+                                                {getNewLabRequestsCount()} xét nghiệm - {getNewLabRequestsTotal().toLocaleString()} VNĐ
+                                            </span>
+                                        </div>
+                                        <small className="text-muted d-block mt-1">
+                                            <i className="fas fa-info-circle me-1"></i>
+                                            Nhấn "Lưu xét nghiệm" để lưu các xét nghiệm chưa được lưu
+                                        </small>
+                                    </div>
+                                )}
                             </div>
                         </div>
 
@@ -512,7 +572,7 @@ export default function AppointmentNoteForm({ appointment, onClose, onSave }) {
                                 Hủy
                             </button>
 
-                           
+
                         </div>
                     </form>
                 </motion.div>
