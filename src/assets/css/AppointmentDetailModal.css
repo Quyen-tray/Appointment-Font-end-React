@@ -1,0 +1,75 @@
+.custom-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(3px);
+}
+
+.custom-modal {
+  background: linear-gradient(to bottom right, #ffffff, #f0f8ff);
+  padding: 30px 40px;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 650px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  position: relative;
+  animation: slideIn 0.3s ease;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.custom-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+}
+
+.custom-modal-header h2 {
+  font-size: 20px;
+  color: #333;
+  margin: 0;
+}
+
+.custom-modal-body {
+  margin-top: 20px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #444;
+}
+
+.custom-modal-footer {
+  margin-top: 25px;
+  text-align: right;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #888;
+  transition: color 0.2s;
+}
+
+.close-button:hover {
+  color: #333;
+}

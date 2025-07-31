@@ -45,10 +45,10 @@ function Contact() {
             <div className="container-fluid bg-primary py-5 hero-header mb-5">
                 <div className="row py-3">
                     <div className="col-12 text-center">
-                        <h1 className="display-3 text-white">Contact Us</h1>
-                        <Link to="/" className="h4 text-white">Home</Link>
+                        <h1 className="display-3 text-white">Liên hệ</h1>
+                        <Link to="/" className="h4 text-white">Trang chủ</Link>
                         <i className="far fa-circle text-white px-2"></i>
-                        <Link to="/contact" className="h4 text-white">Contact</Link>
+                        <Link to="/contact" className="h4 text-white">Liên hệ</Link>
                     </div>
                 </div>
             </div>
@@ -70,28 +70,28 @@ function Contact() {
                             <div className="bg-light rounded h-100 p-5">
                                 <div className="section-title">
                                     <h5 className="position-relative d-inline-block text-primary text-uppercase">
-                                        Contact Us
+                                        Liên hệ với chúng tôi
                                     </h5>
-                                    <h1 className="display-6 mb-4">Feel Free To Contact Us</h1>
+                                    <h1 className="display-6 mb-4">Vui lòng liên hệ với chúng tôi!</h1>
                                 </div>
                                 <div className="d-flex align-items-center mb-2">
                                     <i className="bi bi-geo-alt fs-1 text-primary me-3"></i>
                                     <div className="text-start">
-                                        <h5 className="mb-0">Our Office</h5>
+                                        <h5 className="mb-0">Văn phòng của chúng tôi</h5>
                                         <span>123 Street, New York, USA</span>
                                     </div>
                                 </div>
                                 <div className="d-flex align-items-center mb-2">
                                     <i className="bi bi-envelope-open fs-1 text-primary me-3"></i>
                                     <div className="text-start">
-                                        <h5 className="mb-0">Email Us</h5>
+                                        <h5 className="mb-0">Email của chúng tôi</h5>
                                         <span>info@example.com</span>
                                     </div>
                                 </div>
                                 <div className="d-flex align-items-center">
                                     <i className="bi bi-phone-vibrate fs-1 text-primary me-3"></i>
                                     <div className="text-start">
-                                        <h5 className="mb-0">Call Us</h5>
+                                        <h5 className="mb-0">Liên hệ với chúng tôi</h5>
                                         <span>+012 345 6789</span>
                                     </div>
                                 </div>
@@ -112,7 +112,7 @@ function Contact() {
                                         <input
                                             type="text"
                                             className="form-control border-0 bg-light px-4"
-                                            placeholder="Your Name"
+                                            placeholder="Tên của bạn"
                                             style={{ height: '55px' }}
                                             value={name}
                                             onChange={(e) => setName(e.target.value)}
@@ -134,7 +134,7 @@ function Contact() {
                                         <input
                                             type="text"
                                             className="form-control border-0 bg-light px-4"
-                                            placeholder="Subject"
+                                            placeholder="Chủ thể"
                                             style={{ height: '55px' }}
                                             value={subject}
                                             onChange={(e) => setSubject(e.target.value)}
@@ -145,7 +145,7 @@ function Contact() {
                                         <textarea
                                             className="form-control border-0 bg-light px-4 py-3"
                                             rows="5"
-                                            placeholder="Message"
+                                            placeholder="Tin nhắn"
                                             value={message}
                                             onChange={(e) => setMessage(e.target.value)}
                                             required

@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -21,6 +20,7 @@ import AdminLayout from "./pages/admin/AdminLayout";
 import ReceptionistLayout from "./pages/receptionist/ReceptionistLayout";
 import Unauthorized from "./pages/Unauthorized";
 import PublicLayout from "./pages/PublicLayout";
+import PatientDashboard from "./pages/patient/PatientDashboard";
 // import PatientDashboard from "./pages/patient/PatientDashboard";
 
 import ReceptionistDashboard from './pages/receptionist/ReceptionistDashboard';
@@ -46,8 +46,12 @@ import UserReceptionistPage from "./pages/admin/UserReceptionistPage";
 import UserActivityLogPage from "./pages/admin/UserActivityLogPage";
 import LoginAuditPage from "./pages/admin/LoginAuditPage";
 
-import ChangePassword from "./pages/patient/ChangePassword";
 import Invoice from "./pages/patient/Invoice";
+import ChangePassword from "./pages/patient/ChangePassword";
+import AppointmentDetailModal from "./pages/patient/AppointmentDetailModal";
+import ReceptionistContactList from "./pages/receptionist/ReceptionistContactList";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 import DoctorDetail from "./pages/DoctorDetail";
 import ReceptionistProfile from "./pages/receptionist/ReceptionistProfile";
 function App() {
@@ -61,7 +65,7 @@ function App() {
                 <Route index element={<Home />} />  {/* tức là / */}
                 <Route path="about" element={<About />} />
                 <Route path="appointment" element={<Appointment />} />
-                <Route path="contact" element={<Contact />} />
+                      <Route path="contact" element={<Contact />} />
                 <Route path="price" element={<Price />} />
                 <Route path="service" element={<Service />} />
                 <Route path="team" element={<Team />} />
@@ -81,7 +85,7 @@ function App() {
                         <PatientLayout />
                     </PrivateRoute>
                 }>
-                    {/* <Route index element={<PatientDashboard />} /> */}
+                    <Route index element={<PatientDashboard />} />
                     {/*<Route path="profile" element={<PatientProfile />} />*/}
                     <Route path="booking" element={<BookingForm />} />
                     <Route path="booking-success" element={<BookingSuccess />} />
@@ -90,8 +94,9 @@ function App() {
                     <Route path="medicalvisit" element={<MedicalVisit />} />
                     <Route path="feedback" element={<PatientFeedback />} />
                     <Route path="feedback/submit" element={<SubmitFeedback />} />
-                    <Route path="change-password" element={<ChangePassword />} />
                     <Route path="invoice" element={<Invoice />} />
+                    <Route path="change-password" element={<ChangePassword />} />
+                    <Route path="appointmentDetail" element={<AppointmentDetailModal />} />
                 </Route>
                 
 
@@ -106,7 +111,8 @@ function App() {
                     <Route path="usersReceptionist" element={<UserReceptionistPage />} />
                     <Route path="usersActivityLog" element={<UserActivityLogPage />} />
                     <Route path="loginAuditPage" element={<LoginAuditPage />} />
-                    <Route index element={<AdminHome />} />
+                    <Route index element={<AdminHome />} />                   
+                    {/*<Route index element={<AdminDashboard />} />*/}
                     {/*<Route path="users" element={<UserManagement />} />*/}
                 </Route>
 
@@ -122,8 +128,9 @@ function App() {
                     <Route path="/receptionist/patient-history/:id" element={<PatientHistory />} />
                     <Route path="/receptionist/doctors" element={<DoctorList />} />
                     <Route path="appointments" element={<AppointmentReceptionist />} />
+                    <Route path="contacts" element={<ReceptionistContactList />} />
                     <Route path="profile" element={<ReceptionistProfile />} />
-                    
+                    <Route path="change-password" element={<ChangePassword />} />
                 {/*<Route path="appointments" element={<ManageAppointments />} />*/}
             </Route>
 

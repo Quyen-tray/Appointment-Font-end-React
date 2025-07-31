@@ -26,11 +26,11 @@ export default function PatientNavbar() {
                     </li>
 
                     <li className="nav-item">
-                        <Link className="nav-link" to="/patient/feedback">Feedback</Link> 
+                        <Link className="nav-link" to="/patient/feedback">Đánh Giá</Link> 
                     </li>
 
                     <li className="nav-item">
-                        <Link className="nav-link" to="/patient/feedback/submit">Gửi Feedback</Link>
+                        <Link className="nav-link" to="/patient/feedback/submit">Gửi Đánh giá</Link>
                     </li>
 
                     <li className="nav-item">

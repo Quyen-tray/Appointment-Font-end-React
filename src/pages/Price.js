@@ -24,17 +24,17 @@ function Price() {
     const priceData = [
         {
             img: price1,
-            title: "Teeth Whitening",
+            title: "Làm trắng răng",
             price: "$35"
         },
         {
             img: price2,
-            title: "Dental Implant",
+            title: "Cấy ghép răng",
             price: "$49"
         },
         {
             img: price3,
-            title: "Root Canal",
+            title: "Kênh gốc",
             price: "$99"
         }
     ];
@@ -45,10 +45,10 @@ function Price() {
             <div className="container-fluid bg-primary py-5 hero-header mb-5">
                 <div className="row py-3">
                     <div className="col-12 text-center">
-                        <h1 className="display-3 text-white animated zoomIn">Pricing</h1>
-                        <Link to="/" className="h4 text-white">Home</Link>
+                        <h1 className="display-3 text-white animated zoomIn">Gói Dịch Vụ</h1>
+                        <Link to="/" className="h4 text-white">Trang chủ</Link>
                         <i className="far fa-circle text-white px-2"></i>
-                        <Link to="/price" className="h4 text-white">Pricing</Link>
+                        <Link to="/price" className="h4 text-white">Giá cả</Link>
                     </div>
                 </div>
             </div>
@@ -66,14 +66,10 @@ function Price() {
                             viewport={{ once: true }}
                         >
                             <div className="section-title mb-4">
-                                <h5 className="position-relative d-inline-block text-primary text-uppercase">Pricing Plan</h5>
-                                <h1 className="display-5 mb-0">We Offer Fair Prices for Dental Treatment</h1>
+                                <h5 className="position-relative d-inline-block text-primary text-uppercase">Kế hoạch giá</h5>
+                                <h1 className="display-5 mb-0">Chúng tôi cung cấp giá cả hợp lý cho điều trị nha khoa</h1>
                             </div>
-                            <p className="mb-4">
-                                Tempor erat elitr rebum at clita. Diam dolor diam ipsum et tempor sit. Aliqu diam amet diam et eos labore.
-                                Clita erat ipsum et lorem et sit, sed stet no labore lorem sit. Sanctus clita duo justo eirmod magna dolore erat amet
-                            </p>
-                            <h5 className="text-uppercase text-primary">Call for Appointment</h5>
+                            <h5 className="text-uppercase text-primary">LIÊN HỆ TRỰC TIẾP</h5>
                             <h1>+012 345 6789</h1>
                         </motion.div>
 
@@ -96,10 +92,10 @@ function Price() {
                                         <div className="position-relative text-center bg-light border-bottom border-primary py-5 p-4">
                                             <h4>{item.title}</h4>
                                             <hr className="text-primary w-50 mx-auto mt-0" />
-                                            <div className="d-flex justify-content-between mb-3"><span>Modern Equipment</span><i className="fa fa-check text-primary pt-1"></i></div>
-                                            <div className="d-flex justify-content-between mb-3"><span>Professional Dentist</span><i className="fa fa-check text-primary pt-1"></i></div>
-                                            <div className="d-flex justify-content-between mb-2"><span>24/7 Call Support</span><i className="fa fa-check text-primary pt-1"></i></div>
-                                            <Link to="/appointment" className="btn btn-primary py-2 px-4 position-absolute top-100 start-50 translate-middle">Appointment</Link>
+                                            <div className="d-flex justify-content-between mb-3"><span>Thiết bị hiện đại</span><i className="fa fa-check text-primary pt-1"></i></div>
+                                            <div className="d-flex justify-content-between mb-3"><span>Bác sĩ nha khoa chuyên nghiệp</span><i className="fa fa-check text-primary pt-1"></i></div>
+                                            <div className="d-flex justify-content-between mb-2"><span>Hỗ trợ cuộc gọi 24/7</span><i className="fa fa-check text-primary pt-1"></i></div>
+                                            <Link to="/appointment" className="btn btn-primary py-2 px-4 position-absolute top-100 start-50 translate-middle">Đặt lịch</Link>
                                         </div>
                                     </div>
                                 ))}

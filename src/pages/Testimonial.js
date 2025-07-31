@@ -6,13 +6,13 @@ import testimonial2 from "../assets/img/testimonial-2.jpg";
 const testimonials = [
     {
         image: testimonial1,
-        text: "Dolores sed duo clita justo dolor et stet lorem kasd dolore lorem ipsum. At lorem lorem magna ut et, nonumy labore diam erat. Erat dolor rebum sit ipsum.",
-        name: "Client One",
+        text: "Tôi rất hài lòng với dịch vụ tại bệnh viện nha khoa này. Đội ngũ bác sĩ tận tâm, nhẹ nhàng và luôn giải thích kỹ lưỡng trước khi điều trị. Không gian sạch sẽ, hiện đại, tạo cảm giác yên tâm khi đến khám răng. Chắc chắn sẽ quay lại khi cần!",
+        name: "— Nguyễn Thị Mai, 32 tuổi",
     },
     {
         image: testimonial2,
-        text: "Dolores sed duo clita justo dolor et stet lorem kasd dolore lorem ipsum. At lorem lorem magna ut et, nonumy labore diam erat. Erat dolor rebum sit ipsum.",
-        name: "Client Two",
+        text: "Lần đầu đến khám răng nhưng mình thấy rất ấn tượng. Thời gian chờ không lâu, nhân viên thân thiện, bác sĩ điều trị chuyên nghiệp. Chi phí cũng rõ ràng, hợp lý. Đây là địa chỉ nha khoa uy tín mà mình sẽ giới thiệu cho người thân.",
+        name: "— Jesica Nguyễn, 27 tuổi",
     },
 ];
 
@@ -23,10 +23,10 @@ function Testimonial() {
             <div className="container-fluid bg-primary py-5 hero-header mb-5">
                 <div className="row py-3">
                     <div className="col-12 text-center">
-                        <h1 className="display-3 text-white">Testimonial</h1>
-                        <Link to="/" className="h4 text-white">Home</Link>
+                        <h1 className="display-3 text-white">Lời chứng thực</h1>
+                        <Link to="/" className="h4 text-white">Trang chủ</Link>
                         <i className="far fa-circle text-white px-2"></i>
-                        <Link to="/testimonial" className="h4 text-white">Testimonial</Link>
+                        <Link to="/testimonial" className="h4 text-white">Lời chứng thực</Link>
                     </div>
                 </div>
             </div>

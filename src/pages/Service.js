@@ -14,10 +14,10 @@ function Service() {
             <div className="container-fluid bg-primary py-5 hero-header mb-5">
                 <div className="row py-3">
                     <div className="col-12 text-center">
-                        <h1 className="display-3 text-white animated zoomIn">Services</h1>
-                        <Link to="/" className="h4 text-white">Home</Link>
+                        <h1 className="display-3 text-white animated zoomIn">Dịch vụ</h1>
+                        <Link to="/" className="h4 text-white">Trang Chủ</Link>
                         <i className="far fa-circle text-white px-2"></i>
-                        <Link to="/service" className="h4 text-white">Services</Link>
+                        <Link to="/service" className="h4 text-white">Dịch vụ</Link>
                     </div>
                 </div>
             </div>
@@ -39,12 +39,12 @@ function Service() {
                         </div>
                         <div className="col-lg-7">
                             <div className="section-title mb-5">
-                                <h5 className="position-relative d-inline-block text-primary text-uppercase">Our Services</h5>
-                                <h1 className="display-5 mb-0">We Offer The Best Quality Dental Services</h1>
+                                <h5 className="position-relative d-inline-block text-primary text-uppercase">Dịch vụ của chúng tôi</h5>
+                                <h1 className="display-5 mb-0">Chúng tôi cung cấp dịch vụ nha khoa chất lượng tốt nhất</h1>
                             </div>
                             <div className="row g-5">
-                                <ServiceItem img={service1} title="Cosmetic Dentistry" />
-                                <ServiceItem img={service2} title="Dental Implants" />
+                                <ServiceItem img={service1} title="Nha khoa thẩm mỹ" />
+                                <ServiceItem img={service2} title="Cấy ghép răng" />
                             </div>
                         </div>
                     </div>
@@ -52,14 +52,14 @@ function Service() {
                     <div className="row g-5">
                         <div className="col-lg-7">
                             <div className="row g-5">
-                                <ServiceItem img={service3} title="Dental Bridges" />
-                                <ServiceItem img={service4} title="Teeth Whitening" />
+                                <ServiceItem img={service3} title="Cầu răng" />
+                                <ServiceItem img={service4} title="Làm trắng răng" />
                             </div>
                         </div>
                         <div className="col-lg-5">
                             <div className="position-relative bg-primary rounded h-100 d-flex flex-column align-items-center justify-content-center text-center p-4">
-                                <h3 className="text-white mb-3">Make Appointment</h3>
-                                <p className="text-white mb-3">Clita ipsum magna kasd rebum at ipsum amet dolor justo dolor est magna stet eirmod</p>
+                                <h3 className="text-white mb-3">Đặt lịch</h3>
+                                <p className="text-white mb-3">LIÊN HỆ TRỰC TIẾP</p>
                                 <h2 className="text-white mb-0">+012 345 6789</h2>
                             </div>
                         </div>

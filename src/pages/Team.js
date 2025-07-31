@@ -26,10 +26,10 @@ function Team() {
             <div className="container-fluid bg-primary py-5 hero-header mb-5">
                 <div className="row py-3">
                     <div className="col-12 text-center">
-                        <h1 className="display-3 text-white">Dentist</h1>
-                        <Link to="/" className="h4 text-white">Home</Link>
+                        <h1 className="display-3 text-white">Nha Sĩ</h1>
+                        <Link to="/" className="h4 text-white">Trang chủ</Link>
                         <i className="far fa-circle text-white px-2"></i>
-                        <Link to="/team" className="h4 text-white">Dentist</Link>
+                        <Link to="/team" className="h4 text-white">Nha Sĩ</Link>
                     </div>
                 </div>
             </div>
@@ -42,9 +42,9 @@ function Team() {
                         {/* Section Title */}
                         <div className="col-lg-4">
                             <div className="section-title bg-light rounded h-100 p-5">
-                                <h5 className="position-relative d-inline-block text-primary text-uppercase">Our Dentist</h5>
-                                <h1 className="display-6 mb-4">Meet Our Certified & Experienced Dentist</h1>
-                                <Link to="/appointment" className="btn btn-primary py-3 px-5">Appointment</Link>
+                                <h5 className="position-relative d-inline-block text-primary text-uppercase">Nha sĩ của chúng tôi</h5>
+                                <h1 className="display-6 mb-4">Gặp gỡ nha sĩ được chứng nhận và giàu kinh nghiệm của chúng tôi</h1>
+                                <Link to="/appointment" className="btn btn-primary py-3 px-5">Đặt lịch</Link>
                             </div>
                         </div>
 

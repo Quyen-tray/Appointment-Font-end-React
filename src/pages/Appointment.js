@@ -116,10 +116,10 @@ function Appointment() {
             <div className="container-fluid bg-primary py-5 hero-header mb-5">
                 <div className="row py-3">
                     <div className="col-12 text-center">
-                        <h1 className="display-3 text-white">Appointment</h1>
-                        <Link to="/" className="h4 text-white">Home</Link>
+                        <h1 className="display-3 text-white">Đặt lịch</h1>
+                        <Link to="/" className="h4 text-white">Trang Chủ</Link>
                         <i className="far fa-circle text-white px-2"></i>
-                        <Link to="/appointment" className="h4 text-white">Appointment</Link>
+                        <Link to="/appointment" className="h4 text-white">Đặt Lịch</Link>
                     </div>
                 </div>
             </div>
@@ -139,10 +139,10 @@ function Appointment() {
                         <div className="col-lg-6 py-5">
                             <div className="py-5">
                                 <h1 className="display-5 text-white mb-4">
-                                    We Are A Certified and Award Winning Dental Clinic You Can Trust
+                                    Chúng tôi là phòng khám nha khoa được chứng nhận và đạt giải thưởng mà bạn có thể tin tưởng
                                 </h1>
                                 <p className="text-white mb-0">
-                                    Eirmod sed tempor lorem ut dolores. Aliquyam sit sadipscing kasd ipsum...
+                                    ...
                                 </p>
                             </div>
                         </div>
@@ -155,17 +155,17 @@ function Appointment() {
                             viewport={{ once: true }}
                         >
                             <div className="appointment-form h-100 d-flex flex-column justify-content-center text-center p-5">
-                                <h1 className="text-white mb-4">Make Appointment</h1>
+                                <h1 className="text-white mb-4">Đặt Lịch</h1>
                                 <form onSubmit={handleSubmit}>
                                     <div className="row g-3">
-                                        {/* <div className="col-12 col-sm-6">
+                                        { <div className="col-12 col-sm-6">
                                             <select className="form-select bg-light border-0" style={{ height: '55px' }} defaultValue="1">
                                                 <option value="1">Chọn dịch vụ</option>
-                                                <option value="2">Service 1</option>
-                                                <option value="3">Service 2</option>
-                                                <option value="4">Service 3</option>
+                                                <option value="2">Dịch vụ 1</option>
+                                                <option value="3">Dịch vụ 2</option>
+                                                <option value="4">Dịch vụ 3</option>
                                             </select>
-                                        </div> */}
+                                        </div> }
                                         <div className="col-12 col-sm-6">
                                             <select className="form-select bg-light border-0" value={selectedDoctorId} onChange={(e) => setSelectedDoctorId(e.target.value)} style={{ height: '55px' }}>
                                                 <option value="">Chọn bác sĩ</option>
@@ -203,7 +203,7 @@ function Appointment() {
                                             />
                                         </div>
                                         <div className="col-12">
-                                            <button className="btn btn-dark w-100 py-3" type="submit">Tạo lịch hẹn</button>
+                                            <button className="btn btn-dark w-100 py-3" type="submit">Đặt lịch</button>
                                         </div>
                                     </div>
                                 </form>

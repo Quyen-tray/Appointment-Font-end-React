@@ -59,40 +59,40 @@ function Home() {
     const priceData = [
         {
             img: price1,
-            title: "Teeth Whitening",
+            title: "Làm trắng răng",
             price: "$35"
         },
         {
             img: price2,
-            title: "Dental Implant",
+            title: "Cấy ghép răng",
             price: "$49"
         },
         {
             img: price3,
-            title: "Root Canal",
+            title: "Kênh gốc",
             price: "$99"
         }
     ];
 
     const teamData = [
-        { img: team1, name: "Dr. John Doe", title: "Implant Surgeon" },
-        { img: team2, name: "Dr. Sarah Smith", title: "Orthodontist" },
-        { img: team3, name: "Dr. Lisa Nguyen", title: "Cosmetic Dentist" },
-        { img: team4, name: "Dr. James Lee", title: "Pediatric Dentist" },
-        { img: team5, name: "Dr. Emily Brown", title: "Periodontist" },
+        { img: team1, name: "drvuong EE3874", title: "Bác sĩ phẫu thuật cấy ghép" },
+        { img: team2, name: "Nguyễn Quang Quyền", title: "Bác sĩ chỉnh nha" },
+        { img: team3, name: "Lại Đức Tài", title: "Bác sĩ nha khoa thẩm mỹ" },
+        { img: team4, name: "Nguyễn Văn Long", title: "Bác sĩ nha khoa nhi khoa" },
+        { img: team5, name: "Đỗ Anh Sơn", title: "Bác sĩ nha chu" },
     ];
 
     // Nếu có nhiều đánh giá hơn sau này, dễ mở rộng
     const testimonials = [
         {
             image: testimonial1,
-            text: "Dolores sed duo clita justo dolor et stet lorem kasd dolore lorem ipsum. At lorem lorem magna ut et, nonumy labore diam erat. Erat dolor rebum sit ipsum.",
-            name: "Client One",
+            text: "Tôi rất hài lòng với dịch vụ tại bệnh viện nha khoa này. Đội ngũ bác sĩ tận tâm, nhẹ nhàng và luôn giải thích kỹ lưỡng trước khi điều trị. Không gian sạch sẽ, hiện đại, tạo cảm giác yên tâm khi đến khám răng. Chắc chắn sẽ quay lại khi cần!",
+            name: "— Nguyễn Thị Mai, 32 tuổi",
         },
         {
             image: testimonial2,
-            text: "Dolores sed duo clita justo dolor et stet lorem kasd dolore lorem ipsum. At lorem lorem magna ut et, nonumy labore diam erat. Erat dolor rebum sit ipsum.",
-            name: "Client Two",
+            text: "Lần đầu đến khám răng nhưng mình thấy rất ấn tượng. Thời gian chờ không lâu, nhân viên thân thiện, bác sĩ điều trị chuyên nghiệp. Chi phí cũng rõ ràng, hợp lý. Đây là địa chỉ nha khoa uy tín mà mình sẽ giới thiệu cho người thân.",
+            name: "— Jessica Nguyễn, 27 tuổi",
         },
     ];
   return (
@@ -111,10 +111,10 @@ function Home() {
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.8 }}
                             >
-                                <h5 className="text-white text-uppercase mb-3">Keep Your Teeth Healthy</h5>
-                                <h1 className="display-1 text-white mb-md-4">Take The Best Quality Dental Treatment</h1>
-                                <Link to="/appointment" className="btn btn-primary py-md-3 px-md-5 me-3">Appointment</Link>
-                                <Link to="/contact" className="btn btn-secondary py-md-3 px-md-5">Contact Us</Link>
+                                <h5 className="text-white text-uppercase mb-3">Giữ cho răng của bạn khỏe mạnh</h5>
+                                <h1 className="display-1 text-white mb-md-4">Hãy sử dụng dịch vụ chăm sóc răng miệng chất lượng tốt nhất</h1>
+                                <Link to="/appointment" className="btn btn-primary py-md-3 px-md-5 me-3">Đặt lịch</Link>
+                                <Link to="/contact" className="btn btn-secondary py-md-3 px-md-5">Liên hệ</Link>
                             </motion.div>
                         </div>
                     </div>
@@ -128,10 +128,10 @@ function Home() {
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.8, delay: 0.2 }}
                             >
-                                <h5 className="text-white text-uppercase mb-3">Keep Your Teeth Healthy</h5>
-                                <h1 className="display-1 text-white mb-md-4">Take The Best Quality Dental Treatment</h1>
-                                <Link to="/appointment" className="btn btn-primary py-md-3 px-md-5 me-3">Appointment</Link>
-                                <Link to="/contact" className="btn btn-secondary py-md-3 px-md-5">Contact Us</Link>
+                                <h5 className="text-white text-uppercase mb-3">Giữ cho răng của bạn khỏe mạnh</h5>
+                                <h1 className="display-1 text-white mb-md-4">Hãy sử dụng dịch vụ chăm sóc răng miệng chất lượng tốt nhất</h1>
+                                <Link to="/appointment" className="btn btn-primary py-md-3 px-md-5 me-3">Đặt lịch</Link>
+                                <Link to="/contact" className="btn btn-secondary py-md-3 px-md-5">Liên hệ</Link>
                             </motion.div>
                         </div>
                     </div>
@@ -160,20 +160,20 @@ function Home() {
                             whileInView={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.5 }}
                         >
-                            <h3 className="text-white mb-3">Opening Hours</h3>
+                            <h3 className="text-white mb-3">Giờ hoạt động</h3>
                             <div className="d-flex justify-content-between text-white mb-3">
-                                <h6 className="mb-0">Mon - Fri</h6>
+                                <h6 className="mb-0">Thứ 2 - Thứ 5</h6>
                                 <p className="mb-0">8:00am - 9:00pm</p>
                             </div>
                             <div className="d-flex justify-content-between text-white mb-3">
-                                <h6 className="mb-0">Saturday</h6>
+                                <h6 className="mb-0">Tthứ 7</h6>
                                 <p className="mb-0">8:00am - 7:00pm</p>
                             </div>
                             <div className="d-flex justify-content-between text-white mb-3">
-                                <h6 className="mb-0">Sunday</h6>
+                                <h6 className="mb-0">Chủ nhật</h6>
                                 <p className="mb-0">8:00am - 5:00pm</p>
                             </div>
-                            <Link className="btn btn-light" to="/appointment">Appointment</Link>
+                            <Link className="btn btn-light" to="/appointment">Đặt lịch</Link>
                         </motion.div>
                     </div>
 
@@ -185,18 +185,18 @@ function Home() {
                             whileInView={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5, delay: 0.2 }}
                         >
-                            <h3 className="text-white mb-3">Search A Doctor</h3>
+                            <h3 className="text-white mb-3">Tìm kiếm bác sĩ</h3>
                             <div className="date mb-3">
-                                <input type="text" className="form-control bg-light border-0 datetimepicker-input" placeholder="Appointment Date" style={{ height: "40px" }} />
+                                <input type="text" className="form-control bg-light border-0 datetimepicker-input" placeholder="Ngày Khám" style={{ height: "40px" }} />
                             </div>
                             <select className="form-select bg-light border-0 mb-3" style={{ height: "40px" }} defaultValue="1">
-                                <option value="1">Select A Service</option>
-                                <option value="2">Service 1</option>
-                                <option value="3">Service 2</option>
-                                <option value="4">Service 3</option>
+                                <option value="1">Chọn dịch vụ</option>
+                                <option value="2">Dịch vụ 1</option>
+                                <option value="3">Dịch vụ 2</option>
+                                <option value="4">Dịch vụ 3</option>
                             </select>
                             {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                            <a className="btn btn-light" href="#">Search Doctor</a>
+                            <a className="btn btn-light" href="#">Tìm bác sĩ</a>
                         </motion.div>
                     </div>
 
@@ -208,8 +208,8 @@ function Home() {
                             whileInView={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.5, delay: 0.4 }}
                         >
-                            <h3 className="text-white mb-3">Make Appointment</h3>
-                            <p className="text-white">Ipsum erat ipsum dolor clita rebum no rebum dolores labore, ipsum magna at eos et eos amet.</p>
+                            <h3 className="text-white mb-3">Đặt lịch</h3>
+                            <p className="text-white">LIÊN HỆ TRỰC TIẾP</p>
                             <h2 className="text-white mb-0">+012 345 6789</h2>
                         </motion.div>
                     </div>
@@ -231,11 +231,11 @@ function Home() {
                 <div className="row g-5">
                     <div className="col-lg-7">
                         <div className="section-title mb-4">
-                            <h5 className="position-relative d-inline-block text-primary text-uppercase">About Us</h5>
-                            <h1 className="display-5 mb-0">The World's Best Dental Clinic That You Can Trust</h1>
+                            <h5 className="position-relative d-inline-block text-primary text-uppercase">Chúng tôi</h5>
+                            <h1 className="display-5 mb-0">Phòng khám nha khoa tốt nhất thế giới mà bạn có thể tin tưởng</h1>
                         </div>
-                        <h4 className="text-body fst-italic mb-4">Diam dolor diam ipsum sit...</h4>
-                        <p className="mb-4">Tempor erat elitr rebum at clita...</p>
+                        <h4 className="text-body fst-italic mb-4">Chăm sóc toàn diện...</h4>
+                        <p className="mb-4">Tận tâm từng phút, vững bước cùng bạn!</p>
                         <div className="row g-3">
                             <motion.div
                                 className="col-sm-6"
@@ -244,8 +244,8 @@ function Home() {
                                 transition={{ delay: 0.3, duration: 0.5 }}
                                 viewport={{ once: true }}
                             >
-                                <h5 className="mb-3"><i className="fa fa-check-circle text-primary me-3"></i>Award Winning</h5>
-                                <h5 className="mb-3"><i className="fa fa-check-circle text-primary me-3"></i>Professional Staff</h5>
+                                <h5 className="mb-3"><i className="fa fa-check-circle text-primary me-3"></i>Đoạt giải thưởng</h5>
+                                <h5 className="mb-3"><i className="fa fa-check-circle text-primary me-3"></i>Đội ngũ chuyên nghiệp</h5>
                             </motion.div>
 
                             <motion.div
@@ -255,8 +255,8 @@ function Home() {
                                 transition={{ delay: 0.6, duration: 0.5 }}
                                 viewport={{ once: true }}
                             >
-                                <h5 className="mb-3"><i className="fa fa-check-circle text-primary me-3"></i>24/7 Opened</h5>
-                                <h5 className="mb-3"><i className="fa fa-check-circle text-primary me-3"></i>Fair Prices</h5>
+                                <h5 className="mb-3"><i className="fa fa-check-circle text-primary me-3"></i>Mở cửa 24/7</h5>
+                                <h5 className="mb-3"><i className="fa fa-check-circle text-primary me-3"></i>Giá cả hợp lý</h5>
                             </motion.div>
                         </div>
 
@@ -266,7 +266,7 @@ function Home() {
                             transition={{ delay: 0.6 }}
                             viewport={{ once: true }}
                         >
-                            <Link to="/appointment" className="btn btn-primary py-3 px-5 mt-4">Make Appointment</Link>
+                            <Link to="/appointment" className="btn btn-primary py-3 px-5 mt-4">Đặt lịch</Link>
                         </motion.div>
                     </div>
 
@@ -302,10 +302,10 @@ function Home() {
                     <div className="col-lg-6 py-5">
                         <div className="py-5">
                             <h1 className="display-5 text-white mb-4">
-                                We Are A Certified and Award Winning Dental Clinic You Can Trust
+                                Chúng tôi là phòng khám nha khoa được chứng nhận và đạt giải thưởng mà bạn có thể tin tưởng
                             </h1>
                             <p className="text-white mb-0">
-                                Eirmod sed tempor lorem ut dolores. Aliquyam sit sadipscing kasd ipsum...
+                                ...
                             </p>
                         </div>
                     </div>
@@ -318,36 +318,36 @@ function Home() {
                         viewport={{ once: true }}
                     >
                         <div className="appointment-form h-100 d-flex flex-column justify-content-center text-center p-5">
-                            <h1 className="text-white mb-4">Make Appointment</h1>
+                            <h1 className="text-white mb-4">Đặt lịch</h1>
                             <form>
                                 <div className="row g-3">
                                     <div className="col-12 col-sm-6">
                                         <select className="form-select bg-light border-0" style={{ height: '55px' }} defaultValue="1">
-                                            <option value="1">Select A Service</option>
-                                            <option value="2">Service 1</option>
-                                            <option value="3">Service 2</option>
-                                            <option value="4">Service 3</option>
+                                            <option value="1">Chọn dịch vụ</option>
+                                            <option value="2">Dịch vụ 1</option>
+                                            <option value="3">Dịch vụ 2</option>
+                                            <option value="4">Dịch Vụ 3</option>
                                         </select>
                                     </div>
                                     <div className="col-12 col-sm-6">
                                         <select className="form-select bg-light border-0" style={{ height: '55px' }} defaultValue="1">
-                                            <option value="1">Select Doctor</option>
-                                            <option value="2">Doctor 1</option>
-                                            <option value="3">Doctor 2</option>
-                                            <option value="4">Doctor 3</option>
+                                            <option value="1">Chọn Bác Sĩ</option>
+                                            <option value="2">Bác Sĩ 1</option>
+                                            <option value="3">Bác Sĩ 2</option>
+                                            <option value="4">Bác Sĩ 3</option>
                                         </select>
                                     </div>
                                     <div className="col-12 col-sm-6">
-                                        <input type="text" className="form-control bg-light border-0" placeholder="Your Name" style={{ height: '55px' }} />
+                                        <input type="text" className="form-control bg-light border-0" placeholder="Tên của bạn" style={{ height: '55px' }} />
                                     </div>
                                     <div className="col-12 col-sm-6">
-                                        <input type="email" className="form-control bg-light border-0" placeholder="Your Email" style={{ height: '55px' }} />
+                                        <input type="email" className="form-control bg-light border-0" placeholder="Email" style={{ height: '55px' }} />
                                     </div>
                                     <div className="col-12 col-sm-6">
                                         <DatePicker
                                             selected={appointmentDate}
                                             onChange={(date) => setAppointmentDate(date)}
-                                            placeholderText="Appointment Date"
+                                            placeholderText="Ngày khám"
                                             className="form-control bg-light border-0"
                                             dateFormat="dd/MM/yyyy"
                                         />
@@ -356,7 +356,7 @@ function Home() {
                                         <DatePicker
                                             selected={appointmentTime}
                                             onChange={(time) => setAppointmentTime(time)}
-                                            placeholderText="Appointment Time"
+                                            placeholderText="Giờ khám"
                                             className="form-control bg-light border-0"
                                             showTimeSelect
                                             showTimeSelectOnly
@@ -366,7 +366,7 @@ function Home() {
                                         />
                                     </div>
                                     <div className="col-12">
-                                        <button className="btn btn-dark w-100 py-3" type="submit">Make Appointment</button>
+                                        <button className="btn btn-dark w-100 py-3" type="submit">Đặt lịch</button>
                                     </div>
                                 </div>
                             </form>
@@ -394,12 +394,12 @@ function Home() {
                     </div>
                     <div className="col-lg-7">
                         <div className="section-title mb-5">
-                            <h5 className="position-relative d-inline-block text-primary text-uppercase">Our Services</h5>
-                            <h1 className="display-5 mb-0">We Offer The Best Quality Dental Services</h1>
+                            <h5 className="position-relative d-inline-block text-primary text-uppercase">Dịch vụ</h5>
+                            <h1 className="display-5 mb-0">Chúng tôi cung cấp dịch vụ nha khoa chất lượng tốt nhất</h1>
                         </div>
                         <div className="row g-5">
-                            <ServiceItem img={service1} title="Cosmetic Dentistry" />
-                            <ServiceItem img={service2} title="Dental Implants" />
+                            <ServiceItem img={service1} title="Nha khoa thẩm mỹ" />
+                            <ServiceItem img={service2} title="Cấy ghép răng" />
                         </div>
                     </div>
                 </div>
@@ -407,14 +407,14 @@ function Home() {
                 <div className="row g-5">
                     <div className="col-lg-7">
                         <div className="row g-5">
-                            <ServiceItem img={service3} title="Dental Bridges" />
-                            <ServiceItem img={service4} title="Teeth Whitening" />
+                            <ServiceItem img={service3} title="Cầu răng" />
+                            <ServiceItem img={service4} title="Làm trắng răng" />
                         </div>
                     </div>
                     <div className="col-lg-5">
                         <div className="position-relative bg-primary rounded h-100 d-flex flex-column align-items-center justify-content-center text-center p-4">
-                            <h3 className="text-white mb-3">Make Appointment</h3>
-                            <p className="text-white mb-3">Clita ipsum magna kasd rebum at ipsum amet dolor justo dolor est magna stet eirmod</p>
+                            <h3 className="text-white mb-3">Đặt lịch</h3>
+                            <p className="text-white mb-3">LIÊN HỆ TRỰC TIẾP</p>
                             <h2 className="text-white mb-0">+012 345 6789</h2>
                         </div>
                     </div>
@@ -430,10 +430,9 @@ function Home() {
             <div className="row justify-content-center">
                 <div className="col-lg-7 wow zoomIn" >
                     <div className="offer-text text-center rounded p-5">
-                        <h1 className="display-5 text-white">Save 30% On Your First Dental Checkup</h1>
-                        <p className="text-white mb-4">Eirmod sed tempor lorem ut dolores sit kasd ipsum. Dolor ea et dolore et at sea ea at dolor justo ipsum duo rebum sea. Eos vero eos vero ea et dolore eirmod diam duo lorem magna sit dolore sed et.</p>
-                        <Link to="/appointment" className="btn btn-dark py-3 px-5 me-3">Appointment</Link>
-                        <Link to="" className="btn btn-light py-3 px-5">Read More</Link>
+                        <h1 className="display-5 text-white">Tiết kiệm 30% cho lần khám răng đầu tiên của bạn</h1>
+                        <Link to="/appointment" className="btn btn-dark py-3 px-5 me-3">Đặt lịch</Link>
+                        <Link to="" className="btn btn-light py-3 px-5">Đọc Thêm</Link>
                     </div>
                 </div>
             </div>
@@ -454,14 +453,10 @@ function Home() {
                         viewport={{ once: true }}
                     >
                         <div className="section-title mb-4">
-                            <h5 className="position-relative d-inline-block text-primary text-uppercase">Pricing Plan</h5>
-                            <h1 className="display-5 mb-0">We Offer Fair Prices for Dental Treatment</h1>
+                            <h5 className="position-relative d-inline-block text-primary text-uppercase">Kế hoạch giá</h5>
+                            <h1 className="display-5 mb-0">Chúng tôi cung cấp giá cả hợp lý cho điều trị nha khoa</h1>
                         </div>
-                        <p className="mb-4">
-                            Tempor erat elitr rebum at clita. Diam dolor diam ipsum et tempor sit. Aliqu diam amet diam et eos labore.
-                            Clita erat ipsum et lorem et sit, sed stet no labore lorem sit. Sanctus clita duo justo eirmod magna dolore erat amet
-                        </p>
-                        <h5 className="text-uppercase text-primary">Call for Appointment</h5>
+                        <h5 className="text-uppercase text-primary">LIÊN HỆ TRỰC TIẾP</h5>
                         <h1>+012 345 6789</h1>
                     </motion.div>
 
@@ -484,10 +479,10 @@ function Home() {
                                     <div className="position-relative text-center bg-light border-bottom border-primary py-5 p-4">
                                         <h4>{item.title}</h4>
                                         <hr className="text-primary w-50 mx-auto mt-0" />
-                                        <div className="d-flex justify-content-between mb-3"><span>Modern Equipment</span><i className="fa fa-check text-primary pt-1"></i></div>
-                                        <div className="d-flex justify-content-between mb-3"><span>Professional Dentist</span><i className="fa fa-check text-primary pt-1"></i></div>
-                                        <div className="d-flex justify-content-between mb-2"><span>24/7 Call Support</span><i className="fa fa-check text-primary pt-1"></i></div>
-                                        <Link to="/appointment" className="btn btn-primary py-2 px-4 position-absolute top-100 start-50 translate-middle">Appointment</Link>
+                                        <div className="d-flex justify-content-between mb-3"><span>Thiết bị hiện đại</span><i className="fa fa-check text-primary pt-1"></i></div>
+                                        <div className="d-flex justify-content-between mb-3"><span>Bác sĩ nha khoa chuyên nghiệp</span><i className="fa fa-check text-primary pt-1"></i></div>
+                                        <div className="d-flex justify-content-between mb-2"><span>Hỗ trợ cuộc gọi 24/7</span><i className="fa fa-check text-primary pt-1"></i></div>
+                                        <Link to="/appointment" className="btn btn-primary py-2 px-4 position-absolute top-100 start-50 translate-middle">Đặt lịch ngay</Link>
                                     </div>
                                 </div>
                             ))}
@@ -528,9 +523,9 @@ function Home() {
                     {/* Section Title */}
                     <div className="col-lg-4">
                         <div className="section-title bg-light rounded h-100 p-5">
-                            <h5 className="position-relative d-inline-block text-primary text-uppercase">Our Dentist</h5>
-                            <h1 className="display-6 mb-4">Meet Our Certified & Experienced Dentist</h1>
-                            <Link to="/appointment" className="btn btn-primary py-3 px-5">Appointment</Link>
+                            <h5 className="position-relative d-inline-block text-primary text-uppercase">Nha sĩ của chúng tôi</h5>
+                            <h1 className="display-6 mb-4">Gặp gỡ nha sĩ được chứng nhận và giàu kinh nghiệm của chúng tôi</h1>
+                            <Link to="/appointment" className="btn btn-primary py-3 px-5">Đặt lịch</Link>
                         </div>
                     </div>
 

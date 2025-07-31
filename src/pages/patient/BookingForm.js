@@ -146,8 +146,8 @@ export default function BookingForm() {
                     type="button"
                     key={time}
                     className={`btn ${selectedTime === time
-                        ? "btn-success"
-                        : "btn-outline-secondary"
+                      ? "btn-success"
+                      : "btn-outline-secondary"
                       }`}
                     onClick={() => setSelectedTime(time)}
                     disabled={!selectedDate}
@@ -167,8 +167,8 @@ export default function BookingForm() {
                     type="button"
                     key={time}
                     className={`btn ${selectedTime === time
-                        ? "btn-success"
-                        : "btn-outline-secondary"
+                      ? "btn-success"
+                      : "btn-outline-secondary"
                       }`}
                     onClick={() => setSelectedTime(time)}
                     disabled={!selectedDate}
@@ -184,6 +184,13 @@ export default function BookingForm() {
               Tiếp tục
             </button>
           </form>
+          <button
+            type="button"
+            className="btn btn-secondary w-100 mt-2"
+            onClick={() => navigate("/patient")}
+          >
+            Quay lại trang chủ
+          </button>
         </div>
       </div>
     </div>

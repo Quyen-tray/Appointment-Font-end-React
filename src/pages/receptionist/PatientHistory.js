@@ -59,8 +59,9 @@ useEffect(() => {
               <th className="px-4 py-2 border">Ngày khám</th>
               <th className="px-4 py-2 border">Lý do</th>
               <th className="px-4 py-2 border">Chẩn đoán</th>
-              <th className="px-4 py-2 border">Trạng thái</th>
               <th className="px-4 py-2 border">Ghi chú</th>
+              <th className="px-4 py-2 border">Trạng thái</th>
+
             </tr>
           </thead>
           <tbody>
@@ -69,8 +70,9 @@ useEffect(() => {
                 <td className="px-4 py-2 border">{entry.appointmentDate}</td>
                 <td className="px-4 py-2 border">{entry.reason}</td>
                 <td className="px-4 py-2 border">{entry.diagnosis}</td>
-                <td className="px-4 py-2 border">{entry.status}</td>
                 <td className="px-4 py-2 border">{entry.notes}</td>
+                <td className="px-4 py-2 border">{entry.status}</td>
+
               </tr>
             ))}
           </tbody>

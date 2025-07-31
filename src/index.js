@@ -4,6 +4,7 @@ import './assets/css/style.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import { AuthProvider } from "./AuthContext";
+import 'bootstrap/dist/css/bootstrap.min.css';
 // import 'animate.css';
 // import 'jquery.easing';
 // import 'owl.carousel/dist/assets/owl.carousel.css';
