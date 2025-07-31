@@ -38,12 +38,16 @@ import Profile from "./pages/patient/Profile";
 import BookingForm from "./pages/patient/BookingForm";
 import BookingSuccess from "./pages/patient/BookingSuccess";
 import HistoryAppointment from"./pages/patient/HistoryAppointment";
+
+import AdminHome from "./pages/admin/AdminHome";
 import UserAccountPage from "./pages/admin/UserAccountPage";
 import UserPatientPage from "./pages/admin/UserPatientPage";
 import UserReceptionistPage from "./pages/admin/UserReceptionistPage";
 import UserActivityLogPage from "./pages/admin/UserActivityLogPage";
-import ChangePassword from "./pages/patient/ChangePassword";
+import LoginAuditPage from "./pages/admin/LoginAuditPage";
 
+import ChangePassword from "./pages/patient/ChangePassword";
+import Invoice from "./pages/patient/Invoice";
 import DoctorDetail from "./pages/DoctorDetail";
 import ReceptionistProfile from "./pages/receptionist/ReceptionistProfile";
 function App() {
@@ -87,6 +91,7 @@ function App() {
                     <Route path="feedback" element={<PatientFeedback />} />
                     <Route path="feedback/submit" element={<SubmitFeedback />} />
                     <Route path="change-password" element={<ChangePassword />} />
+                    <Route path="invoice" element={<Invoice />} />
                 </Route>
                 
 
@@ -95,11 +100,13 @@ function App() {
                     <PrivateRoute allowedRoles={["ROLE_ADMIN"]}>
                         <AdminLayout />
                     </PrivateRoute>}>
+                    <Route path="adminHome" element={<AdminHome />} />
                     <Route path="usersAccount" element={<UserAccountPage />} />
                     <Route path="usersPatient" element={<UserPatientPage />} />
                     <Route path="usersReceptionist" element={<UserReceptionistPage />} />
                     <Route path="usersActivityLog" element={<UserActivityLogPage />} />
-                    {/*<Route index element={<AdminDashboard />} />*/}
+                    <Route path="loginAuditPage" element={<LoginAuditPage />} />
+                    <Route index element={<AdminHome />} />
                     {/*<Route path="users" element={<UserManagement />} />*/}
                 </Route>
 
