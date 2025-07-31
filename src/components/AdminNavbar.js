@@ -19,6 +19,9 @@ export default function AdminNavbar() {
 
             <div className="collapse navbar-collapse" id="adminNavbar">
                 <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li className="nav-item">
+                        <Link className="nav-link" to="/admin/adminHome">Home Admin</Link>
+                    </li>
 
                     <li className="nav-item">
                         <Link className="nav-link" to="/admin/usersAccount">Quản Lý Tài Khoản</Link>
@@ -33,7 +36,11 @@ export default function AdminNavbar() {
                     </li>
 
                     <li className="nav-item">
-                        <Link className="nav-link" to="/admin/usersActivityLog"> Lịch Sử Truy Cập</Link>
+                        <Link className="nav-link" to="/admin/usersActivityLog"> Lịch Sử Truy Cập API</Link>
+                    </li>
+
+                    <li className="nav-item">
+                        <Link className="nav-link" to="/admin/loginAuditPage"> Lịch sử đăng nhập</Link>
                     </li>
 
 
