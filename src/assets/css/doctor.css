@@ -489,4 +489,147 @@ textarea.form-control {
 .btn .spinner-border-sm {
     width: 0.875rem;
     height: 0.875rem;
+}
+
+/* Enhanced Diagnosis and Note Sections */
+.diagnosis-note-card {
+    border-left: 4px solid #17a2b8;
+    box-shadow: 0 4px 15px rgba(23, 162, 184, 0.1);
+    transition: all 0.3s ease;
+}
+
+.diagnosis-note-card:hover {
+    box-shadow: 0 6px 20px rgba(23, 162, 184, 0.15);
+    transform: translateY(-2px);
+}
+
+.diagnosis-note-card .card-header {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-bottom: 2px solid #17a2b8;
+}
+
+.diagnosis-note-card .card-header h6 {
+    color: #17a2b8;
+    font-weight: 600;
+}
+
+.diagnosis-note-card .form-control {
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.diagnosis-note-card .form-control:focus {
+    border-color: #17a2b8;
+    box-shadow: 0 0 0 0.2rem rgba(23, 162, 184, 0.25);
+}
+
+.diagnosis-note-card .text-muted {
+    color: #6c757d !important;
+    font-style: italic;
+}
+
+.diagnosis-note-card .text-muted i {
+    color: #17a2b8;
+}
+
+/* Note section specific styling */
+.note-card {
+    border-left: 4px solid #28a745;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.1);
+}
+
+.note-card:hover {
+    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.15);
+    transform: translateY(-2px);
+}
+
+.note-card .card-header {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-bottom: 2px solid #28a745;
+}
+
+.note-card .card-header h6 {
+    color: #28a745;
+    font-weight: 600;
+}
+
+.note-card .form-control:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}
+
+.note-card .text-muted i {
+    color: #28a745;
+}
+
+/* Visual Separator */
+.visual-separator {
+    position: relative;
+    margin: 2rem 0;
+}
+
+.visual-separator::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #dee2e6, transparent);
+}
+
+.visual-separator .separator-icon {
+    background: #f8f9fa;
+    padding: 0.5rem;
+    border-radius: 50%;
+    border: 2px solid #dee2e6;
+    color: #6c757d;
+    transition: all 0.3s ease;
+}
+
+.visual-separator:hover .separator-icon {
+    border-color: #17a2b8;
+    color: #17a2b8;
+    transform: scale(1.1);
+}
+
+/* Enhanced Form Labels */
+.diagnosis-note-card .form-label,
+.note-card .form-label {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    padding: 0.5rem 0;
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.diagnosis-note-card .form-label:hover,
+.note-card .form-label:hover {
+    border-bottom-color: currentColor;
+}
+
+.diagnosis-note-card .form-label.text-primary {
+    color: #17a2b8 !important;
+}
+
+.note-card .form-label.text-success {
+    color: #28a745 !important;
+}
+
+/* Enhanced textarea styling */
+.diagnosis-note-card textarea.form-control,
+.note-card textarea.form-control {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    padding: 0.75rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.diagnosis-note-card textarea.form-control:focus,
+.note-card textarea.form-control:focus {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 } 

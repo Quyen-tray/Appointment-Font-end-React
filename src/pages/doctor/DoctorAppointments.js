@@ -229,6 +229,7 @@ export default function DoctorAppointments() {
                                 <table className="table table-hover">
                                     <thead className="table-light">
                                         <tr>
+                                            <th>Người tạo hồ sơ</th>
                                             <th>Bệnh nhân</th>
                                             <th>Ngày & Giờ</th>
                                             <th>Trạng thái</th>
@@ -240,16 +241,35 @@ export default function DoctorAppointments() {
                                         {currentAppointments.map((appointment) => (
                                             <tr key={appointment.id}>
                                                 <td>
-                                                    <div>
-                                                        <div className="fw-bold">
-                                                            {appointment.patient?.fullName || "N/A"}
-                                                        </div>
-                                                        <small className="text-muted">
-                                                            <i className="fas fa-phone me-1"></i>
-                                                            {appointment.patient?.phone || "N/A"}
-                                                        </small>
+                                                    <div className="fw-bold">
+                                                        {appointment.patient?.fullName || "N/A"}
+                                                    </div>
+                                                    <div className="text-muted small">
+                                                        <i className="fas fa-phone me-1"></i>
+                                                        {appointment.patient?.phone || "N/A"}
                                                     </div>
                                                 </td>
+
+                                                {/* Ô 2: Người nhà */}
+                                                <td>
+                                                    {appointment.relative?.id && appointment.relative?.fullName ? (
+                                                        <>
+                                                            <div className="fw-bold">{appointment.relative.fullName}</div>
+                                                            <div className="text-muted small fst-italic">
+                                                                Người nhà ({appointment.relative.relation || "Không rõ quan hệ"})
+                                                            </div>
+                                                        </>
+                                                    ) : appointment.patient?.fullName ? (
+                                                        <>
+                                                            <div className="fw-bold">{appointment.patient.fullName}</div>
+                                                            <div className="text-muted small fst-italic">Chính chủ</div>
+                                                        </>
+                                                    ) : (
+                                                        <div className="text-muted">N/A</div>
+                                                    )}
+                                                </td>
+
+
                                                 <td>
                                                     <div>
                                                         <div className="fw-bold">

@@ -166,10 +166,10 @@ export const DoctorAppointmentApi = {
     },
 
     // Update medical visit note only
-    updateMedicalVisitNote: async (appointmentId, noteData) => {
+    updateMedicalVisitNote: async (appointmentId, body) => {
         try {
             console.log(appointmentId)
-            const response = await axios.put(`http://localhost:8081/api/visits/${appointmentId}`, noteData, {
+            const response = await axios.put(`http://localhost:8081/api/visits/${appointmentId}`, body, {
                 headers: {
                     "Content-Type": "application/json",
                     ...getAuthHeader(),

@@ -9,6 +9,7 @@ export default function AppointmentNotePage() {
     const [appointment, setAppointment] = useState(null);
     const [formData, setFormData] = useState({
         note: "",
+        diagnosis: "",
         labRequests: []
     });
     const [loading, setLoading] = useState(true);
@@ -49,6 +50,7 @@ export default function AppointmentNotePage() {
             setMedicalVisitId(response.medicalVisit.id);
             setFormData({
                 note: response.medicalVisit.note || "",
+                diagnosis: response.medicalVisit.diagnosis || "",
                 labRequests: response.labRequests?.map(lab => ({
                     labId: lab.labId,
                     visitId: lab.visitId,
@@ -124,7 +126,7 @@ export default function AppointmentNotePage() {
 
             setFormData(prev => ({
                 ...prev,
-                labRequests: prev.labRequests.filter((_, i) => i !== index)
+                labRequests: prev.labRequests?.filter((_, i) => i !== index)
             }));
         }
     };
@@ -132,7 +134,7 @@ export default function AppointmentNotePage() {
     const updateLabRequest = (index, field, value) => {
         setFormData(prev => ({
             ...prev,
-            labRequests: prev.labRequests.map((item, i) => {
+            labRequests: prev.labRequests?.map((item, i) => {
                 if (i === index) {
                     return { ...item, [field]: value };
                 }
@@ -150,14 +152,17 @@ export default function AppointmentNotePage() {
     };
 
     const getNewLabRequestsCount = () => {
-        return formData.labRequests.filter(request => request.testType && !request.labId).length;
+        return formData.labRequests?.filter(request => request.testType && !request.labId).length;
     };
 
     const getNewLabRequestsTotal = () => {
+        if (!Array.isArray(formData.labRequests)) return 0;
+
         return formData.labRequests
             .filter(request => request.testType && !request.labId)
             .reduce((total, request) => total + (request.price || 0), 0);
     };
+
 
     const handleCreateBill = async () => {
         if (window.confirm(`Xác nhận tạo hóa đơn và thanh toán cho bệnh nhân ${appointment?.patient?.fullName}?`)) {
@@ -174,10 +179,15 @@ export default function AppointmentNotePage() {
         }
     };
 
-    // Save medical visit note only
+    // Save medical visit note and diagnosis
     const handleSaveNote = async () => {
-        if (!formData.note.trim()) {
+        if (!formData.note?.trim()) {
             setError("Vui lòng nhập ghi chú khám bệnh!");
+            return;
+        }
+
+        if (!formData.diagnosis?.trim()) {
+            setError("Vui lòng nhập chẩn đoán bệnh!");
             return;
         }
 
@@ -186,15 +196,17 @@ export default function AppointmentNotePage() {
             setError("");
 
             const noteData = {
-                note: formData.note.trim()
+                note: formData.note.trim(),
+                diagnosis: formData.diagnosis.trim()
             };
 
             await DoctorAppointmentApi.updateMedicalVisitNote(
                 appointmentId,
+                // appointment.patient.id,
                 noteData
             );
 
-            alert("Lưu ghi chú khám bệnh thành công!");
+            alert("Lưu ghi chú khám bệnh và chẩn đoán thành công!");
         } catch (err) {
             setError("Có lỗi xảy ra khi lưu ghi chú khám bệnh. Vui lòng thử lại!");
             console.error("Error saving note:", err);
@@ -205,11 +217,11 @@ export default function AppointmentNotePage() {
 
     // Save lab requests only
     const handleSaveLabRequests = async () => {
-        const newLabRequests = formData.labRequests.filter(request =>
+        const newLabRequests = formData.labRequests?.filter(request =>
             request.testType && !request.labId // New requests don't have labId yet
         );
 
-        if (newLabRequests.length === 0) {
+        if (newLabRequests?.length === 0) {
             setError("Không có xét nghiệm mới nào để lưu!");
             return;
         }
@@ -231,7 +243,7 @@ export default function AppointmentNotePage() {
                 await DoctorAppointmentApi.createLabRequest(medicalVisitId, labRequestData);
             }
 
-            alert(`Đã thêm ${newLabRequests.length} xét nghiệm thành công!`);
+            alert(`Đã thêm ${newLabRequests?.length} xét nghiệm thành công!`);
             // Refresh data after adding lab requests
             fetchAppointmentAndMedicalVisit();
         } catch (err) {
@@ -251,23 +263,29 @@ export default function AppointmentNotePage() {
             return;
         }
 
+        if (!formData.diagnosis.trim()) {
+            setError("Vui lòng nhập chẩn đoán bệnh!");
+            return;
+        }
+
         try {
             setSaving(true);
             setError("");
 
             // First, update medical visit with note
-            const noteData = {
-                note: formData.note.trim()
+            const body = {
+                note: formData.note.trim(),
+                diagnosis: formData.diagnosis.trim()
             };
 
             await DoctorAppointmentApi.updateMedicalVisitNote(
                 appointmentId,
                 appointment.patient.id,
-                noteData
+                body
             );
 
             // Then, create new lab requests
-            const newLabRequests = formData.labRequests.filter(request =>
+            const newLabRequests = formData.labRequests?.filter(request =>
                 request.testType && !request.labId // New requests don't have labId yet
             );
 
@@ -284,7 +302,7 @@ export default function AppointmentNotePage() {
                 await DoctorAppointmentApi.createLabRequest(medicalVisitId, labRequestData);
             }
 
-            alert("Lưu thông tin khám bệnh thành công!");
+            alert("Lưu thông tin khám bệnh và chẩn đoán thành công!");
             navigate("/doctor/appointments");
         } catch (err) {
             setError("Có lỗi xảy ra khi lưu thông tin khám bệnh. Vui lòng thử lại!");
@@ -320,21 +338,36 @@ export default function AppointmentNotePage() {
         }
 
         return (
-            <div className="d-flex align-items-center">
-                <div className="me-3">
-                    <div className="fw-bold">{patient.fullName || "N/A"}</div>
-                    <small className="text-muted">
-                        <i className="fas fa-phone me-1"></i>
-                        {patient.phone || "N/A"}
-                    </small>
+            <div className="d-flex align-items-center justify-content-between p-3 border rounded shadow-sm bg-light">
+                <div className="d-flex flex-column">
+                    <div className="fw-semibold fs-5 mb-1">
+                        {appointment?.relative?.id && appointment?.relative?.fullName
+                            ? appointment.relative.fullName
+                            : patient.fullName || "N/A"}
+                    </div>
+
+                    {appointment?.relative?.id && appointment?.relative?.relation && (
+                        <div className="text-muted small fst-italic mb-1">
+                            Người nhà của bệnh nhân {appointment.patient?.fullName} ({appointment.relative?.relation})
+                        </div>
+                    )}
+
+                    <div className="text-muted">
+                        <i className="fas fa-phone me-2 text-primary"></i>
+                        <small>{patient.phone || "N/A"}</small>
+                    </div>
                 </div>
-                <div className="text-muted">
-                    <small>
-                        <i className="fas fa-calendar me-1"></i>
-                        {formatDate(appointment.scheduledTime)}
-                    </small>
+
+                <div className="text-end text-muted">
+                    <div>
+                        <i className="fas fa-calendar-alt me-2 text-success"></i>
+                        <small>{formatDate(appointment.scheduledTime)}</small>
+                    </div>
                 </div>
             </div>
+
+
+
         );
     };
 
@@ -382,7 +415,7 @@ export default function AppointmentNotePage() {
                             {appointment?.note ? "Cập nhật thông tin khám" : "Thông tin khám bệnh"}
                         </h2>
                         <p className="text-muted mb-0">
-                            Ghi chú và xét nghiệm cho bệnh nhân
+                            Ghi chú, chẩn đoán và xét nghiệm cho bệnh nhân
                         </p>
                     </div>
                     <button
@@ -425,19 +458,19 @@ export default function AppointmentNotePage() {
                                 </div>
                             </div>
 
-                            {/* Note Input */}
-                            <div className="card mb-4">
+                            {/* Diagnosis Input */}
+                            <div className="card mb-4 diagnosis-note-card">
                                 <div className="card-header bg-light">
                                     <div className="d-flex justify-content-between align-items-center">
                                         <h6 className="fw-bold mb-0">
-                                            <i className="fas fa-clipboard me-2"></i>
-                                            Ghi chú khám bệnh <span className="text-danger">*</span>
+                                            <i className="fas fa-stethoscope me-2"></i>
+                                            Chẩn đoán bệnh <span className="text-danger">*</span>
                                         </h6>
                                         <button
                                             type="button"
                                             className="btn btn-sm btn-outline-primary"
                                             onClick={handleSaveNote}
-                                            disabled={savingNote || !formData.note.trim()}
+                                            disabled={savingNote || !formData.diagnosis?.trim()}
                                         >
                                             {savingNote ? (
                                                 <>
@@ -447,26 +480,67 @@ export default function AppointmentNotePage() {
                                             ) : (
                                                 <>
                                                     <i className="fas fa-save me-1"></i>
-                                                    Lưu ghi chú
+                                                    Lưu ghi chú & chẩn đoán
                                                 </>
                                             )}
                                         </button>
                                     </div>
                                 </div>
                                 <div className="card-body">
-                                    <textarea
-                                        className="form-control"
-                                        name="note"
-                                        value={formData.note}
-                                        onChange={handleInputChange}
-                                        rows="6"
-                                        placeholder="Nhập ghi chú về tình trạng sức khỏe, kết quả khám, chẩn đoán và hướng điều trị..."
-                                        required
-                                        autoFocus
-                                        disabled={savingNote}
-                                    />
+                                    <div className="mb-3">
+                                        <label className="form-label fw-bold text-primary">
+                                            <i className="fas fa-clipboard-list me-1"></i>
+                                            Chẩn đoán chính:
+                                        </label>
+                                        <textarea
+                                            className="form-control"
+                                            name="diagnosis"
+                                            value={formData.diagnosis}
+                                            onChange={handleInputChange}
+                                            rows="4"
+                                            placeholder="Nhập chẩn đoán bệnh..."
+                                            disabled={savingNote}
+                                            required
+                                        />
+                                    </div>
                                     <small className="text-muted">
-                                        Ghi chú sẽ được lưu vào hồ sơ bệnh nhân
+                                        <i className="fas fa-info-circle me-1"></i>
+                                        Chẩn đoán sẽ được lưu cùng với ghi chú khám bệnh
+                                    </small>
+                                </div>
+                            </div>
+
+
+
+                            {/* Note Input */}
+                            <div className="card mb-4 note-card">
+                                <div className="card-header bg-light">
+                                    <h6 className="fw-bold mb-0">
+                                        <i className="fas fa-clipboard me-2"></i>
+                                        Ghi chú khám bệnh
+                                    </h6>
+                                </div>
+                                <div className="card-body">
+                                    <div className="mb-3">
+                                        <label className="form-label fw-bold text-success">
+                                            <i className="fas fa-notes-medical me-1"></i>
+                                            Ghi chú chi tiết:
+                                        </label>
+                                        <textarea
+                                            className="form-control"
+                                            name="note"
+                                            value={formData.note}
+                                            onChange={handleInputChange}
+                                            rows="6"
+                                            placeholder="Nhập ghi chú về tình trạng sức khỏe, kết quả khám và hướng điều trị..."
+                                            required
+                                            autoFocus
+                                            disabled={savingNote}
+                                        />
+                                    </div>
+                                    <small className="text-muted">
+                                        <i className="fas fa-info-circle me-1"></i>
+                                        Ghi chú và chẩn đoán sẽ được lưu vào hồ sơ bệnh nhân
                                     </small>
                                 </div>
                             </div>
@@ -511,7 +585,7 @@ export default function AppointmentNotePage() {
                                     </div>
                                 </div>
                                 <div className="card-body">
-                                    {formData.labRequests.map((request, index) => (
+                                    {formData.labRequests?.map((request, index) => (
                                         <div key={request.labId || index} className={`border rounded p-3 mb-3 ${request.labId ? 'bg-light' : 'bg-warning bg-opacity-10'}`}>
                                             <div className="row">
                                                 <div className="col-md-4">
@@ -648,7 +722,7 @@ export default function AppointmentNotePage() {
 
                                     <div className="mb-3">
                                         <h6 className="fw-bold text-primary">Thống kê</h6>
-                                        <p className="mb-1"><strong>Xét nghiệm đã lưu:</strong> {formData.labRequests.filter(r => r.labId).length}</p>
+                                        <p className="mb-1"><strong>Xét nghiệm đã lưu:</strong> {formData.labRequests?.filter(r => r.labId).length}</p>
                                         <p className="mb-1"><strong>Xét nghiệm chưa lưu:</strong> {getNewLabRequestsCount()}</p>
                                         <p className="mb-1"><strong>Tổng chi phí:</strong> {getTotalAmount().toLocaleString()} VNĐ</p>
                                         <p className="mb-0">
@@ -660,7 +734,7 @@ export default function AppointmentNotePage() {
                                     </div>
 
                                     <div className="d-grid gap-1 text-center" style={{ maxWidth: '300px' }}>
-                                       
+
 
                                         <button
                                             type="button"
