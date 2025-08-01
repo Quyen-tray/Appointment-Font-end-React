@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { DoctorAppointmentApi } from "../../service/DoctorAppointmentApi";
-import AppointmentNoteForm from "./AppointmentNoteForm";
 
 export default function DoctorAppointments() {
+    const navigate = useNavigate();
     const [appointments, setAppointments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
-    const [showNoteModal, setShowNoteModal] = useState(false);
-    const [selectedAppointment, setSelectedAppointment] = useState(null);
     const [filters, setFilters] = useState({
         status: "all",
         date: "",
@@ -39,13 +38,11 @@ export default function DoctorAppointments() {
     };
 
     const handleAddNote = (appointment) => {
-        setSelectedAppointment(appointment);
-        setShowNoteModal(true);
+        navigate(`/doctor/appointments/${appointment.id}/note`);
     };
 
     const handleEditNote = (appointment) => {
-        setSelectedAppointment(appointment);
-        setShowNoteModal(true);
+        navigate(`/doctor/appointments/${appointment.id}/note`);
     };
 
     const handleDeleteNote = async (appointmentId) => {
@@ -61,25 +58,7 @@ export default function DoctorAppointments() {
         }
     };
 
-    const handleNoteSaved = () => {
-        setShowNoteModal(false);
-        setSelectedAppointment(null);
-        fetchAppointments(); // Refresh list
-    };
 
-    const handleCreateBill = async (appointment) => {
-        if (window.confirm(`Xác nhận tạo hóa đơn và thanh toán cho bệnh nhân ${appointment.patient?.fullName}?`)) {
-            try {
-                // Call API to create invoice and payment based on lab requests
-                await DoctorAppointmentApi.createInvoiceAndPayment(appointment.id);
-                fetchAppointments(); // Refresh list
-                alert("Tạo hóa đơn và phiếu thanh toán thành công! Bệnh nhân có thể vào thanh toán.");
-            } catch (err) {
-                alert("Có lỗi xảy ra khi tạo hóa đơn!");
-                console.error("Error creating invoice and payment:", err);
-            }
-        }
-    };
 
     function formatDate(dateString) {
         if (!dateString) return "null";
@@ -181,7 +160,7 @@ export default function DoctorAppointments() {
                             Quản Lý Cuộc Hẹn
                         </h2>
                         <p className="text-muted mb-0">
-                            Quản lý lịch khám và ghi chú điều trị của bệnh nhân
+                            Danh sách lịch hẹn của bạn
                         </p>
                     </div>
                     <button
@@ -202,7 +181,7 @@ export default function DoctorAppointments() {
 
                 {/* Filters */}
                 <div className="row mb-4">
-                    
+
                     <div className="col-md-4">
                         <input
                             type="text"
@@ -307,14 +286,14 @@ export default function DoctorAppointments() {
                                                                     onClick={() => handleEditNote(appointment)}
                                                                     title="Cập nhật thông tin khám"
                                                                 >
-                                                                    <i className="fas fa-sticky-note"></i>
+                                                                    <i className="fas fa-edit"></i>
                                                                 </button>
                                                                 <button
                                                                     className="btn btn-sm btn-outline-danger"
                                                                     onClick={() => handleDeleteNote(appointment.id)}
                                                                     title="Xóa thông tin khám"
                                                                 >
-                                                                    <i className="fas fa-times"></i>
+                                                                    <i className="fas fa-trash"></i>
                                                                 </button>
                                                             </>
                                                         ) : (
@@ -323,19 +302,11 @@ export default function DoctorAppointments() {
                                                                 onClick={() => handleAddNote(appointment)}
                                                                 title="Thêm thông tin khám"
                                                             >
-                                                                <i className="fas fa-clipboard-list"></i>
+                                                                <i className="fas fa-plus"></i>
                                                             </button>
                                                         )}
 
-                                                        {/* Bill Action */}
-                                                        <button
-                                                            className={`btn btn-sm ${appointment.billGenerated ? 'btn-success' : 'btn-outline-warning'}`}
-                                                            onClick={() => handleCreateBill(appointment)}
-                                                            disabled={appointment.billGenerated}
-                                                            title={appointment.billGenerated ? "Đã tạo hóa đơn" : "Tạo hóa đơn"}
-                                                        >
-                                                            <i className={`fas ${appointment.billGenerated ? 'fa-check-circle' : 'fa-file-invoice-dollar'}`}></i>
-                                                        </button>
+
                                                     </div>
                                                 </td>
                                             </tr>
@@ -445,14 +416,6 @@ export default function DoctorAppointments() {
                 )}
             </motion.div>
 
-            {/* Note Form Modal */}
-            {showNoteModal && (
-                <AppointmentNoteForm
-                    appointment={selectedAppointment}
-                    onClose={() => setShowNoteModal(false)}
-                    onSave={handleNoteSaved}
-                />
-            )}
         </div>
     );
 } 

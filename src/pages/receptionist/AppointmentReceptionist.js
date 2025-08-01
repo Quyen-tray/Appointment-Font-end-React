@@ -27,7 +27,7 @@ export default function AppointmentReceptionist() {
     const [sortScheduledTime, setSortScheduledTime] = useState();
     const [showApproveModal, setShowApproveModal] = useState(false);
 
-// ho tro dinh dang thoi gian
+    // ho tro dinh dang thoi gian
     function getNowForInput(offsetMinutes = 2) {
         const now = new Date(Date.now() + offsetMinutes * 60000);
         const year = now.getFullYear();
@@ -139,7 +139,19 @@ export default function AppointmentReceptionist() {
             // Kiểm tra nếu thời gian đã chọn nhỏ hơn hiện tại thì thông báo lỗi
             if (selectedDate < now) {
                 alert("Không được chọn thời gian trong quá khứ!");
-                return; // hoặc throw lỗi, hoặc return false nếu trong hàm
+                return;
+            }
+
+            // Kiểm tra giờ có nằm trong khoảng 6:00 - 16:30 không
+            const hour = selectedDate.getHours();
+            const minute = selectedDate.getMinutes();
+
+            const isBefore6AM = hour < 6;
+            const isAfter4_30PM = hour > 16 || (hour === 16 && minute > 15);
+
+            if (isBefore6AM || isAfter4_30PM) {
+                alert("Chỉ được chọn thời gian từ 6h sáng đến 4h15 chiều!");
+                return;
             }
 
             // Nếu hợp lệ, chuyển sang định dạng chuẩn UTC ISO (thêm 'Z')
@@ -147,6 +159,7 @@ export default function AppointmentReceptionist() {
                 scheduledTime = selectedDate.toISOString();
             }
         }
+
         // luôn gửi UTC
         const body = {
             ...editing,
@@ -413,7 +426,7 @@ export default function AppointmentReceptionist() {
                                 <div className="modal-body">
                                     <div className="mb-2">
                                         <label>Bệnh nhân</label>
-                                        <select name="patient" className="form-control" value={form.patient} onChange={handleChange} required  disabled={!!editing}>
+                                        <select name="patient" className="form-control" value={form.patient} onChange={handleChange} required disabled={!!editing}>
                                             <option value="">-- Chọn bệnh nhân --</option>
                                             {patients.map((p) => (
                                                 <option key={p.id} value={p.id}>{p.fullName}</option>
@@ -431,7 +444,7 @@ export default function AppointmentReceptionist() {
                                     </div>
                                     <div className="mb-2">
                                         <label>Phòng</label>
-                                        <select name="room" className="form-control" value={form.room} onChange={handleChange} required>
+                                        <select name="room" className="form-control" value={form.room} onChange={handleChange} required disabled={!!editing}>
                                             <option value="">-- Chọn phòng --</option>
                                             {rooms.map((r) => (
                                                 <option key={r.id} value={r.id}>{r.roomName}</option>

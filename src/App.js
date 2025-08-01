@@ -56,6 +56,7 @@ import BlogDetail from "./pages/BlogDetail";
 import BlogManagement from "./pages/admin/BlogManagement";
 import DoctorLayout from "./pages/doctor/DoctorLayout";
 import DoctorAppointments from "./pages/doctor/DoctorAppointments";
+import AppointmentNotePage from "./pages/doctor/AppointmentNotePage";
 import Invoice from "./pages/patient/Invoice";
 import UnpaidInvoices from "./pages/patient/UnpaidInvoices";
 import PaymentSuccess from "./pages/patient/PaymentSuccess";
@@ -93,7 +94,6 @@ function App() {
                     </PrivateRoute>
                 }>
                     <Route path="invoice" element={<Invoice />} />
-                    <Route path="payments" element={<UnpaidInvoices />} />
                     <Route path="payment-success" element={<PaymentSuccess />} />
                     <Route index element={<PatientDashboard />} />
                     {/*<Route path="profile" element={<PatientProfile />} />*/}
@@ -136,6 +136,7 @@ function App() {
                     <Route path="/receptionist/patient-history/:id" element={<PatientHistory />} />
                     <Route path="/receptionist/doctors" element={<DoctorList />} />
                     <Route path="appointments" element={<AppointmentReceptionist />} />
+                    <Route path="invoice-management" element={<UnpaidInvoices />} />
                     <Route path="profile" element={<ReceptionistProfile />} />
                     <Route path="change-password" element={<ChangePassword />} />
                     {/*<Route path="appointments" element={<ManageAppointments />} />*/}
@@ -148,6 +149,7 @@ function App() {
                     </PrivateRoute>}>
                     <Route index element={<DoctorAppointments />} />
                     <Route path="appointments" element={<DoctorAppointments />} />
+                    <Route path="appointments/:appointmentId/note" element={<AppointmentNotePage />} />
                     <Route path="patients" element={<PatientList />} />
                     <Route path="profile" element={<ReceptionistProfile />} />
                     <Route path="change-password" element={<ChangePassword />} />

@@ -2,7 +2,7 @@ import axios from "axios";
 
 const API_URL = "http://localhost:8081/api/patient/invoices";
 const API_PAYMENT = "http://localhost:8081/api/payment/add/transaction";
-
+const API_PAYMENT_URL = "http://localhost:8081/api/payment";
 // Get token from localStorage
 const getAuthHeader = () => {
     const token = localStorage.getItem("token");
@@ -23,18 +23,20 @@ export const PatientPaymentApi = {
         }
     },
 
-    // Get invoice details by ID
-    getInvoiceDetails: async (invoiceId) => {
+    // Get all unpaid invoices for all patients (admin/receptionist view)
+    getAllUnpaidInvoices: async () => {
         try {
-            const response = await axios.get(`${API_URL}/invoice/${invoiceId}`, {
+            const response = await axios.get(`${API_PAYMENT_URL}/invoices/unpaid`, {
                 headers: getAuthHeader(),
             });
             return response.data;
         } catch (error) {
-            console.error("Error fetching invoice details:", error);
+            console.error("Error fetching all unpaid invoices:", error);
             throw error;
         }
     },
+
+
 
     // Create VNPay payment for invoice
     createVNPayPayment: async (invoiceId) => {
@@ -61,6 +63,24 @@ export const PatientPaymentApi = {
             return response.data;
         } catch (error) {
             console.error("Error fetching payment history:", error);
+            throw error;
+        }
+    },
+
+    // Send reminder emails for selected invoices
+    sendReminderEmails: async (invoiceIds) => {
+        try {
+            const response = await axios.post(`${API_PAYMENT_URL}/send-email`, {
+                invoiceIds: invoiceIds
+            }, {
+                headers: {
+                    "Content-Type": "application/json",
+                    ...getAuthHeader(),
+                },
+            });
+            return response.data;
+        } catch (error) {
+            console.error("Error sending reminder emails:", error);
             throw error;
         }
     }

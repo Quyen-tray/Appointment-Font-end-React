@@ -2,24 +2,29 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { PatientPaymentApi } from "../../service/PatientPaymentApi";
 import "../../assets/css/patient-payment.css";
-import { useAuth } from "../../AuthContext";
 
 export default function UnpaidInvoices() {
     const [invoices, setInvoices] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [paying, setPaying] = useState(null); // Track which invoice is being processed
+    const [sendingEmail, setSendingEmail] = useState(false);
     const [error, setError] = useState("");
+    const [selectedInvoices, setSelectedInvoices] = useState([]);
     const [selectedInvoice, setSelectedInvoice] = useState(null);
     const [showDetailsModal, setShowDetailsModal] = useState(false);
-    const { patientId } = useAuth();
+    const [filters, setFilters] = useState({
+        searchTerm: "",
+        status: "all",
+        dateRange: ""
+    });
+
     useEffect(() => {
-        fetchUnpaidInvoices();
+        fetchAllUnpaidInvoices();
     }, []);
 
-    const fetchUnpaidInvoices = async () => {
+    const fetchAllUnpaidInvoices = async () => {
         try {
             setLoading(true);
-            const data = await PatientPaymentApi.getUnpaidInvoices(patientId);
+            const data = await PatientPaymentApi.getAllUnpaidInvoices();
             setInvoices(data);
         } catch (err) {
             setError("Không thể tải danh sách hóa đơn. Vui lòng thử lại sau.");
@@ -29,37 +34,50 @@ export default function UnpaidInvoices() {
         }
     };
 
-    const handleViewDetails = async (invoice) => {
-        try {
-            const details = await PatientPaymentApi.getInvoiceDetails(invoice.id);
-            setSelectedInvoice(details);
-            setShowDetailsModal(true);
-        } catch (err) {
-            alert("Không thể tải chi tiết hóa đơn!");
-            console.error("Error fetching invoice details:", err);
+    const handleViewDetails = (invoice) => {
+        setSelectedInvoice(invoice);
+        setShowDetailsModal(true);
+    };
+
+    const handleSelectInvoice = (invoiceId) => {
+        setSelectedInvoices(prev => {
+            if (prev.includes(invoiceId)) {
+                return prev.filter(id => id !== invoiceId);
+            } else {
+                return [...prev, invoiceId];
+            }
+        });
+    };
+
+    const handleSelectAll = () => {
+        if (selectedInvoices.length === filteredInvoices.length) {
+            setSelectedInvoices([]);
+        } else {
+            setSelectedInvoices(filteredInvoices.map(invoice => invoice.id));
         }
     };
 
-    const handlePayment = async (invoice) => {
-        if (!window.confirm(`Xác nhận thanh toán hóa đơn ${invoice.id} với số tiền ${invoice.amount.toLocaleString()} VNĐ?`)) {
+    const handleSendReminderEmail = async () => {
+        if (selectedInvoices.length === 0) {
+            alert("Vui lòng chọn ít nhất một hóa đơn để gửi email nhắc nhở!");
+            return;
+        }
+
+        if (!window.confirm(`Xác nhận gửi email nhắc nhở cho ${selectedInvoices.length} hóa đơn chưa thanh toán?`)) {
             return;
         }
 
         try {
-            setPaying(invoice.id);
-            const paymentData = await PatientPaymentApi.createVNPayPayment(invoice.id);
-
-            // Redirect to VNPay payment URL
-            if (paymentData.url) {
-                window.location.href = paymentData.url;
-            } else {
-                alert("Không thể tạo liên kết thanh toán. Vui lòng thử lại!");
-            }
+            setSendingEmail(true);
+            await PatientPaymentApi.sendReminderEmails(selectedInvoices);
+            alert(`Đã gửi email nhắc nhở thành công cho ${selectedInvoices.length} hóa đơn!`);
+            setSelectedInvoices([]);
+            fetchAllUnpaidInvoices(); // Refresh list
         } catch (err) {
-            alert("Có lỗi xảy ra khi tạo thanh toán. Vui lòng thử lại!");
-            console.error("Error creating payment:", err);
+            alert("Có lỗi xảy ra khi gửi email nhắc nhở. Vui lòng thử lại!");
+            console.error("Error sending reminder emails:", err);
         } finally {
-            setPaying(null);
+            setSendingEmail(false);
         }
     };
 
@@ -86,6 +104,22 @@ export default function UnpaidInvoices() {
         );
     };
 
+    const filteredInvoices = invoices.filter(invoice => {
+        if (filters.searchTerm) {
+            const searchLower = filters.searchTerm.toLowerCase();
+            const patientName = invoice.patientName?.toLowerCase() || "";
+            const patientPhone = invoice.patientPhone?.toLowerCase() || "";
+            const invoiceNumber = invoice.invoiceNumber?.toLowerCase() || "";
+            const doctorName = invoice.doctorName?.toLowerCase() || "";
+
+            return patientName.includes(searchLower) ||
+                patientPhone.includes(searchLower) ||
+                invoiceNumber.includes(searchLower) ||
+                doctorName.includes(searchLower);
+        }
+        return true;
+    });
+
     if (loading) {
         return (
             <div className="d-flex justify-content-center mt-5">
@@ -108,20 +142,39 @@ export default function UnpaidInvoices() {
                     <div>
                         <h2 className="fw-bold text-primary mb-1">
                             <i className="fas fa-file-invoice-dollar me-2"></i>
-                            Hóa đơn chưa thanh toán
+                            Quản Lý Hóa Đơn Chưa Thanh Toán
                         </h2>
                         <p className="text-muted mb-0">
-                            Quản lý và thanh toán các hóa đơn y tế của bạn
+                            Quản lý và gửi email nhắc nhở cho tất cả bệnh nhân chưa thanh toán
                         </p>
                     </div>
-                    <button
-                        className="btn btn-outline-primary"
-                        onClick={fetchUnpaidInvoices}
-                        disabled={loading}
-                    >
-                        <i className="fas fa-sync-alt me-2"></i>
-                        Làm mới
-                    </button>
+                    <div className="d-flex gap-2">
+                        <button
+                            className="btn btn-outline-primary"
+                            onClick={fetchAllUnpaidInvoices}
+                            disabled={loading}
+                        >
+                            <i className="fas fa-sync-alt me-2"></i>
+                            Làm mới
+                        </button>
+                        <button
+                            className="btn btn-warning"
+                            onClick={handleSendReminderEmail}
+                            disabled={sendingEmail || selectedInvoices.length === 0}
+                        >
+                            {sendingEmail ? (
+                                <>
+                                    <div className="spinner-border spinner-border-sm me-2" role="status"></div>
+                                    Đang gửi...
+                                </>
+                            ) : (
+                                <>
+                                    <i className="fas fa-envelope me-2"></i>
+                                    Gửi nhắc nhở ({selectedInvoices.length})
+                                </>
+                            )}
+                        </button>
+                    </div>
                 </div>
 
                 {error && (
@@ -131,92 +184,125 @@ export default function UnpaidInvoices() {
                     </div>
                 )}
 
+                {/* Filters */}
+                <div className="row mb-4">
+                    <div className="col-md-6">
+                        <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Tìm theo tên bệnh nhân, SĐT, số hóa đơn hoặc bác sĩ..."
+                            value={filters.searchTerm}
+                            onChange={(e) => setFilters({ ...filters, searchTerm: e.target.value })}
+                        />
+                    </div>
+
+                    <div className="col-md-3">
+                        <div className="text-muted">
+                            Tổng: {filteredInvoices.length} hóa đơn
+                        </div>
+                    </div>
+                </div>
+
                 {/* Invoices List */}
-                {invoices.length === 0 ? (
+                {filteredInvoices.length === 0 ? (
                     <div className="text-center py-5 empty-state">
                         <i className="fas fa-check-circle fa-3x text-success mb-3"></i>
-                        <h5 className="text-muted">Tuyệt vời! Bạn không có hóa đơn nào chưa thanh toán</h5>
-                        <p className="text-muted">Tất cả các hóa đơn của bạn đã được thanh toán</p>
+                        <h5 className="text-muted">Tuyệt vời! Không có hóa đơn nào chưa thanh toán</h5>
+                        <p className="text-muted">Tất cả bệnh nhân đã thanh toán đầy đủ</p>
                     </div>
                 ) : (
-                    <div className="row">
-                        {invoices.map((invoice) => (
-                            <div key={invoice.id} className="col-md-6 col-lg-4 mb-4">
-                                <motion.div
-                                    className="card h-100 invoice-card"
-                                    whileHover={{ scale: 1.02 }}
-                                    transition={{ duration: 0.2 }}
-                                >
-                                    <div className="card-header bg-light d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <h6 className="mb-0 fw-bold">
-                                                <i className="fas fa-file-medical me-2"></i>
-                                                {invoice.invoiceNumber}
-                                            </h6>
-                                            <small className="text-muted">
-                                                {formatDate(invoice.issueDate)}
-                                            </small>
-                                        </div>
-                                        {getStatusBadge(invoice.status)}
+                    <div className="card">
+                        <div className="card-header bg-light">
+                            <div className="d-flex justify-content-between align-items-center">
+                                <h6 className="mb-0 fw-bold">
+                                    <i className="fas fa-list me-2"></i>
+                                    Danh sách hóa đơn chưa thanh toán
+                                </h6>
+                                <div className="d-flex align-items-center gap-3">
+                                    <div className="form-check">
+                                        <input
+                                            className="form-check-input"
+                                            type="checkbox"
+                                            checked={selectedInvoices.length === filteredInvoices.length && filteredInvoices.length > 0}
+                                            onChange={handleSelectAll}
+                                        />
+                                        <label className="form-check-label">
+                                            Chọn tất cả
+                                        </label>
                                     </div>
-
-                                    <div className="card-body">
-                                        <div className="mb-3">
-                                            <div className="d-flex justify-content-between mb-2">
-                                                <span className="text-muted">Bác sĩ khám:</span>
-                                                <span className="fw-bold">{invoice.doctorName}</span>
-                                            </div>
-                                            <div className="d-flex justify-content-between mb-2">
-                                                <span className="text-muted">Ngày khám:</span>
-                                                <span>{formatDate(invoice.visitDate)}</span>
-                                            </div>
-                                            <div className="d-flex justify-content-between mb-2">
-                                                <span className="text-muted">Số dịch vụ:</span>
-                                                <span className="badge bg-info">{invoice.serviceCount} dịch vụ</span>
-                                            </div>
-                                        </div>
-
-                                        <div className="total-section p-3 bg-warning bg-opacity-10 rounded mb-3">
-                                            <div className="d-flex justify-content-between align-items-center">
-                                                <span className="fw-bold">Tổng tiền:</span>
-                                                <span className="fs-5 fw-bold text-danger">
-                                                    {invoice.amount.toLocaleString()} VNĐ
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="card-footer bg-transparent">
-                                        <div className="d-grid gap-2">
-                                            <button
-                                                className="btn btn-outline-info btn-sm"
-                                                onClick={() => handleViewDetails(invoice)}
-                                            >
-                                                <i className="fas fa-eye me-2"></i>
-                                                Xem chi tiết
-                                            </button>
-                                            <button
-                                                className="btn btn-primary vnpay-button payment-button"
-                                                onClick={() => handlePayment(invoice)}
-                                                disabled={paying === invoice.id || invoice.status !== 'UNPAID'}
-                                            >
-                                                {paying === invoice.id ? (
-                                                    <>
-                                                        <div className="spinner-border spinner-border-sm me-2" role="status"></div>
-                                                        Đang xử lý...
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <i className="fas fa-credit-card me-2"></i>
-                                                        Thanh toán VNPay
-                                                    </>
-                                                )}
-                                            </button>
-                                        </div>
-                                    </div>
-                                </motion.div>
+                                    <span className="text-muted">
+                                        Đã chọn: {selectedInvoices.length}
+                                    </span>
+                                </div>
                             </div>
-                        ))}
+                        </div>
+                        <div className="card-body p-0">
+                            <div className="table-responsive">
+                                <table className="table table-hover mb-0">
+                                    <thead className="table-light">
+                                        <tr>
+                                            <th width="50">
+                                                <i className="fas fa-check-square"></i>
+                                            </th>
+                                            <th>Bệnh nhân</th>
+                                            <th>Số hóa đơn</th>
+                                            <th>Ngày khám</th>
+                                            <th>Số tiền</th>
+                                            <th>Trạng thái</th>
+                                            <th>Thao tác</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {filteredInvoices.map((invoice) => (
+                                            <tr key={invoice.id}>
+                                                <td>
+                                                    <div className="form-check">
+                                                        <input
+                                                            className="form-check-input"
+                                                            type="checkbox"
+                                                            checked={selectedInvoices.includes(invoice.id)}
+                                                            onChange={() => handleSelectInvoice(invoice.id)}
+                                                        />
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div>
+                                                        <div className="fw-bold">
+                                                            {invoice.patientName || "N/A"}
+                                                        </div>
+                                                        <small className="text-muted">
+                                                            <i className="fas fa-phone me-1"></i>
+                                                            {invoice.patientPhone || "N/A"}
+                                                        </small>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <span className="fw-bold text-primary">
+                                                        {invoice.id}
+                                                    </span>
+                                                </td>
+                                                <td>{formatDate(invoice.issuedDate)}</td>
+                                                <td>
+                                                    <span className="fw-bold text-danger">
+                                                        {invoice.amount?.toLocaleString()} VNĐ
+                                                    </span>
+                                                </td>
+                                                <td>{getStatusBadge(invoice.status)}</td>
+                                                <td>
+                                                    <button
+                                                        className="btn btn-sm btn-outline-info"
+                                                        onClick={() => handleViewDetails(invoice)}
+                                                        title="Xem chi tiết"
+                                                    >
+                                                        <i className="fas fa-eye"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 )}
             </motion.div>
@@ -242,56 +328,28 @@ export default function UnpaidInvoices() {
                                 <div className="row mb-4">
                                     <div className="col-md-6">
                                         <h6 className="fw-bold mb-3">Thông tin hóa đơn</h6>
-                                        <p><strong>Số hóa đơn:</strong> {selectedInvoice.invoiceNumber}</p>
-                                        <p><strong>Ngày tạo:</strong> {formatDate(selectedInvoice.issueDate)}</p>
+                                        <p><strong>Ngày tạo:</strong> {formatDate(selectedInvoice.issuedDate || selectedInvoice.createdAt)}</p>
                                         <p><strong>Trạng thái:</strong> {getStatusBadge(selectedInvoice.status)}</p>
                                     </div>
                                     <div className="col-md-6">
-                                        <h6 className="fw-bold mb-3">Thông tin khám bệnh</h6>
-                                        <p><strong>Bác sĩ:</strong> {selectedInvoice.doctorName}</p>
-                                        <p><strong>Ngày khám:</strong> {formatDate(selectedInvoice.visitDate)}</p>
-                                        <p><strong>Ghi chú:</strong> {selectedInvoice.visitNote || "Không có"}</p>
+                                        <h6 className="fw-bold mb-3">Thông tin bệnh nhân</h6>
+                                        <p><strong>Tên:</strong> {selectedInvoice.patientName}</p>
+                                        <p><strong>SĐT:</strong> {selectedInvoice.phone}</p>
+                                        <p><strong>Email:</strong> {selectedInvoice.email || "N/A"}</p>
                                     </div>
                                 </div>
 
-                                {/* Service Details */}
-                                <h6 className="fw-bold mb-3">Chi tiết dịch vụ</h6>
-                                <div className="table-responsive">
-                                    <table className="table table-sm table-striped invoice-details-table">
-                                        <thead>
-                                            <tr>
-                                                <th>#</th>
-                                                <th>Dịch vụ</th>
-                                                <th>Ghi chú</th>
-                                                <th>Trạng thái</th>
-                                                <th className="text-end">Giá tiền</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {selectedInvoice.services?.map((service, index) => (
-                                                <tr key={service.id}>
-                                                    <td>{index + 1}</td>
-                                                    <td className="fw-bold">{service.testType}</td>
-                                                    <td>{service.result || <em className="text-muted">--</em>}</td>
-                                                    <td>
-                                                        <span className="badge bg-info">{service.status}</span>
-                                                    </td>
-                                                    <td className="text-end fw-bold">
-                                                        {service.price.toLocaleString()} VNĐ
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                        <tfoot>
-                                            <tr className="table-warning">
-                                                <td colSpan="4" className="fw-bold text-end">Tổng cộng:</td>
-                                                <td className="text-end fw-bold fs-5 text-danger">
-                                                    {selectedInvoice.amount.toLocaleString()} VNĐ
-                                                </td>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
-                                </div>
+                               
+
+                                {/* Additional Info */}
+                                {selectedInvoice.note && (
+                                    <div className="mt-3">
+                                        <h6 className="fw-bold mb-2">Ghi chú khám bệnh</h6>
+                                        <div className="p-3 bg-light rounded">
+                                            <p className="mb-0">{selectedInvoice.note}</p>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                             <div className="modal-footer">
                                 <button
@@ -301,19 +359,17 @@ export default function UnpaidInvoices() {
                                 >
                                     Đóng
                                 </button>
-                                {selectedInvoice.status === 'UNPAID' && (
-                                    <button
-                                        className="btn btn-primary vnpay-button payment-button"
-                                        onClick={() => {
-                                            setShowDetailsModal(false);
-                                            handlePayment(selectedInvoice);
-                                        }}
-                                        disabled={paying === selectedInvoice.id}
-                                    >
-                                        <i className="fas fa-credit-card me-2"></i>
-                                        Thanh toán ngay
-                                    </button>
-                                )}
+                                <button
+                                    className="btn btn-warning"
+                                    onClick={() => {
+                                        setShowDetailsModal(false);
+                                        handleSelectInvoice(selectedInvoice.id);
+                                    }}
+                                    disabled={selectedInvoices.includes(selectedInvoice.id)}
+                                >
+                                    <i className="fas fa-envelope me-2"></i>
+                                    Thêm vào danh sách gửi email
+                                </button>
                             </div>
                         </div>
                     </div>
