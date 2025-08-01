@@ -21,7 +21,6 @@ import ReceptionistLayout from "./pages/receptionist/ReceptionistLayout";
 import Unauthorized from "./pages/Unauthorized";
 import PublicLayout from "./pages/PublicLayout";
 import PatientDashboard from "./pages/patient/PatientDashboard";
-// import PatientDashboard from "./pages/patient/PatientDashboard";
 
 import ReceptionistDashboard from './pages/receptionist/ReceptionistDashboard';
 import RoomList from "./pages/receptionist/RoomList";
@@ -49,11 +48,14 @@ import LoginAuditPage from "./pages/admin/LoginAuditPage";
 import Invoice from "./pages/patient/Invoice";
 import ChangePassword from "./pages/patient/ChangePassword";
 import AppointmentDetailModal from "./pages/patient/AppointmentDetailModal";
+import RelativeManagement from "./pages/patient/RelativeManagement";
 import ReceptionistContactList from "./pages/receptionist/ReceptionistContactList";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import DoctorDetail from "./pages/DoctorDetail";
 import ReceptionistProfile from "./pages/receptionist/ReceptionistProfile";
+import ChangePassword2 from "./pages/ChangePassword";
+
 function App() {
   return (
       <Router>
@@ -97,6 +99,7 @@ function App() {
                     <Route path="invoice" element={<Invoice />} />
                     <Route path="change-password" element={<ChangePassword />} />
                     <Route path="appointmentDetail" element={<AppointmentDetailModal />} />
+                    <Route path="relative" element={<RelativeManagement />} />
                 </Route>
                 
 
@@ -130,7 +133,7 @@ function App() {
                     <Route path="appointments" element={<AppointmentReceptionist />} />
                     <Route path="contacts" element={<ReceptionistContactList />} />
                     <Route path="profile" element={<ReceptionistProfile />} />
-                    <Route path="change-password" element={<ChangePassword />} />
+                    <Route path="change-password" element={<ChangePassword2 />} />
                 {/*<Route path="appointments" element={<ManageAppointments />} />*/}
             </Route>
 

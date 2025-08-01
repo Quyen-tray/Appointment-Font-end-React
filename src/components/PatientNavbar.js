@@ -40,6 +40,10 @@ export default function PatientNavbar() {
                     <li className="nav-item">
                         <Link className="nav-link" to="/patient/profile">Hồ sơ</Link>
                     </li>
+
+                    <li className="nav-item">
+                        <Link className="nav-link" to="/patient/relative">Quản lý người thân</Link>
+                    </li>
                 </ul>
 
                 {/*<button className="btn btn-outline-light btn-sm" onClick={handleLogout}>*/}
