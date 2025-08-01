@@ -64,7 +64,6 @@ import BlogManagement from "./pages/admin/BlogManagement";
 import DoctorLayout from "./pages/doctor/DoctorLayout";
 import DoctorAppointments from "./pages/doctor/DoctorAppointments";
 import AppointmentNotePage from "./pages/doctor/AppointmentNotePage";
-import Invoice from "./pages/patient/Invoice";
 import UnpaidInvoices from "./pages/patient/UnpaidInvoices";
 import PaymentSuccess from "./pages/patient/PaymentSuccess";
 function App() {
