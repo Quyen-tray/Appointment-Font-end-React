@@ -33,7 +33,6 @@ export default function BookingSuccess() {
         },
       })
       .then((res) => {
-        console.log("Chi tiết lịch hẹn:", res.data);
         setBookingInfo(res.data);
         setLoading(false);
       })

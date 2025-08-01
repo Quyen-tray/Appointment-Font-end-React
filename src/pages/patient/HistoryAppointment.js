@@ -3,7 +3,6 @@ import axios from "axios";
 import RescheduleModal from "../../components/RescheduleModal";
 import AppointmentDetailModal from "./AppointmentDetailModal";
 
-
 export default function PatientAppointments() {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,18 +16,40 @@ export default function PatientAppointments() {
   const [sortStatus, setSortStatus] = useState("All");
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
+  const [searchDoctor, setSearchDoctor] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [examinerList, setExaminerList] = useState([]);
+  const [selectedExaminer, setSelectedExaminer] = useState("Tất cả");
 
-
-
-  const fetchAppointments = async () => {
+  const fetchAppointments = async (page =0 ,doctorFilter = searchDoctor, start = startDate, end = endDate) => {
     try {
       setLoading(true);
       const res = await axios.get("http://localhost:8081/api/patient/my-appointment", {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        params: { page: currentPage, size: pageSize },
+        params: {
+          page,
+          size: pageSize,
+          doctorName: doctorFilter.trim() !== "" ? doctorFilter : undefined,
+          startDate: start || undefined,
+          endDate: end || undefined,
+           status: sortStatus !== "All" ? sortStatus : undefined,
+        examiner: selectedExaminer !== "Tất cả" ? selectedExaminer : undefined,
+        },
       });
       setAppointments(res.data.appointments || []);
       setTotalPages(res.data.totalPages);
+      setCurrentPage(res.data.currentPage);
+
+      const uniqueExaminers = new Set();
+      res.data.appointments.forEach((appt) => {
+        if (appt.relative) {
+          uniqueExaminers.add(`${appt.relative.fullName} (${appt.relative.relation})`);
+        } else {
+          uniqueExaminers.add("Bản thân");
+        }
+      });
+      setExaminerList(Array.from(uniqueExaminers));
     } catch (err) {
       console.error("Lỗi tải danh sách lịch hẹn:", err);
     } finally {
@@ -37,11 +58,23 @@ export default function PatientAppointments() {
   };
 
   useEffect(() => {
-    fetchAppointments();
-  }, [currentPage]);
+  fetchAppointments(currentPage);
+}, [currentPage]);
+
+useEffect(() => {
+  fetchAppointments(0);
+}, [searchDoctor, startDate, endDate, sortStatus, selectedExaminer]);
+
 
   const sortedAppointments = [...appointments]
     .filter((a) => sortStatus === "All" || a.status === sortStatus)
+    .filter((a) => {
+      if (selectedExaminer === "Tất cả") return true;
+      const name = a.relative
+        ? `${a.relative.fullName} (${a.relative.relation})`
+        : "Bản thân";
+      return name === selectedExaminer;
+    })
     .sort((a, b) => {
       const timeA = new Date(a.scheduledTime).getTime();
       const timeB = new Date(b.scheduledTime).getTime();
@@ -52,8 +85,8 @@ export default function PatientAppointments() {
     switch (status) {
       case "PENDING":
         return { label: "Đang chờ", className: "badge bg-warning text-dark" };
-      case "CONFIRMED":
-        return { label: "Đã xác nhận", className: "badge bg-success" };
+      case "DONE":
+        return { label: "Đã khám xong", className: "badge bg-success" };
       case "CANCELLED":
         return { label: "Đã huỷ", className: "badge bg-danger" };
       case "APPROVED":
@@ -116,6 +149,15 @@ export default function PatientAppointments() {
     }
   };
 
+  const handleResetFilters = () => {
+    setSearchDoctor("");
+    setStartDate("");
+    setEndDate("");
+    setSelectedExaminer("Tất cả");
+    setCurrentPage(0);
+    setSortStatus("All");
+  };
+
   const renderPagination = () => {
     const pages = [];
     for (let i = 0; i < totalPages; i++) {
@@ -135,31 +177,97 @@ export default function PatientAppointments() {
   return (
     <div className="container mt-5">
       <h3 className="mb-4 text-center">Lịch hẹn của bạn</h3>
+      <div className="d-flex flex-wrap align-items-end gap-3 mb-3">
+        <div className="d-flex align-items-center">
+          <label className="me-1">Bác sĩ:</label>
+          <input
+            type="text"
+            className="form-control form-control-sm"
+            style={{ width: "180px" }}
+            value={searchDoctor}
+            onChange={(e) => setSearchDoctor(e.target.value)}
+          />
+        </div>
+
+        <div className="d-flex align-items-center">
+          <label className="me-1">Từ ngày:</label>
+          <input
+            type="date"
+            className="form-control form-control-sm"
+            style={{ width: "160px" }}
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+          />
+        </div>
+
+        <div className="d-flex align-items-center">
+          <label className="me-1">Đến ngày:</label>
+          <input
+            type="date"
+            className="form-control form-control-sm"
+            style={{ width: "160px" }}
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+          />
+        </div>
+
+        <div className="d-flex align-items-center">
+          <label className="me-1">Trạng thái:</label>
+          <select
+            className="form-select form-select-sm"
+            value={sortStatus}
+            onChange={(e) => setSortStatus(e.target.value)}
+          >
+            <option value="All">Tất cả</option>
+            <option value="PENDING">Đang chờ</option>
+            <option value="APPROVED">Đã duyệt</option>
+            <option value="CANCELLED">Đã huỷ</option>
+            <option value="DONE">Đã khám</option>
+          </select>
+        </div>
+
+        <div className="d-flex align-items-center">
+          <label className="me-1">Người khám:</label>
+          <select
+            className="form-select form-select-sm"
+            value={selectedExaminer}
+            onChange={(e) => setSelectedExaminer(e.target.value)}
+          >
+            <option value="Tất cả">Tất cả</option>
+            {examinerList.map((name, idx) => (
+              <option key={idx} value={name}>{name}</option>
+            ))}
+          </select>
+        </div>
+
+        <div className="d-flex align-items-center">
+          <button
+            className="btn btn-sm btn-primary me-2"
+            onClick={() => {
+              setCurrentPage(0);
+            }}
+          >
+            Tìm
+          </button>
+
+          <button className="btn btn-sm btn-primary" onClick={handleResetFilters}>
+            Làm mới
+          </button>
+        </div>
+      </div>
       {loading ? (
         <div className="text-center">Đang tải danh sách lịch hẹn...</div>
       ) : appointments.length === 0 ? (
         <p className="text-center">Bạn chưa có lịch hẹn nào.</p>
       ) : (
         <>
-          <div className="d-flex justify-content-end mb-2">
-            <label className="me-2">Trạng Thái:</label>
-            <select
-              className="form-select form-select-sm w-auto"
-              value={sortStatus}
-              onChange={(e) => setSortStatus(e.target.value)}
-            >
-              <option value="All">Tất cả</option>
-              <option value="PENDING">Đang chờ</option>
-              <option value="APPROVED">Đã xác nhận</option>
-              <option value="CANCELLED">Đã huỷ</option>
-            </select>
-          </div>
           <div className="table-responsive">
             <table className="table table-bordered table-hover shadow-sm">
-              <thead className="table-light">
+              <thead className="table-primary">
                 <tr>
                   <th>STT</th>
                   <th>Bác sĩ</th>
+                  <th>Người khám</th>
                   <th>
                     <div className="d-flex justify-content-between align-items-center">
                       <span>Thời gian khám</span>
@@ -184,6 +292,11 @@ export default function PatientAppointments() {
                     <tr key={appt.id}>
                       <td>{index + 1 + currentPage * pageSize}</td>
                       <td>{appt.doctorName}</td>
+                      <td>
+                        {appt.relative
+                          ? `${appt.relative.fullName} (${appt.relative.relation})`
+                          : "Bản thân"}
+                      </td>
                       <td>{new Date(appt.scheduledTime).toLocaleString("vi-VN")}</td>
                       <td>{appt.roomName}</td>
                       <td><span className={className}>{label}</span></td>
@@ -242,8 +355,6 @@ export default function PatientAppointments() {
         onClose={() => setShowDetailModal(false)}
         data={selectedAppointment}
       />
-
     </div>
   );
-
 }
