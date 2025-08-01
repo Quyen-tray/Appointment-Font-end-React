@@ -18,7 +18,12 @@ function ReceptionistContactList() {
     const itemsPerPage = 8;
 
     useEffect(() => {
-        axios.get("http://localhost:8081/api/patient/contact/all")
+        const token = localStorage.getItem("token");
+        axios.get("http://localhost:8081/api/appointment/contact/all", {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
             .then((res) => setContacts(res.data))
             .catch((err) => console.error(err));
     }, []);
@@ -34,7 +39,7 @@ function ReceptionistContactList() {
 
     const handleViewHistory = (contact) => {
         const token = localStorage.getItem("token");
-        axios.get(`http://localhost:8081/api/patient/contact/reply-history/${contact.id}`, {
+        axios.get(`http://localhost:8081/api/appointment/contact/reply-history/${contact.id}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -47,10 +52,15 @@ function ReceptionistContactList() {
     };
 
     const handleSendEmail = (contactId, subject, replyMessage) => {
-        axios.post("http://localhost:8081/api/patient/contact/reply", {
+        const token = localStorage.getItem("token");
+        axios.post("http://localhost:8081/api/appointment/contact/reply", {
             contactId,
             subject,
             replyMessage
+        }, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
         })
             .then(() => {
                 alert("Phản hồi đã được gửi qua email!");
