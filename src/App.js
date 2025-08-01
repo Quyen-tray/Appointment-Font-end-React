@@ -161,8 +161,6 @@ function App() {
                     <Route index element={<DoctorAppointments />} />
                     <Route path="appointments" element={<DoctorAppointments />} />
                     <Route path="appointments/:appointmentId/note" element={<AppointmentNotePage />} />
-                    <Route path="patients" element={<PatientList />} />
-                     <Route path="contacts" element={<ReceptionistContactList />} />
                     <Route path="profile" element={<ReceptionistProfile />} />
                     <Route path="change-password" element={<ChangePassword />} />
                 </Route>

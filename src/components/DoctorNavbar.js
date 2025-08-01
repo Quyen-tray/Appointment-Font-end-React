@@ -15,15 +15,6 @@ export default function DoctorNavbar() {
                             <i className="fas fa-calendar-check me-2"></i>Cuộc Hẹn
                         </Link>
                     </li>
-
-                    <li className="nav-item">
-                        <Link className="nav-link" to="/doctor/patients">
-                            <i className="fas fa-users me-2"></i>Bệnh Nhân
-                        </Link>
-                    </li>
-
-
-
                     <li className="nav-item">
                         <Link className="nav-link" to="/doctor/profile">
                             <i className="fas fa-user-md me-2"></i>Hồ Sơ
