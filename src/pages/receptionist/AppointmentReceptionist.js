@@ -232,7 +232,7 @@ export default function AppointmentReceptionist() {
         setShowDetail(true);
     };
 
-    // Mở modal duyệt (cho phép đổi trạng thái)
+    // Mở modal duyệt (cho phép đổi trạng thái và phòng)
     const openApproveModal = (item) => {
         setDetailData(item);
         setDetailForm({
@@ -261,7 +261,8 @@ export default function AppointmentReceptionist() {
     };
     const confirmUpdateDetail = () => {
         const body = {
-            status: detailForm.status
+            status: detailForm.status,
+            roomId: rooms.find((r) => r.id === detailForm.room)?.id
         };
         fetch(`http://localhost:8081/api/appointment/status/${detailData.id}`, {
             method: "PUT",
@@ -403,11 +404,22 @@ export default function AppointmentReceptionist() {
                             <td>{a.approvalStatus ?? 'null'}</td>
                             <td>{formatDate(a.approvedAt) ?? 'null'}</td>
                             <td>
-                                <button className="btn btn-sm btn-info me-2" onClick={() => openDetail(a)}>Xem chi tiết</button>
-                                <button className="btn btn-sm btn-success me-2" onClick={() => openApproveModal(a)}>Duyệt</button>
-                                <button className="btn btn-sm btn-warning me-2" onClick={() => openModal(a)}>Sửa</button>
-                                <button className="btn btn-sm btn-danger" onClick={() => handleDelete(a.id)}>Xóa</button>
+                                <div className="d-flex flex-wrap gap-2 justify-content-start">
+                                    <button className="btn btn-outline-info btn-sm d-flex align-items-center gap-1" onClick={() => openDetail(a)}>
+                                        <i className="bi bi-eye"></i> Xem
+                                    </button>
+                                    <button disabled={a.status === "DONE"} className="btn btn-outline-success btn-sm d-flex align-items-center gap-1" onClick={() => openApproveModal(a)}>
+                                        <i className="bi bi-check-circle"></i> Duyệt
+                                    </button>
+                                    <button className="btn btn-outline-warning btn-sm d-flex align-items-center gap-1" onClick={() => openModal(a)}>
+                                        <i className="bi bi-pencil-square"></i> Sửa
+                                    </button>
+                                    <button className="btn btn-outline-danger btn-sm d-flex align-items-center gap-1" onClick={() => handleDelete(a.id)}>
+                                        <i className="bi bi-trash"></i> Xóa
+                                    </button>
+                                </div>
                             </td>
+
                         </tr>
                     ))}
                 </tbody>
@@ -539,7 +551,7 @@ export default function AppointmentReceptionist() {
                 </div>
             )}
 
-            {/* Modal duyệt (cho phép đổi trạng thái) */}
+            {/* Modal duyệt (cho phép đổi trạng thái và phòng) */}
             {showApproveModal && (
                 <div className="modal show" style={{ display: "block", background: "rgba(0,0,0,0.3)" }}>
                     <div className="modal-dialog">
@@ -550,6 +562,15 @@ export default function AppointmentReceptionist() {
                             </div>
                             <form onSubmit={handleUpdateDetail}>
                                 <div className="modal-body">
+                                    <div className="mb-2">
+                                        <label>Phòng</label>
+                                        <select name="room" className="form-control" value={detailForm.room} onChange={handleDetailChange} required>
+                                            <option value="">-- Chọn phòng --</option>
+                                            {rooms.map((r) => (
+                                                <option key={r.id} value={r.id}>{r.roomName}</option>
+                                            ))}
+                                        </select>
+                                    </div>
                                     <div className="mb-2">
                                         <label>Trạng thái</label>
                                         <select name="status" className="form-control" value={detailForm.status} onChange={handleDetailChange} required>
@@ -580,7 +601,7 @@ export default function AppointmentReceptionist() {
                                 <h5 className="modal-title">Xác nhận cập nhật</h5>
                             </div>
                             <div className="modal-body">
-                                Bạn có chắc chắn muốn cập nhật trạng thái lịch hẹn này không?
+                                Bạn có chắc chắn muốn cập nhật phòng và trạng thái lịch hẹn này không?
                             </div>
                             <div className="modal-footer">
                                 <button className="btn btn-secondary" onClick={() => setShowConfirm(false)}>Hủy</button>
