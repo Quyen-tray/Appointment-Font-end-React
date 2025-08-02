@@ -68,6 +68,32 @@ function PatientList() {
   };
 
   const handleCreatePatient = async () => {
+    const { fullName, dob, gender, phone, email, address, username, password } = newPatient;
+
+    if (!fullName || !dob || !gender || !phone || !email || !address || !username || !password) {
+      alert("❌ Vui lòng điền đầy đủ tất cả các thông tin!");
+      return;
+    }
+    const phoneRegex = /^[0-9]{10,11}$/;
+    if (!phoneRegex.test(phone)) {
+      alert("❌ Số điện thoại phải có 10 đến 11 chữ số!");
+      return;
+    }
+    const today = new Date();
+    const birthDate = new Date(dob);
+    const age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    const dayDiff = today.getDate() - birthDate.getDate();
+
+    if (age < 18 || (age === 18 && (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)))) {
+      alert("❌ Bệnh nhân phải đủ 18 tuổi trở lên!");
+      return;
+    }
+    if (password.length < 8) {
+      alert("❌ Mật khẩu phải có ít nhất 8 ký tự!");
+      return;
+    }
+
     try {
       await axios.post("http://localhost:8081/api/patients", newPatient, {
         headers: { Authorization: `Bearer ${token}` },

@@ -1,227 +1,292 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Modal, Button, Form, InputGroup, DropdownButton, Dropdown } from "react-bootstrap";
+import { FaEdit, FaInfoCircle, FaSearch, FaHotel } from "react-icons/fa";
 
 function RoomList() {
     const [rooms, setRooms] = useState([]);
-    const [searchId, setSearchId] = useState("");
-    const [selectedType, setSelectedType] = useState("");
-    const [roomTypes, setRoomTypes] = useState([]);
     const [error, setError] = useState("");
-
-    const [page, setPage] = useState(0);
-    const [totalPages, setTotalPages] = useState(0);
-    const pageSize = 3;
+    const [editingRoom, setEditingRoom] = useState(null);
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [showDetailModal, setShowDetailModal] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [roomTypeFilter, setRoomTypeFilter] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [selectedRoom, setSelectedRoom] = useState(null);
+    const roomsPerPage = 5;
+    const token = localStorage.getItem("token");
+    const [roomTypes, setRoomTypes] = useState([]);
 
     useEffect(() => {
-        fetchRoomTypes();
-        if (!searchId && !selectedType) {
-            fetchRoomsPaginated(page);
-        }
-    }, [page]);
+        fetchRooms();
+    }, []);
 
-    const fetchRoomTypes = () => {
-        const token = localStorage.getItem("token");
-        axios
-            .get("http://localhost:8081/api/rooms/types", {
-                headers: { Authorization: `Bearer ${token}` },
-            })
-            .then((res) => setRoomTypes(res.data))
-            .catch((err) => console.error("Lỗi khi lấy loại phòng:", err));
-    };
+    const fetchRooms = async () => {
+        setLoading(true);
+        try {
+            const response = await axios.get("http://localhost:8081/api/rooms/all", {
+                headers: { Authorization: `Bearer ${token}` }
 
-    const fetchRoomsPaginated = (pageNumber) => {
-        const token = localStorage.getItem("token");
-        axios
-            .get(`http://localhost:8081/api/rooms/paginated?page=${pageNumber}&size=${pageSize}`, {
-                headers: { Authorization: `Bearer ${token}` },
-            })
-            .then((response) => {
-                setRooms(response.data.content);
-                setTotalPages(response.data.totalPages);
-                setError("");
-            })
-            .catch((error) => {
-                console.error("Lỗi khi tải phòng:", error);
-                setError("Không thể tải danh sách phòng.");
             });
-    };
-
-    const handleSearch = () => {
-        if (!searchId.trim()) {
-            setPage(0);
-            fetchRoomsPaginated(0);
-            return;
+            setRooms(response.data);
+            const types = [...new Set(response.data.map(room => room.roomType))];
+            setRoomTypes(types);
+        } catch (err) {
+            console.error("Error fetching rooms:", err);
+            setError("Không thể tải danh sách phòng.");
+        } finally {
+            setLoading(false);
         }
-
-        const token = localStorage.getItem("token");
-        axios
-            .get(`http://localhost:8081/api/rooms/${searchId}`, {
-                headers: { Authorization: `Bearer ${token}` },
-            })
-            .then((response) => {
-                setRooms([response.data]);
-                setError("");
-                setTotalPages(0);
-            })
-            .catch((error) => {
-                console.error("Không tìm thấy phòng:", error);
-                setRooms([]);
-                setError("Không tìm thấy phòng với ID đã nhập.");
-                setTotalPages(0);
-            });
     };
 
-    const handleFilterByType = (type) => {
-        setSelectedType(type);
-        setSearchId("");
+    const handleEditClick = (room) => {
+        setEditingRoom({ ...room });
+        setShowEditModal(true);
+    };
 
-        if (!type) {
-            setPage(0);
-            fetchRoomsPaginated(0);
-            return;
+    const handleDetailClick = (room) => {
+        setSelectedRoom(room);
+        setShowDetailModal(true);
+    };
+
+    const handleEditChange = (e) => {
+        const { name, value } = e.target;
+        setEditingRoom((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handleEditSubmit = async () => {
+        if (!window.confirm("Bạn có chắc chắn muốn lưu thay đổi không?")) return;
+
+        try {
+            setLoading(true);
+            await axios.put(`http://localhost:8081/api/rooms/${editingRoom.id}`, {
+                roomNumber: editingRoom.roomNumber,
+                roomName: editingRoom.roomName,
+                roomType: editingRoom.roomType,
+                floor: editingRoom.floor,
+                status: editingRoom.status,
+                description: editingRoom.description
+            }, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            setShowEditModal(false);
+            fetchRooms();
+            alert("Cập nhật thành công!");
+        } catch (err) {
+            console.error("Error updating room:", err);
+            alert("Lỗi khi cập nhật thông tin phòng.");
+        } finally {
+            setLoading(false);
         }
-
-        const token = localStorage.getItem("token");
-        axios
-            .get(`http://localhost:8081/api/rooms/filter?type=${encodeURIComponent(type)}`, {
-                headers: { Authorization: `Bearer ${token}` },
-            })
-            .then((response) => {
-                setRooms(response.data);
-                setError("");
-                setTotalPages(0);
-            })
-            .catch((error) => {
-                console.error("Lỗi khi lọc loại phòng:", error);
-                setRooms([]);
-                setError("Không tìm thấy phòng với loại đã chọn.");
-                setTotalPages(0);
-            });
     };
 
-    const handleReset = () => {
-        setSearchId("");
-        setSelectedType("");
-        setPage(0);
-        fetchRoomsPaginated(0);
-    };
+    // Pagination
+    const filteredRooms = rooms.filter((room) =>
+        room.roomName.toLowerCase().includes(searchTerm.toLowerCase()) &&
+        (roomTypeFilter === "" || room.roomType === roomTypeFilter)
+    );
+    const indexOfLastRoom = currentPage * roomsPerPage;
+    const indexOfFirstRoom = indexOfLastRoom - roomsPerPage;
+    const currentRooms = filteredRooms.slice(indexOfFirstRoom, indexOfLastRoom);
+    const totalPages = Math.ceil(filteredRooms.length / roomsPerPage);
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
     return (
-        <div className="p-6 max-w-7xl mx-auto">
-            <h2 style={{ color: '#2563eb' }} className="mb-6 font-bold text-center text-2xl">
-                📋 Danh sách phòng
-            </h2>
+        <div className="container py-4">
+            <h2 className="text-center text-primary mb-4"><FaHotel className="me-2" /> Danh Sách Phòng</h2>
 
-            {/* Bộ lọc */}
-            <div className="bg-white rounded-xl shadow p-6 mb-6">
-                <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-                    <div className="flex flex-col gap-2">
-                        <label className="text-sm font-medium text-gray-700">Tìm theo ID:</label>
-                        <input
-                            type="text"
-                            value={searchId}
-                            onChange={(e) => setSearchId(e.target.value)}
-                            placeholder="Nhập ID phòng"
-                            className="border border-gray-300 p-2 rounded w-full md:w-64"
-                        />
-                    </div>
+            {error && <div className="alert alert-danger">{error}</div>}
 
-                    <div className="flex flex-col gap-2">
-                        <label className="text-sm font-medium text-gray-700">Lọc theo loại:</label>
-                        <select
-                            value={selectedType}
-                            onChange={(e) => handleFilterByType(e.target.value)}
-                            className="border border-gray-300 p-2 rounded w-full md:w-64"
-                        >
-                            <option value="">Tất cả</option>
-                            {roomTypes.map((type, i) => (
-                                <option key={i} value={type}>{type}</option>
-                            ))}
-                        </select>
-                    </div>
+            {/* Search and Filter */}
+            <div className="d-flex justify-content-between mb-4">
+                <InputGroup className="w-50">
+                    <Form.Control
+                        placeholder="Tìm kiếm phòng theo tên"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                    <Button variant="outline-secondary" onClick={() => fetchRooms()}>
+                        <FaSearch /> Tìm kiếm
+                    </Button>
+                </InputGroup>
 
-                    <div className="flex gap-2">
-                        <button
-                            onClick={handleSearch}
-                            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
-                        >
-                            Tìm kiếm
-                        </button>
-                        <button
-                            onClick={handleReset}
-                            className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded"
-                        >
-                            Đặt lại
-                        </button>
-                    </div>
-                </div>
+                <DropdownButton
+                    id="dropdown-room-type"
+                    title={roomTypeFilter || "Loại phòng"}
+                    onSelect={(e) => setRoomTypeFilter(e)}
+                    variant="outline-primary"
+                >
+                    <Dropdown.Item eventKey="">Tất cả</Dropdown.Item>
+                    {roomTypes.map((type, index) => (
+                        <Dropdown.Item key={index} eventKey={type}>
+                            {type}
+                        </Dropdown.Item>
+                    ))}
+                </DropdownButton>
             </div>
 
-            {/* Thông báo lỗi */}
-            {error && <div className="text-red-600 mb-4 font-semibold">{error}</div>}
-
-            {/* Danh sách phòng */}
-            <div className="overflow-x-auto bg-white rounded-xl shadow">
-                <table className="min-w-full table-auto">
-                    <thead className="bg-gray-100 text-gray-700">
-                    <tr>
-                        <th className="px-4 py-3 text-left">ID</th>
-                        <th className="px-4 py-3 text-left">Tên phòng</th>
-                        <th className="px-4 py-3 text-left">Số phòng</th>
-                        <th className="px-4 py-3 text-left">Loại</th>
-                        <th className="px-4 py-3 text-left">Tầng</th>
-                        <th className="px-4 py-3 text-left">Trạng thái</th>
-                        <th className="px-4 py-3 text-left">Mô tả</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {rooms.map((room) => (
-                        <tr key={room.id} className="border-b hover:bg-gray-50">
-                            <td className="px-4 py-3">{room.id}</td>
-                            <td className="px-4 py-3">{room.roomName || "—"}</td>
-                            <td className="px-4 py-3">{room.roomNumber || "—"}</td>
-                            <td className="px-4 py-3">{room.roomType || "—"}</td>
-                            <td className="px-4 py-3">{room.floor || "—"}</td>
-                            <td className="px-4 py-3">{room.status || "—"}</td>
-                            <td className="px-4 py-3">{room.description || "—"}</td>
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
+            {/* Room List */}
+            <div className="row">
+                {loading ? (
+                    <div className="text-center w-100">
+                        <Button variant="secondary" disabled>
+                            Đang tải dữ liệu...
+                        </Button>
+                    </div>
+                ) : (
+                    currentRooms.map((room, index) => (
+                        <div className="col-lg-4 col-md-6 mb-4" key={room.id}>
+                            <div className="card shadow-sm">
+                                <div className="card-body">
+                                    <h5 className="card-title">Tên Phòng: {room.roomName}</h5>
+                                    <p className="card-text">Mã phòng: {room.roomNumber}</p>
+                                    <p className="card-text">Loại: {room.roomType}</p>
+                                    <p className="card-text">Tầng: {room.floor}</p>
+                                    <p className="card-text">Mô tả: {room.description}</p>
+                                    <Button
+                                        variant="primary"
+                                        onClick={() => handleEditClick(room)}
+                                        className="w-100 mb-2"
+                                    >
+                                        <FaEdit /> Sửa
+                                    </Button>
+                                    <Button
+                                        variant="info"
+                                        onClick={() => handleDetailClick(room)} // Open detail modal
+                                        className="w-100"
+                                    >
+                                        <FaInfoCircle /> Chi tiết
+                                    </Button>
+                                </div>
+                            </div>
+                        </div>
+                    ))
+                )}
             </div>
 
-            {/* Phân trang */}
-            {totalPages > 1 && (
-                <div className="flex justify-center mt-6 gap-2 flex-wrap">
-                    <button
-                        onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
-                        disabled={page === 0}
-                        className="px-3 py-1 bg-gray-300 hover:bg-gray-400 rounded disabled:opacity-50"
+            {/* Pagination */}
+            <div className="d-flex justify-content-center mt-4">
+                {Array.from({ length: totalPages }, (_, i) => (
+                    <Button
+                        key={i + 1}
+                        onClick={() => paginate(i + 1)}
+                        className={`mx-1 ${currentPage === i + 1 ? 'btn-primary' : 'btn-light'}`}
                     >
-                        ◀ Trước
-                    </button>
+                        {i + 1}
+                    </Button>
+                ))}
+            </div>
 
-                    {[...Array(totalPages).keys()].map((p) => (
-                        <button
-                            key={p}
-                            onClick={() => setPage(p)}
-                            className={`px-3 py-1 rounded ${
-                                p === page ? "bg-blue-600 text-white" : "bg-gray-200"
-                            }`}
-                        >
-                            {p + 1}
-                        </button>
-                    ))}
+            {/* Edit Modal */}
+            <Modal show={showEditModal} onHide={() => setShowEditModal(false)} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>Sửa thông tin phòng</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form>
+                        <Form.Group controlId="formRoomNumber">
+                            <Form.Label>Mã Phòng</Form.Label>
+                            <Form.Control
+                                type="text"
+                                placeholder="Mã phòng"
+                                name="roomNumber"
+                                value={editingRoom?.roomNumber}
+                                onChange={handleEditChange}
+                            />
+                        </Form.Group>
 
-                    <button
-                        onClick={() => setPage((prev) => Math.min(prev + 1, totalPages - 1))}
-                        disabled={page === totalPages - 1}
-                        className="px-3 py-1 bg-gray-300 hover:bg-gray-400 rounded disabled:opacity-50"
-                    >
-                        Sau ▶
-                    </button>
-                </div>
-            )}
+                        <Form.Group controlId="formRoomName">
+                            <Form.Label>Tên Phòng</Form.Label>
+                            <Form.Control
+                                type="text"
+                                placeholder="Tên phòng"
+                                name="roomName"
+                                value={editingRoom?.roomName}
+                                onChange={handleEditChange}
+                            />
+                        </Form.Group>
+
+                        <Form.Group controlId="formRoomType">
+                            <Form.Label>Loại Phòng</Form.Label>
+                            <Form.Control
+                                type="text"
+                                placeholder="Loại phòng"
+                                name="roomType"
+                                value={editingRoom?.roomType}
+                                onChange={handleEditChange}
+                            />
+                        </Form.Group>
+
+                        <Form.Group controlId="formFloor">
+                            <Form.Label>Tầng</Form.Label>
+                            <Form.Control
+                                type="number"
+                                placeholder="Tầng"
+                                name="floor"
+                                value={editingRoom?.floor}
+                                onChange={handleEditChange}
+                            />
+                        </Form.Group>
+
+                        <Form.Group controlId="formStatus">
+                            <Form.Label>Trạng Thái</Form.Label>
+                            <Form.Control
+                                type="text"
+                                placeholder="Trạng thái"
+                                name="status"
+                                value={editingRoom?.status}
+                                onChange={handleEditChange}
+                            />
+                        </Form.Group>
+
+                        <Form.Group controlId="formDescription">
+                            <Form.Label>Mô Tả</Form.Label>
+                            <Form.Control
+                                as="textarea"
+                                rows={3}
+                                placeholder="Mô tả phòng"
+                                name="description"
+                                value={editingRoom?.description}
+                                onChange={handleEditChange}
+                            />
+                        </Form.Group>
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowEditModal(false)}>
+                        Đóng
+                    </Button>
+                    <Button variant="primary" onClick={handleEditSubmit}>
+                        Lưu
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            {/* Room Detail Modal */}
+            <Modal show={showDetailModal} onHide={() => setShowDetailModal(false)} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>Chi tiết phòng</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {selectedRoom && (
+                        <div>
+                            <p><strong>Mã phòng:</strong> {selectedRoom.roomNumber}</p>
+                            <p><strong>Tên phòng:</strong> {selectedRoom.roomName}</p>
+                            <p><strong>Loại phòng:</strong> {selectedRoom.roomType}</p>
+                            <p><strong>Tầng:</strong> {selectedRoom.floor}</p>
+                            <p><strong>Trạng thái:</strong> {selectedRoom.status}</p>
+                            <p><strong>Mô tả:</strong> {selectedRoom.description}</p>
+                        </div>
+                    )}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowDetailModal(false)}>
+                        Đóng
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 }
