@@ -531,12 +531,15 @@ export default function AppointmentReceptionist() {
                                 <div className="mb-2">
                                     <label>Thời gian</label>
                                     <input
-                                        type="datetime-local"
-                                        className="form-control"
-                                        value={form.scheduledTime}
-                                        disabled
-                                        step="60"
-                                    />
+                                            name="scheduledTime"
+                                            type="datetime-local"
+                                            className="form-control"
+                                            value={detailForm.scheduledTime}
+                                            onChange={handleChange}
+                                            disabled
+                                            step="60" // chỉ cho chọn đến phút, không chọn giây
+                                            min={getNowForInput()}
+                                        />
                                 </div>
                                 <div className="mb-2">
                                     <label>Trạng thái</label>
