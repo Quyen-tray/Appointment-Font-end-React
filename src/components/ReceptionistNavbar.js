@@ -36,6 +36,11 @@ export default function ReceptionistNavbar() {
                         <Link className="nav-link" to="/receptionist/doctors">Danh Sách Bác Sĩ</Link>
                     </li>
 
+                    <li>
+                        <Link className="nav-link" to="/receptionist/invoice-management">
+                            <i className="fas fa-file-invoice-dollar me-2"></i>Quản Lý Hóa Đơn
+                        </Link>
+                    </li>
                     <li className="nav-item">
                         <Link className="nav-link" to="/receptionist/contacts">Liên hệ</Link>
                     </li>

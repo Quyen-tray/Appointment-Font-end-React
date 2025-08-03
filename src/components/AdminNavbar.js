@@ -40,6 +40,15 @@ export default function AdminNavbar() {
                     </li>
 
                     <li className="nav-item">
+                        <Link className="nav-link" to="/admin/blog-management">
+                            <i className="fas fa-blog me-2"></i>Quản Lý Blog
+                        </Link>
+                    </li>
+
+                    {/*<li className="nav-item">*/}
+                    {/*    <Link className="nav-link" to="/admin/feedbacks">Feedback Management</Link>*/}
+                    {/*</li>*/}
+                    <li className="nav-item">
                         <Link className="nav-link" to="/admin/loginAuditPage"> Lịch sử đăng nhập</Link>
                     </li>
 
