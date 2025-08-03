@@ -534,7 +534,7 @@ export default function AppointmentReceptionist() {
                                             name="scheduledTime"
                                             type="datetime-local"
                                             className="form-control"
-                                            value={form.scheduledTime}
+                                            value={detailForm.scheduledTime}
                                             onChange={handleChange}
                                             disabled
                                             step="60" // chỉ cho chọn đến phút, không chọn giây
