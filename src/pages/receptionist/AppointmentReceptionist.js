@@ -165,7 +165,7 @@ export default function AppointmentReceptionist() {
             ...editing,
             patientId: patients.find((p) => p.id === form.patient).id,
             doctorId: doctors.find((d) => d.id === form.doctor).id,
-            roomId: rooms.find((r) => r.id === form.room).id,
+            roomId: rooms?.find((r) => r.id === form.room)?.id,
             scheduledTime,
             createdRole: "RECEPTIONIST", // Mặc định là receptionist
         };
@@ -272,6 +272,12 @@ export default function AppointmentReceptionist() {
             },
             body: JSON.stringify(body),
         })
+            .then(async(res) => {
+                if (!res.ok) {
+                    const errorText = await res.text(); // <<-- đọc lỗi dạng text
+                    throw new Error(errorText || 'Failed to update appointment');
+                }
+            })
             .then(() => fetch("http://localhost:8081/api/appointment", {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -279,6 +285,9 @@ export default function AppointmentReceptionist() {
                 },
             }).then((res) => res.json()))
             .then((data) => setAppointments(data))
+            .catch((error) => {
+                alert(error.message || "Something went wrong!");
+            })
             .finally(() => {
                 setShowConfirm(false);
                 closeDetail();
@@ -531,15 +540,15 @@ export default function AppointmentReceptionist() {
                                 <div className="mb-2">
                                     <label>Thời gian</label>
                                     <input
-                                            name="scheduledTime"
-                                            type="datetime-local"
-                                            className="form-control"
-                                            value={detailForm.scheduledTime}
-                                            onChange={handleChange}
-                                            disabled
-                                            step="60" // chỉ cho chọn đến phút, không chọn giây
-                                            min={getNowForInput()}
-                                        />
+                                        name="scheduledTime"
+                                        type="datetime-local"
+                                        className="form-control"
+                                        value={detailForm.scheduledTime}
+                                        onChange={handleChange}
+                                        disabled
+                                        step="60" // chỉ cho chọn đến phút, không chọn giây
+                                        min={getNowForInput()}
+                                    />
                                 </div>
                                 <div className="mb-2">
                                     <label>Trạng thái</label>
