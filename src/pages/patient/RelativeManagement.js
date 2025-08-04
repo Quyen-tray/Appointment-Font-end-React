@@ -17,6 +17,12 @@ function RelativeManagement() {
         note: ""
     });
     const [isEditing, setIsEditing] = useState(false);
+    const [searchInput, setSearchInput] = useState("");
+    const [page, setPage] = useState(0);
+    const [size] = useState(5);
+    const [totalPages, setTotalPages] = useState(0);
+    const [search, setSearch] = useState("");
+    const isFullNameValid = (name) => /^[\p{L} ]+$/u.test(name);
 
     const fetchRelatives = async () => {
         const config = {
@@ -24,9 +30,14 @@ function RelativeManagement() {
                 Authorization: `Bearer ${localStorage.getItem("token")}`
             }
         };
-        const response = await axios.get("http://localhost:8081/api/patient/relatives/all", config);
-        setRelatives(response.data);
+        const response = await axios.get(`http://localhost:8081/api/patient/relatives/paged?page=${page}&size=${size}&search=${search}`, config);
+        setRelatives(response.data.content);
+        setTotalPages(response.data.totalPages);
     };
+
+    useEffect(() => {
+        fetchRelatives();
+    }, [page, search]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -45,27 +56,42 @@ function RelativeManagement() {
             .map(word => word.charAt(0).toUpperCase() + word.slice(1))
             .join(" ");
     };
+    const [submitAttempted, setSubmitAttempted] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setSubmitAttempted(true);
+
+        if (!isFullNameValid(formData.fullName)) {
+            return;
+        }
+
         const config = {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`
             }
         };
+
         const submitData = {
             ...formData,
             fullName: capitalizeWords(formData.fullName)
         };
-        if (isEditing) {
-            await axios.put(`http://localhost:8081/api/patient/relatives/update/${formData.id}`, submitData, config);
-        } else {
-            await axios.post("http://localhost:8081/api/patient/relatives/add", submitData, config);
+
+        try {
+            if (isEditing) {
+                await axios.put(`http://localhost:8081/api/patient/relatives/update/${formData.id}`, submitData, config);
+            } else {
+                await axios.post("http://localhost:8081/api/patient/relatives/add", submitData, config);
+            }
+            fetchRelatives();
+            setFormData({ id: null, fullName: "", dob: "", gender: "", relation: "", note: "" });
+            setIsEditing(false);
+            setSubmitAttempted(false);
+        } catch (err) {
+            alert("Đã xảy ra lỗi khi lưu dữ liệu.");
         }
-        fetchRelatives();
-        setFormData({ id: null, fullName: "", dob: "", gender: "", relation: "", note: "" });
-        setIsEditing(false);
     };
+
 
     const handleEdit = (relative) => {
         setFormData(relative);
@@ -96,6 +122,9 @@ function RelativeManagement() {
                     <div className="col-md-4">
                         <label>Họ tên</label>
                         <input className="form-control" name="fullName" value={formData.fullName} onChange={handleChange} required />
+                        {submitAttempted && !isFullNameValid(formData.fullName) && (
+                            <small className="text-danger">Họ tên không được chứa số hoặc ký hiệu đặc biệt.</small>
+                        )}
                     </div>
                     <div className="col-md-2">
                         <label>Ngày sinh</label>
@@ -157,6 +186,47 @@ function RelativeManagement() {
                     </button>
                 )}
             </form>
+            <div className="row mb-3">
+                <div className="col-md-6">
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Tìm theo tên người thân..."
+                        value={searchInput}
+                        onChange={(e) => setSearchInput(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                setPage(0);
+                                setSearch(searchInput.trim());
+                            }
+                        }}
+                    />
+                </div>
+                <div className="col-md-6 d-flex justify-content-start mt-2 mt-md-0">
+                    <button
+                        className="btn btn-primary me-2"
+                        type="button"
+                        onClick={() => {
+                            setPage(0);
+                            setSearch(searchInput.trim());
+                        }}
+                    >
+                        Tìm
+                    </button>
+                    <button
+                        className="btn btn-warning"
+                        type="button"
+                        onClick={() => {
+                            setSearchInput("");
+                            setSearch("");
+                            setPage(0);
+                        }}
+                    >
+                        Làm mới
+                    </button>
+                </div>
+            </div>
+
             <h5>Danh sách người thân:</h5>
             <div className="table-responsive">
                 <table className="table table-bordered table-hover text-center">
@@ -194,6 +264,23 @@ function RelativeManagement() {
                         )}
                     </tbody>
                 </table>
+                <div className="d-flex justify-content-center mt-3">
+                    <button
+                        className="btn btn-outline-primary me-2"
+                        disabled={page === 0}
+                        onClick={() => setPage(prev => prev - 1)}
+                    >
+                        Trang trước
+                    </button>
+                    <span className="align-self-center">Trang {page + 1} / {totalPages}</span>
+                    <button
+                        className="btn btn-outline-primary ms-2"
+                        disabled={page + 1 >= totalPages}
+                        onClick={() => setPage(prev => prev + 1)}
+                    >
+                        Trang sau
+                    </button>
+                </div>
             </div>
         </div>
     );

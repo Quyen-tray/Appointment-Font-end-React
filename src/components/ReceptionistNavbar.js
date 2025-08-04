@@ -46,10 +46,10 @@ export default function ReceptionistNavbar() {
                     </li>
 
                     <li className="nav-item">
-                        <Link className="nav-link" to="/receptionist/profile">Profile</Link>
+                        <Link className="nav-link" to="/receptionist/profile">Hồ sơ</Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link" to="/receptionist/change-password">Change Password</Link>
+                        <Link className="nav-link" to="/receptionist/change-password">Đổi mật khẩu</Link>
                     </li>
                 </ul>
 

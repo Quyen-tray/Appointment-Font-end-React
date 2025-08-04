@@ -21,8 +21,14 @@ export default function PatientAppointments() {
   const [endDate, setEndDate] = useState("");
   const [examinerList, setExaminerList] = useState([]);
   const [selectedExaminer, setSelectedExaminer] = useState("Tất cả");
+  const [appliedSearchDoctor, setAppliedSearchDoctor] = useState("");
+  const [appliedStartDate, setAppliedStartDate] = useState("");
+  const [appliedEndDate, setAppliedEndDate] = useState("");
+  const [appliedExaminer, setAppliedExaminer] = useState("Tất cả");
 
-  const fetchAppointments = async (page =0 ,doctorFilter = searchDoctor, start = startDate, end = endDate) => {
+
+
+  const fetchAppointments = async (page = 0) => {
     try {
       setLoading(true);
       const res = await axios.get("http://localhost:8081/api/patient/my-appointment", {
@@ -30,11 +36,11 @@ export default function PatientAppointments() {
         params: {
           page,
           size: pageSize,
-          doctorName: doctorFilter.trim() !== "" ? doctorFilter : undefined,
-          startDate: start || undefined,
-          endDate: end || undefined,
-           status: sortStatus !== "All" ? sortStatus : undefined,
-        examiner: selectedExaminer !== "Tất cả" ? selectedExaminer : undefined,
+          doctorName: appliedSearchDoctor.trim() !== "" ? appliedSearchDoctor : undefined,
+          startDate: appliedStartDate || undefined,
+          endDate: appliedEndDate || undefined,
+          status: sortStatus !== "All" ? sortStatus : undefined,
+          examiner: appliedExaminer !== "Tất cả" ? appliedExaminer : undefined,
         },
       });
       setAppointments(res.data.appointments || []);
@@ -58,12 +64,8 @@ export default function PatientAppointments() {
   };
 
   useEffect(() => {
-  fetchAppointments(currentPage);
-}, [currentPage]);
-
-useEffect(() => {
-  fetchAppointments(0);
-}, [searchDoctor, startDate, endDate, sortStatus, selectedExaminer]);
+    fetchAppointments(currentPage);
+  }, [currentPage, appliedSearchDoctor, appliedStartDate, appliedEndDate, appliedExaminer, sortStatus]);
 
 
   const sortedAppointments = [...appointments]
@@ -156,6 +158,12 @@ useEffect(() => {
     setSelectedExaminer("Tất cả");
     setCurrentPage(0);
     setSortStatus("All");
+    setAppliedSearchDoctor("");
+    setAppliedStartDate("");
+    setAppliedEndDate("");
+    setAppliedExaminer("Tất cả");
+
+    fetchAppointments(0);
   };
 
   const renderPagination = () => {
@@ -244,12 +252,15 @@ useEffect(() => {
           <button
             className="btn btn-sm btn-primary me-2"
             onClick={() => {
+              setAppliedSearchDoctor(searchDoctor);
+              setAppliedStartDate(startDate);
+              setAppliedEndDate(endDate);
+              setAppliedExaminer(selectedExaminer);
               setCurrentPage(0);
             }}
           >
             Tìm
           </button>
-
           <button className="btn btn-sm btn-primary" onClick={handleResetFilters}>
             Làm mới
           </button>
