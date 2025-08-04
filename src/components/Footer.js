@@ -50,7 +50,7 @@ function Footer() {
                             <p className="mb-0"><i className="bi bi-telephone text-primary me-2"></i>+84 969 222 666</p>
                         </div>
                         <div className="col-lg-3 col-md-6">
-                            <h3 className="text-white mb-4">Follow Us</h3>
+                            <h3 className="text-white mb-4"></h3>
                             <div className="d-flex">
                                 <Link className="btn btn-lg btn-primary btn-lg-square rounded me-2" to="#">
                                     <i className="bi bi-twitter fw-normal"></i>
@@ -74,7 +74,7 @@ function Footer() {
                 <div className="container">
                     <div className="row g-0">
                         <div className="col-md-6 text-center text-md-start">
-                            <p className="mb-md-0">&copy; <Link className="text-white border-bottom" to="#">Your Site Name</Link>. All Rights Reserved.</p>
+                            <p className="mb-md-0">&copy; <Link className="text-white border-bottom" to="#">Nhóm 1</Link></p>
                         </div>
                     </div>
                 </div>
